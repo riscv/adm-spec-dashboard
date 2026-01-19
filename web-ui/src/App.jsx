@@ -650,6 +650,27 @@ function App() {
             <span className="toolbar-text">Specification Development Explorer</span>
           </a>
         </div>
+        
+        <div className="status-legend">
+          <span className="legend-label">Target Ratification Quarter:</span>
+          <div className="legend-item">
+            <span className="legend-color status-cell on-track">On Track</span>
+            <span className="legend-text">Likely to meet.</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color status-cell exposed">Exposed</span>
+            <span className="legend-text">At risk.</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color status-cell late">Late</span>
+            <span className="legend-text">Will miss, replan required.</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color status-cell not-set">Not Yet Defined</span>
+            <span className="legend-text">Undefined.</span>
+          </div>
+        </div>
+
         <table className="table table-bordered" ref={tableRef}>
           <thead>
             <tr>
@@ -805,6 +826,7 @@ function App() {
           </tbody>
         </table>
       </div>
+
       {showBackToTop ? (
         <button
           className="back-to-top"
