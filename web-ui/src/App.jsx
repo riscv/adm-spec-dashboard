@@ -332,7 +332,7 @@ function App() {
   const tableRef = useRef(null);
   const tableContainerRef = useRef(null);
   const assetBase = import.meta.env.BASE_URL || "/";
-          const latestCsvUrl = `${assetBase}latest.csv`;
+  const latestCsvUrl = `${assetBase}latest.csv`;
 
   useEffect(() => {
     let isMounted = true;
@@ -547,6 +547,31 @@ function App() {
     window.location.href = mailtoLink;
   };
 
+  const ratificationForecast = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const forecast = {
+      year: currentYear,
+      total: 0,
+      q1: 0,
+      q2: 0,
+      q3: 0,
+      q4: 0,
+    };
+
+    rows.forEach((row) => {
+      const { year, qtr } = parseQuarter(row.trendingQuarter);
+      if (year === currentYear) {
+        forecast.total++;
+        if (qtr === 1) forecast.q1++;
+        else if (qtr === 2) forecast.q2++;
+        else if (qtr === 3) forecast.q3++;
+        else if (qtr === 4) forecast.q4++;
+      }
+    });
+
+    return forecast;
+  }, [rows]);
+
   return (
     <div className="container">
       <div className="sticky-shell">
@@ -565,27 +590,27 @@ function App() {
           <div className="timeline-fill">
             <div className="timeline-fill-past" style={{ width: `${yearProgress}%` }}></div>
           </div>
-        {[1, 2, 3, 4].map((quarter) => (
-          <div
-            key={quarter}
-            className={`timeline-point${quarter === currentQuarter ? " current" : ""}`}
-          >
-            <div className="timeline-label">
-              <div>
-                Q{quarter}
-                {quarter === currentQuarter ? ` (${daysLeft} days left)` : ""}
-              </div>
-              {quarter === currentQuarter ? (
-                <div className="timeline-subtext">
-                  {monthLabel} · {daysLeftInMonth} days left
-                  <div className="timeline-subtext-secondary">
-                    {daysLeftInYear} days left in year
-                  </div>
+          {[1, 2, 3, 4].map((quarter) => (
+            <div
+              key={quarter}
+              className={`timeline-point${quarter === currentQuarter ? " current" : ""}`}
+            >
+              <div className="timeline-label">
+                <div>
+                  Q{quarter}
+                  {quarter === currentQuarter ? ` (${daysLeft} days left)` : ""}
                 </div>
-              ) : null}
+                {quarter === currentQuarter ? (
+                  <div className="timeline-subtext">
+                    {monthLabel} · {daysLeftInMonth} days left
+                    <div className="timeline-subtext-secondary">
+                      {daysLeftInYear} days left in year
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
         </div>
 
         <div id="searchContainer">
@@ -604,6 +629,9 @@ function App() {
 
       <div className="table-container" ref={tableContainerRef}>
         <div className="table-toolbar">
+          <div className="ratification-forecast">
+            {ratificationForecast.year} Ratification Forecast: {ratificationForecast.total} (Q1: {ratificationForecast.q1} | Q2: {ratificationForecast.q2} | Q3: {ratificationForecast.q3} | Q4: {ratificationForecast.q4})
+          </div>
           <label className="bod-toggle">
             <input
               type="checkbox"
