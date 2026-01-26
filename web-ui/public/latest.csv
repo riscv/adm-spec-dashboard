@@ -1,6 +1,6 @@
 Jira URL,Summary,Status,BoD Report,Updated,ISA or NON-ISA?,GitHub,Baseline Ratification Quarter,Target Ratification Quarter,Ratification Progress,Previous Ratification Progress
 https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,2026-01-17T04:39:04.448-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
-https://riscv.atlassian.net/browse/RVS-1930,Integrated Matrix Extension (IME),Specification Under Development,Yes,2026-01-26T06:17:54.261-0700,ISA,https://github.com/riscv/integrated-matrix-extension,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
+https://riscv.atlassian.net/browse/RVS-1930,Integrated Matrix Extension (IME),Specification Under Development,Yes,2026-01-26T10:00:38.144-0700,ISA,https://github.com/riscv/integrated-matrix-extension,26Q3,26Q3,On Track,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-1017,Fast Interrupts (CLIC),Specification Under Development,Yes,2026-01-23T01:25:22.020-0700,ISA,https://github.com/riscv/riscv-fast-interrupt,24Q4,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-3561,RISC-V Hart Trace Interface (RHTI),Specification in Freeze,No,2026-01-21T06:45:44.685-0700,NON-ISA,https://github.com/riscv-non-isa/host-trace-interface,26Q1,26Q2,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1971,Dot-Product (Zvqdot/Zvdot4a8i),Specification in Planning,No,2026-01-20T13:36:50.961-0700,ISA,https://github.com/riscv/riscv-dot-product,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
