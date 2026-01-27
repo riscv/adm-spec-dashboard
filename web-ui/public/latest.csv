@@ -1,6 +1,8 @@
 Jira URL,Summary,Status,BoD Report,Updated,ISA or NON-ISA?,GitHub,Baseline Ratification Quarter,Target Ratification Quarter,Ratification Progress,Previous Ratification Progress
 https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,2026-01-17T04:39:04.448-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
-https://riscv.atlassian.net/browse/RVS-1017,Fast Interrupts (CLIC),Specification Under Development,Yes,2026-01-26T11:55:42.285-0700,ISA,https://github.com/riscv/riscv-fast-interrupt,24Q4,26Q4,On Track,Late
+https://riscv.atlassian.net/browse/RVS-4180,RVA23.1,Specification Under Development,No,2026-01-27T06:47:41.255-0700,ISA,https://github.com/riscv/riscv-profiles,26Q2,26Q4,On Track,On Track
+https://riscv.atlassian.net/browse/RVS-4184,RVB23.1,Specification Under Development,No,2026-01-27T06:47:38.015-0700,ISA,https://github.com/riscv/riscv-profiles,26Q2,26Q4,On Track,On Track
+https://riscv.atlassian.net/browse/RVS-1017,Fast Interrupts (CLIC),Specification Under Development,Yes,2026-01-27T06:43:15.420-0700,ISA,https://github.com/riscv/riscv-fast-interrupt,24Q4,26Q4,On Track,Late
 https://riscv.atlassian.net/browse/RVS-1930,Integrated Matrix Extension (IME),Specification Under Development,Yes,2026-01-26T10:00:38.144-0700,ISA,https://github.com/riscv/integrated-matrix-extension,26Q3,26Q3,On Track,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-3561,RISC-V Hart Trace Interface (RHTI),Specification in Freeze,No,2026-01-21T06:45:44.685-0700,NON-ISA,https://github.com/riscv-non-isa/host-trace-interface,26Q1,26Q2,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1971,Dot-Product (Zvqdot/Zvdot4a8i),Specification in Planning,No,2026-01-20T13:36:50.961-0700,ISA,https://github.com/riscv/riscv-dot-product,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
@@ -47,5 +49,3 @@ https://riscv.atlassian.net/browse/RVS-1781,Server Platform,Specification in Fre
 https://riscv.atlassian.net/browse/RVS-1345,Supervisor Domains Access Protection (Smmtt),Specification in Freeze,Yes,2026-01-16T08:06:55.415-0700,ISA,https://github.com/riscv/riscv-smmtt,25Q2,26Q2,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1153,Security Model,Specification in Freeze,Yes,2026-01-16T08:06:54.291-0700,NON-ISA,https://github.com/riscv-non-isa/riscv-security-model,24Q4,26Q2,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-4161,Vector Unzip Instruction (Zvzip),Specification Under Development,No,2026-01-07T09:43:48.376-0700,ISA,https://github.com/ved-rivos/riscv-isa-manual/blob/zvzip/src/zvzip.adoc,26Q4,26Q4,On Track,On Track
-https://riscv.atlassian.net/browse/RVS-4184,RVB23.1,Specification Under Development,Yes,2026-01-05T15:44:09.819-0700,ISA,https://github.com/riscv/riscv-profiles,26Q2,26Q4,On Track,On Track
-https://riscv.atlassian.net/browse/RVS-4180,RVA23.1,Specification Under Development,Yes,2026-01-05T15:44:09.425-0700,ISA,https://github.com/riscv/riscv-profiles,26Q2,26Q4,On Track,On Track
