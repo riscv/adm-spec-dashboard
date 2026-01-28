@@ -153,23 +153,6 @@ function formatMonthDay(date = new Date()) {
   }).format(date);
 }
 
-function formatTimestamp(date) {
-  const pad = (value) => String(value).padStart(2, "0");
-  return (
-    date.getFullYear() +
-    "-" +
-    pad(date.getMonth() + 1) +
-    "-" +
-    pad(date.getDate()) +
-    " " +
-    pad(date.getHours()) +
-    ":" +
-    pad(date.getMinutes()) +
-    ":" +
-    pad(date.getSeconds())
-  );
-}
-
 function formatFilenameTimestamp(date) {
   const pad = (value) => String(value).padStart(2, "0");
   return (
@@ -326,7 +309,6 @@ function App() {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [bodOnly, setBodOnly] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState(formatTimestamp(new Date()));
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   const tableRef = useRef(null);
@@ -446,7 +428,6 @@ function App() {
 
         if (isMounted) {
           setRows(sorted);
-          setLastUpdated(formatTimestamp(new Date()));
         }
       } catch (err) {
         if (isMounted) {
@@ -576,7 +557,6 @@ function App() {
     <div className="container">
       <div className="sticky-shell">
         <div id="header">
-          <div id="last-updated">Last updated: {lastUpdated}</div>
           <button id="save-button" className="btn btn-primary" onClick={handleSaveImage}>
             Save as Image
           </button>
@@ -675,7 +655,7 @@ function App() {
           <thead>
             <tr>
               <th className="specification-column">Specification</th>
-              <th className="narrow-column">ISA or NON-ISA?</th>
+              <th className="narrow-column">ISA?</th>
               <th className="narrow-column">Planning</th>
               <th className="narrow-column">Dev</th>
               <th className="narrow-column">Stabilization</th>
@@ -685,9 +665,8 @@ function App() {
               <th className="narrow-column">Planned Ratification Quarter</th>
               <th className="narrow-column">Target Ratification Quarter</th>
               <th className="narrow-column">Current Status</th>
-              <th className="narrow-column">Previous Status</th>
-              <th className="github-column">GitHub</th>
-              <th className="share-column">Share</th>
+              {!bodOnly && <th className="github-column">GitHub</th>}
+              {!bodOnly && <th className="share-column">Share</th>}
             </tr>
           </thead>
           <tbody>
@@ -728,9 +707,9 @@ function App() {
                     let title = `Upcoming Phase: ${phase}`;
 
                     if (phase === row.currentPhase) {
-                      content = "In Progress";
+                      content = "\u23F3";
                       className = "in-progress";
-                      title = `Current Phase: ${phase}`;
+                      title = `In Progress: ${phase}`;
                     } else if (currentPhaseIndex >= 0 && phaseIndex < currentPhaseIndex) {
                       content = "\u2713";
                       className = "bg-completed";
@@ -750,76 +729,77 @@ function App() {
                   <td className={`narrow-column ${statusClassName(row.ratificationProgress)}`}>
                     {row.ratificationProgress}
                   </td>
-                  <td className={`narrow-column ${statusClassName(row.previousRatificationProgress)}`}>
-                    {row.previousRatificationProgress}
-                  </td>
-                  <td>
-                    {hasGithub ? (
-                      <div className="icon-group">
-                        <a
-                          href={githubValue}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="icon-link"
-                          title="GitHub Repository"
-                        >
-                          <img
-                            src={`${assetBase}github-mark.svg`}
-                            alt="GitHub Logo"
-                            width="20"
-                            height="20"
-                            className="icon-img"
-                          />
-                        </a>
-                        {latestReleaseUrl ? (
+                  {!bodOnly && (
+                    <td>
+                      {hasGithub ? (
+                        <div className="icon-group">
                           <a
-                            href={latestReleaseUrl}
+                            href={githubValue}
                             target="_blank"
                             rel="noreferrer"
                             className="icon-link"
-                            title="Latest Release"
+                            title="GitHub Repository"
                           >
                             <img
-                              src={`${assetBase}release-tag.svg`}
-                              alt="Latest release"
-                              width="18"
-                              height="18"
+                              src={`${assetBase}github-mark.svg`}
+                              alt="GitHub Logo"
+                              width="20"
+                              height="20"
                               className="icon-img"
                             />
                           </a>
-                        ) : (
-                          <span className="icon-disabled" title="No releases available">
-                            <img
-                              src={`${assetBase}release-tag.svg`}
-                              alt="No releases available"
-                              width="18"
-                              height="18"
-                              className="icon-img"
-                            />
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      "N/A"
-                    )}
-                  </td>
-                  <td className="narrow-column">
-                    <button
-                      type="button"
-                      className="icon-button"
-                      onClick={() => handleShare(row)}
-                      title="Share"
-                      style={{ background: "none", border: "none", padding: 0 }}
-                    >
-                      <img
-                        src={`${assetBase}paper-plane-2563.svg`}
-                        alt="Share"
-                        width="16"
-                        height="16"
-                        className="icon-img"
-                      />
-                    </button>
-                  </td>
+                          {latestReleaseUrl ? (
+                            <a
+                              href={latestReleaseUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="icon-link"
+                              title="Latest Release"
+                            >
+                              <img
+                                src={`${assetBase}release-tag.svg`}
+                                alt="Latest release"
+                                width="18"
+                                height="18"
+                                className="icon-img"
+                              />
+                            </a>
+                          ) : (
+                            <span className="icon-disabled" title="No releases available">
+                              <img
+                                src={`${assetBase}release-tag.svg`}
+                                alt="No releases available"
+                                width="18"
+                                height="18"
+                                className="icon-img"
+                              />
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        "N/A"
+                      )}
+                    </td>
+                  )}
+                  {!bodOnly && (
+                    <td className="narrow-column">
+                      <button
+                        type="button"
+                        className="icon-button"
+                        onClick={() => handleShare(row)}
+                        title="Share"
+                        style={{ background: "none", border: "none", padding: 0 }}
+                      >
+                        <img
+                          src={`${assetBase}paper-plane-2563.svg`}
+                          alt="Share"
+                          width="16"
+                          height="16"
+                          className="icon-img"
+                        />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               );
             })}

@@ -9,9 +9,7 @@ export default defineConfig(({ command }) => {
   const defaultBase = repoName ? `/${repoName}/` : "/";
   const base = process.env.BASE_URL || defaultBase;
   const repoRoot = path.resolve(__dirname, "..");
-  const localCsvPath = path
-    .resolve(repoRoot, "specs_20260107_182508.csv")
-    .replace(/\\/g, "/");
+  const localCsvPath = "/Users/rpsene/Downloads/RISC-V_Downloads/specs_20260127_135041.csv";
   const localCsvUrl = command === "serve" ? `/@fs/${localCsvPath}` : "";
 
   return {
@@ -19,7 +17,7 @@ export default defineConfig(({ command }) => {
     base,
     server: {
       fs: {
-        allow: [repoRoot],
+        allow: [repoRoot, "/Users/rpsene/Downloads"],
       },
     },
     define: {
