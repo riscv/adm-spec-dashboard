@@ -1,6 +1,6 @@
 Jira URL,Summary,Status,BoD Report,Updated,ISA or NON-ISA?,GitHub,Baseline Ratification Quarter,Target Ratification Quarter,Ratification Progress,Previous Ratification Progress
 https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,2026-01-17T04:39:04.448-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
-https://riscv.atlassian.net/browse/RVS-4180,RVA23.1,Specification Under Development,No,2026-01-27T06:47:41.255-0700,ISA,https://github.com/riscv/riscv-profiles,26Q2,26Q4,On Track,On Track
+https://riscv.atlassian.net/browse/RVS-4180,RVA23.1,Specification Under Stabilization,No,2026-01-27T16:57:39.041-0700,ISA,https://github.com/riscv/riscv-profiles,26Q2,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-4184,RVB23.1,Specification Under Development,No,2026-01-27T06:47:38.015-0700,ISA,https://github.com/riscv/riscv-profiles,26Q2,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1017,Fast Interrupts (CLIC),Specification Under Development,Yes,2026-01-27T06:43:15.420-0700,ISA,https://github.com/riscv/riscv-fast-interrupt,24Q4,26Q4,On Track,Late
 https://riscv.atlassian.net/browse/RVS-1930,Integrated Matrix Extension (IME),Specification Under Development,Yes,2026-01-26T10:00:38.144-0700,ISA,https://github.com/riscv/integrated-matrix-extension,26Q3,26Q3,On Track,Not Set Yet
