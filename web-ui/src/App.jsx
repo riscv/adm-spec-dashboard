@@ -651,7 +651,7 @@ function App() {
           </div>
         </div>
 
-        <table className="table table-bordered" ref={tableRef}>
+        <table className={`table table-bordered${bodOnly ? " bod-view" : ""}`} ref={tableRef}>
           <thead>
             <tr>
               <th className="specification-column">Specification</th>
@@ -686,7 +686,7 @@ function App() {
                     <a href={row.jiraUrl} target="_blank" rel="noreferrer">
                       {row.summary}
                     </a>
-                    {row.updated ? (
+                    {!bodOnly && row.updated ? (
                       <div className="spec-updated">
                         Last Update . {formatUpdateDate(row.updated)}
                       </div>

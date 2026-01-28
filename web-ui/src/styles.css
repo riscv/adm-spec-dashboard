@@ -608,6 +608,11 @@ th.share-column {
   color: var(--muted);
 }
 
+.bod-view th,
+.bod-view td {
+  font-size: 11pt;
+}
+
 .back-to-top {
   position: fixed;
   right: 24px;
