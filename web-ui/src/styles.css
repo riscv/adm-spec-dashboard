@@ -611,6 +611,11 @@ th.share-column {
 .bod-view th,
 .bod-view td {
   font-size: 11pt;
+  white-space: nowrap;
+}
+
+.bod-view td.specification-column {
+  white-space: nowrap;
 }
 
 .back-to-top {

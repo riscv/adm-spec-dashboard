@@ -47,7 +47,9 @@ def parse_issues(issues):
         url = "https://riscv.atlassian.net/browse/" + issue_key
         summary = fields.get('summary')
         status = fields.get('status', {}).get('name')
-        isa_or_non_isa = fields.get('customfield_10042', {}).get('value')
+        isa_or_non_isa = (
+            fields.get('customfield_10042', {}).get('value') if fields.get('customfield_10042') else "Not Set Yet"
+        )
         updated = fields.get('updated')
 
         # Safely accessing custom fields with a fallback to "Not Planned Yet" if None
