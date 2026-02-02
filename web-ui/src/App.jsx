@@ -303,12 +303,18 @@ function formatUpdateDate(value) {
   return `${month} ${day} ${year}`;
 }
 
+function getInitialBodOnly() {
+  const params = new URLSearchParams(window.location.search);
+  const filter = params.get("filter");
+  return filter === "bod";
+}
+
 function App() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [bodOnly, setBodOnly] = useState(false);
+  const [bodOnly, setBodOnly] = useState(getInitialBodOnly);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   const tableRef = useRef(null);
@@ -469,6 +475,16 @@ function App() {
       addResizers(tableRef.current);
     }
   }, [rows]);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (bodOnly) {
+      url.searchParams.set("filter", "bod");
+    } else {
+      url.searchParams.delete("filter");
+    }
+    window.history.replaceState({}, "", url);
+  }, [bodOnly]);
 
   const displayRows = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
