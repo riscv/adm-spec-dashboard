@@ -1,5 +1,6 @@
 Jira URL,Summary,Status,BoD Report,Updated,ISA or NON-ISA?,GitHub,Baseline Ratification Quarter,Target Ratification Quarter,Ratification Progress,Previous Ratification Progress
 https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,2026-01-17T04:39:04.448-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
+https://riscv.atlassian.net/browse/RVS-4146,Platform Management Interface - RPMI (2.0),Specification in Planning,No,2026-02-08T19:52:31.334-0700,NON-ISA,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-4344,SPMP for Hypervisor,Specification in Planning,No,2026-02-07T07:05:44.308-0700,ISA,https://github.com/riscv/riscv-memory-protection-hypervisor,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-4335,'Shadow Stacks s for M-mode, M+U systems, and SPMP',Specification Under Stabilization,No,2026-02-04T06:59:16.258-0700,ISA,https://github.com/ved-rivos/riscv-isa-manual/blob/smpmpss/src/smcfiss.adoc,26Q3,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1971,Dot-Product (Zvqdot/Zvdot4a8i),Specification in Planning,No,2026-02-03T17:16:02.588-0700,ISA,https://github.com/riscv/riscv-isa-manual/pull/2576,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
@@ -23,7 +24,6 @@ https://riscv.atlassian.net/browse/RVS-1017,Fast Interrupts (CLIC),Specification
 https://riscv.atlassian.net/browse/RVS-3826,RISC-V Quality of Service Controllers Table (RQSC),Specification in Freeze,Yes,2026-01-19T17:25:56.655-0700,NON-ISA,https://github.com/riscv-non-isa/riscv-rqsc,26Q2,26Q2,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1618,Confidential VM Extension (CoVE) with I/O,Specification in Freeze,No,2026-01-19T17:23:10.393-0700,NON-ISA,https://github.com/riscv-non-isa/riscv-ap-tee-io,24Q3,26Q2,Exposed,On Track
 https://riscv.atlassian.net/browse/RVS-3982,Sdtrig Enhancements (Sdtrigpend and Sdtrigepm),Specification Under Development,No,2026-01-19T09:41:10.818-0700,ISA,Not Set Yet,25Q4,26Q4,On Track,On Track
-https://riscv.atlassian.net/browse/RVS-4146,Platform Management Interface - RPMI (2.0),Specification Inception,No,2026-01-19T08:53:52.132-0700,NON-ISA,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-3312,RVM Profile,Specification in Planning,Yes,2026-01-17T05:13:56.701-0700,ISA,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-4114,Speculation Barriers,Specification in Planning,No,2026-01-17T05:13:29.802-0700,ISA,https://github.com/riscv/spec-barrier,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-2360,Post Quantum Cryptography,Specification in Planning,No,2026-01-17T05:13:00.086-0700,ISA,https://github.com/riscv/riscv-pqc,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
