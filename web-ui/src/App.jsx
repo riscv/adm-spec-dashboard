@@ -638,7 +638,7 @@ function App() {
           </label>
           <span className="toolbar-divider" aria-hidden="true">|</span>
           <a
-            href="https://riscv-admin.github.io/riscv-sde/"
+            href="https://riscv.github.io/adm-riscv-sde/"
             target="_blank"
             rel="noreferrer"
             className="toolbar-link"
@@ -646,7 +646,7 @@ function App() {
             <span className="toolbar-text">Specification Development Explorer</span>
           </a>
         </div>
-        
+
         <div className="status-legend">
           <span className="legend-label">Target Ratification Quarter:</span>
           <div className="legend-item">
