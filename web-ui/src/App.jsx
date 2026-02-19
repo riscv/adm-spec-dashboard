@@ -681,7 +681,7 @@ function App() {
               <th className="narrow-column">Planned Ratification Quarter</th>
               <th className="narrow-column">Target Ratification Quarter</th>
               <th className="narrow-column">Current Status</th>
-              {!bodOnly && <th className="github-column">GitHub</th>}
+              <th className="github-column">GitHub</th>
               {!bodOnly && <th className="share-column">Share</th>}
             </tr>
           </thead>
@@ -745,58 +745,56 @@ function App() {
                   <td className={`narrow-column ${statusClassName(row.ratificationProgress)}`}>
                     {row.ratificationProgress}
                   </td>
-                  {!bodOnly && (
-                    <td>
-                      {hasGithub ? (
-                        <div className="icon-group">
+                  <td>
+                    {hasGithub ? (
+                      <div className="icon-group">
+                        <a
+                          href={githubValue}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="icon-link"
+                          title="GitHub Repository"
+                        >
+                          <img
+                            src={`${assetBase}github-mark.svg`}
+                            alt="GitHub Logo"
+                            width="20"
+                            height="20"
+                            className="icon-img"
+                          />
+                        </a>
+                        {latestReleaseUrl ? (
                           <a
-                            href={githubValue}
+                            href={latestReleaseUrl}
                             target="_blank"
                             rel="noreferrer"
                             className="icon-link"
-                            title="GitHub Repository"
+                            title="Latest Release"
                           >
                             <img
-                              src={`${assetBase}github-mark.svg`}
-                              alt="GitHub Logo"
-                              width="20"
-                              height="20"
+                              src={`${assetBase}release-tag.svg`}
+                              alt="Latest release"
+                              width="18"
+                              height="18"
                               className="icon-img"
                             />
                           </a>
-                          {latestReleaseUrl ? (
-                            <a
-                              href={latestReleaseUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="icon-link"
-                              title="Latest Release"
-                            >
-                              <img
-                                src={`${assetBase}release-tag.svg`}
-                                alt="Latest release"
-                                width="18"
-                                height="18"
-                                className="icon-img"
-                              />
-                            </a>
-                          ) : (
-                            <span className="icon-disabled" title="No releases available">
-                              <img
-                                src={`${assetBase}release-tag.svg`}
-                                alt="No releases available"
-                                width="18"
-                                height="18"
-                                className="icon-img"
-                              />
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        "N/A"
-                      )}
-                    </td>
-                  )}
+                        ) : (
+                          <span className="icon-disabled" title="No releases available">
+                            <img
+                              src={`${assetBase}release-tag.svg`}
+                              alt="No releases available"
+                              width="18"
+                              height="18"
+                              className="icon-img"
+                            />
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      "N/A"
+                    )}
+                  </td>
                   {!bodOnly && (
                     <td className="narrow-column">
                       <button
