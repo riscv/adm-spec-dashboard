@@ -1,5 +1,6 @@
 Jira URL,Summary,Status,BoD Report,Updated,ISA or NON-ISA?,GitHub,Baseline Ratification Quarter,Target Ratification Quarter,Ratification Progress,Previous Ratification Progress
 https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,2026-01-17T04:39:04.448-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
+https://riscv.atlassian.net/browse/RVS-2770,Performance Event Sampling,Specification Under Development,No,2026-02-26T12:09:42.066-0700,ISA,https://github.com/riscv/riscv-performance-event-sampling,25Q3,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-4344,SPMP for Hypervisor,Specification in Planning,No,2026-02-24T03:27:50.649-0700,ISA,https://github.com/riscv/riscv-spmp/tree/main/spmp-for-hyp,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-1017,Fast Interrupts (CLIC),Specification Under Stabilization,Yes,2026-02-20T08:26:03.177-0700,ISA,https://github.com/riscv/riscv-fast-interrupt,24Q4,26Q4,On Track,Late
 https://riscv.atlassian.net/browse/RVS-1781,Server Platform,Specification in Ratification-Ready,Yes,2026-02-18T07:23:00.701-0700,NON-ISA,https://github.com/riscv-non-isa/riscv-server-platform,25Q4,26Q2,On Track,On Track
@@ -19,7 +20,6 @@ https://riscv.atlassian.net/browse/RVS-3923,Vector Matrix Extension (VME),Specif
 https://riscv.atlassian.net/browse/RVS-1790,Attached Matrix Extension (AME),Specification in Planning,Yes,2026-01-27T23:26:47.851-0700,ISA,https://github.com/riscv/riscv-riscv-ame,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-1895,Dynamic RVTSO,Specification Under Development,No,2026-01-27T23:26:35.566-0700,ISA,https://github.com/riscv/riscv-ssdtso,24Q1,26Q4,Exposed,On Track
 https://riscv.atlassian.net/browse/RVS-3896,Integer Vector Absolute Difference (Zvabd),Specification Under Stabilization,No,2026-01-27T23:25:41.665-0700,ISA,https://github.com/riscv/integer-vector-absolute-difference,26Q2,26Q3,On Track,On Track
-https://riscv.atlassian.net/browse/RVS-2770,Performance Event Sampling,Specification Under Development,No,2026-01-27T23:25:24.898-0700,ISA,https://github.com/riscv/riscv-performance-event-sampling,25Q3,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1930,Integrated Matrix Extension (IME),Specification Under Development,Yes,2026-01-27T23:24:56.716-0700,ISA,https://github.com/riscv/integrated-matrix-extension,26Q3,26Q3,On Track,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-4184,RVB23.1,Specification Under Stabilization,No,2026-01-27T18:13:42.367-0700,ISA,https://github.com/riscv/riscv-profiles,26Q2,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-4180,RVA23.1,Specification Under Stabilization,No,2026-01-27T18:11:55.046-0700,ISA,https://github.com/riscv/riscv-profiles,26Q2,26Q3,On Track,On Track
