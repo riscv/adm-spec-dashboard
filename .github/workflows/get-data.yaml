@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.GHTOKEN }}
 
@@ -52,7 +52,7 @@ jobs:
 
       - name: Upload Data
         if: steps.run_container.outcome == 'success'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
             name: spec-data.csv
             path: ${{ github.workspace }}/*.csv
