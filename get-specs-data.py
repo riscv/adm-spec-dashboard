@@ -35,6 +35,40 @@ def normalize_bod_report_value(value):
     return text
 
 
+def fetch_all_issues(jira, jql, page_size=100):
+    issues = []
+
+    if jira.cloud:
+        next_page_token = None
+        while True:
+            response = jira.enhanced_jql(jql=jql, limit=page_size, nextPageToken=next_page_token)
+            batch = response.get('issues', []) if response else []
+            if not batch:
+                break
+
+            issues.extend(batch)
+            next_page_token = response.get('nextPageToken')
+            if not next_page_token:
+                break
+
+        return issues
+
+    start = 0
+    while True:
+        response = jira.jql(jql=jql, start=start, limit=page_size)
+        batch = response.get('issues', []) if response else []
+        if not batch:
+            break
+
+        issues.extend(batch)
+        start += len(batch)
+        total = response.get('total')
+        if total is not None and start >= total:
+            break
+
+    return issues
+
+
 # Function to parse and extract issue details
 def parse_issues(issues):
     parsed_issues = []
@@ -108,12 +142,12 @@ def get_data_from_jira(jira_token, jira_email):
 
     # JQL query to fetch required issues
     jql = ('project = RVS AND '
-           'issuetype not in subTaskIssueTypes() '
+           'issuetype not in subTaskIssueTypes() AND '
+           'status NOT IN ("Specification Ratified", "Specification Not Ratified") '
            'ORDER BY priority DESC, updated DESC')
 
     # Extract issues from the JSON data
-    all_issues = jira.jql(jql)
-    issues = all_issues.get('issues', [])
+    issues = fetch_all_issues(jira, jql)
     parsed_issues = parse_issues(issues)
 
     # Generating the CSV filename with current date and time
@@ -140,20 +174,19 @@ def get_data_from_jira(jira_token, jira_email):
 
         # Writing each issue to the CSV file
         for issue in parsed_issues:
-            if issue['Status'] != "Specification Ratified" and issue['Status'] != "Specification Not Ratified":
-                writer.writerow([
-                    issue['URL'],
-                    issue['Summary'],
-                    issue['Status'],
-                    issue['BoD Report'],
-                    issue['Updated'],
-                    issue['ISA or NON-ISA'],
-                    issue['GitHub'],
-                    issue['Baseline Ratification Quarter'],
-                    issue['Target Ratification Quarter'],
-                    issue['Ratification Progress'],
-                    issue['Previous Ratification Progress']
-                ])
+            writer.writerow([
+                issue['URL'],
+                issue['Summary'],
+                issue['Status'],
+                issue['BoD Report'],
+                issue['Updated'],
+                issue['ISA or NON-ISA'],
+                issue['GitHub'],
+                issue['Baseline Ratification Quarter'],
+                issue['Target Ratification Quarter'],
+                issue['Ratification Progress'],
+                issue['Previous Ratification Progress']
+            ])
 
     print(f"Data successfully written to {csv_filename}")
 
