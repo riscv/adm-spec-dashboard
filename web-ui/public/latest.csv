@@ -1,5 +1,6 @@
 Jira URL,Summary,Status,BoD Report,Updated,ISA or NON-ISA?,GitHub,Baseline Ratification Quarter,Target Ratification Quarter,Ratification Progress,Previous Ratification Progress
 https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,2026-03-19T17:27:05.802-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
+https://riscv.atlassian.net/browse/RVS-3131,Self-hosted Trace,Specification in Planning,No,2026-03-20T09:32:27.498-0700,ISA,https://github.com/riscv/self-hosted-trace,Not Set Yet,Not Set Yet,Not Set Yet,On Track
 https://riscv.atlassian.net/browse/RVS-2362,High Assurance Cryptography (HAC),Specification Under Development,No,2026-03-20T05:10:39.224-0700,ISA,https://github.com/riscv/riscv-high-assurance-cryptography,26Q4,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-4171,RHTI trcstate Extension,Specification in Planning,No,2026-03-20T04:33:16.366-0700,NON-ISA,https://github.com/riscv-non-isa/hart-trace-interface,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-4454, Implicit Return Extension to the Enhanced Trace for RISC-V 2.0,Specification in Planning,No,2026-03-20T04:32:19.194-0700,NON-ISA,https://github.com/riscv-non-isa/riscv-trace-spec/pull/264,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
@@ -12,7 +13,6 @@ https://riscv.atlassian.net/browse/RVS-4114,Speculation Barriers,Specification i
 https://riscv.atlassian.net/browse/RVS-3923,Vector Matrix Extension (VME),Specification in Planning,Yes,2026-03-19T17:27:09.736-0700,ISA,https://github.com/riscv/riscv-vme,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-3569,Timing Fences,Specification in Planning,No,2026-03-19T17:27:08.585-0700,ISA,https://github.com/riscv/riscv-timing-fences,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-3312,RVM Profile,Specification in Planning,Yes,2026-03-19T17:27:07.733-0700,ISA,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
-https://riscv.atlassian.net/browse/RVS-3131,Self-hosted Trace,Specification in Planning,No,2026-03-19T17:27:06.907-0700,ISA,https://github.com/riscv/self-hosted-trace,Not Set Yet,Not Set Yet,Not Set Yet,On Track
 https://riscv.atlassian.net/browse/RVS-2706,Memory Tagging,Specification in Planning,No,2026-03-19T17:27:04.982-0700,ISA,https://github.com/riscv/riscv-memory-tagging,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-2611,Composable Custom Extensions,Specification in Planning,No,2026-03-19T17:27:03.622-0700,ISA,https://github.com/riscv/composable-custom-extensions,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-1971,Dot-Product (Zvqdot/Zvdot4a8i),Specification in Planning,No,2026-03-19T17:27:02.922-0700,ISA,https://github.com/riscv/riscv-isa-manual/pull/2576,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
