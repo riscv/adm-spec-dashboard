@@ -1,5 +1,6 @@
 Jira URL,Summary,Status,BoD Report,Updated,ISA or NON-ISA?,GitHub,Baseline Ratification Quarter,Target Ratification Quarter,Ratification Progress,Previous Ratification Progress
 https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,2026-03-19T17:27:05.802-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
+https://riscv.atlassian.net/browse/RVS-1017,Fast Interrupts (CLIC),Specification Under Stabilization,Yes,2026-03-23T08:40:24.482-0700,ISA,https://github.com/riscv/riscv-fast-interrupt,24Q4,26Q3,On Track,Late
 https://riscv.atlassian.net/browse/RVS-3131,Self-hosted Trace,Specification in Planning,No,2026-03-20T09:32:27.498-0700,ISA,https://github.com/riscv/self-hosted-trace,Not Set Yet,Not Set Yet,Not Set Yet,On Track
 https://riscv.atlassian.net/browse/RVS-2362,High Assurance Cryptography (HAC),Specification Under Development,No,2026-03-20T05:10:39.224-0700,ISA,https://github.com/riscv/riscv-high-assurance-cryptography,26Q4,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-4171,RHTI trcstate Extension,Specification in Planning,No,2026-03-20T04:33:16.366-0700,NON-ISA,https://github.com/riscv-non-isa/hart-trace-interface,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
@@ -42,7 +43,6 @@ https://riscv.atlassian.net/browse/RVS-793,Input/Output Physical Memory Protecti
 https://riscv.atlassian.net/browse/RVS-4335,'Shadow Stacks s for M-mode, M+U systems, and SPMP',Specification Under Stabilization,No,2026-03-19T16:42:43.703-0700,ISA,https://github.com/ved-rivos/riscv-isa-manual/blob/smpmpss/src/smcfiss.adoc,26Q3,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-3828,Branch with Immediate (Zibi),Specification Under Stabilization,No,2026-03-19T16:42:42.812-0700,ISA,https://github.com/riscv/zibi,26Q2,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-4161,Vector Unzip Instruction (Zvzip),Specification Under Stabilization,No,2026-03-19T16:42:42.221-0700,ISA,https://github.com/ved-rivos/riscv-isa-manual/blob/zvzip/src/zvzip.adoc,26Q4,26Q3,On Track,On Track
-https://riscv.atlassian.net/browse/RVS-1017,Fast Interrupts (CLIC),Specification Under Stabilization,Yes,2026-03-19T16:42:41.482-0700,ISA,https://github.com/riscv/riscv-fast-interrupt,24Q4,26Q3,On Track,Late
 https://riscv.atlassian.net/browse/RVS-4146,Platform Management Interface - RPMI (2.0),Specification Under Development,No,2026-03-19T16:42:39.006-0700,NON-ISA,Not Set Yet,27Q1,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-3982,Sdtrig Enhancements (Sdtrigpend and Sdtrigepm),Specification Under Development,No,2026-03-19T16:42:38.423-0700,ISA,Not Set Yet,25Q4,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-2770,Performance Event Sampling,Specification Under Development,No,2026-03-19T16:42:36.245-0700,ISA,https://github.com/riscv/riscv-performance-event-sampling,25Q3,26Q4,On Track,On Track
