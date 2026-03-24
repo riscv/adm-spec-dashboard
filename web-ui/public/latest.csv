@@ -1,5 +1,6 @@
 Jira URL,Summary,Status,BoD Report,Updated,ISA or NON-ISA?,GitHub,Baseline Ratification Quarter,Target Ratification Quarter,Ratification Progress,Previous Ratification Progress
-https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,2026-03-19T17:27:05.802-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
+https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,2026-03-24T08:19:00.664-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
+https://riscv.atlassian.net/browse/RVS-1792,External Debug Security,Specification in Freeze,No,2026-03-24T06:59:05.175-0700,ISA + NON-ISA,https://github.com/riscv-non-isa/riscv-external-debug-security,25Q4,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1017,Fast Interrupts (CLIC),Specification Under Stabilization,Yes,2026-03-23T08:40:24.482-0700,ISA,https://github.com/riscv/riscv-fast-interrupt,24Q4,26Q3,On Track,Late
 https://riscv.atlassian.net/browse/RVS-3131,Self-hosted Trace,Specification in Planning,No,2026-03-20T09:32:27.498-0700,ISA,https://github.com/riscv/self-hosted-trace,Not Set Yet,Not Set Yet,Not Set Yet,On Track
 https://riscv.atlassian.net/browse/RVS-2362,High Assurance Cryptography (HAC),Specification Under Development,No,2026-03-20T05:10:39.224-0700,ISA,https://github.com/riscv/riscv-high-assurance-cryptography,26Q4,26Q4,On Track,On Track
@@ -34,7 +35,6 @@ https://riscv.atlassian.net/browse/RVS-2141,CHERI,Specification in Freeze,Yes,20
 https://riscv.atlassian.net/browse/RVS-2940,RISC-V Worlds,Specification in Freeze,Yes,2026-03-19T16:42:59.172-0700,ISA,https://github.com/riscv/wordguard,25Q4,26Q3,On Track,Late
 https://riscv.atlassian.net/browse/RVS-1915,Extra Vector Carry-Less/Crypto Extensions,Specification in Freeze,No,2026-03-19T16:42:58.728-0700,ISA,https://github.com/riscv/riscv-isa-manual/pull/2369,24Q4,26Q3,On Track,Exposed
 https://riscv.atlassian.net/browse/RVS-1906,Confidential VM Extension (CoVE),Specification in Freeze,Yes,2026-03-19T16:42:57.492-0700,NON-ISA,https://github.com/riscv-non-isa/riscv-ap-tee,24Q4,26Q3,On Track,On Track
-https://riscv.atlassian.net/browse/RVS-1792,External Debug Security,Specification in Freeze,No,2026-03-19T16:42:56.076-0700,ISA + NON-ISA,https://github.com/riscv-non-isa/riscv-external-debug-security,25Q4,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1618,Confidential VM Extension (CoVE) with I/O,Specification in Freeze,No,2026-03-19T16:42:54.385-0700,NON-ISA,https://github.com/riscv-non-isa/riscv-ap-tee-io,24Q3,26Q3,Exposed,On Track
 https://riscv.atlassian.net/browse/RVS-1345,Supervisor Domains Access Protection (Smmtt),Specification in Freeze,Yes,2026-03-19T16:42:52.612-0700,ISA,https://github.com/riscv/riscv-smmtt,25Q2,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1153,Security Model,Specification in Freeze,Yes,2026-03-19T16:42:51.375-0700,NON-ISA,https://github.com/riscv-non-isa/riscv-security-model,24Q4,26Q3,On Track,On Track
