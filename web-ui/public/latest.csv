@@ -1,5 +1,6 @@
 Jira URL,Summary,Status,BoD Report,Updated,ISA or NON-ISA?,GitHub,Baseline Ratification Quarter,Target Ratification Quarter,Ratification Progress,Previous Ratification Progress
 https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,2026-03-24T08:19:00.664-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
+https://riscv.atlassian.net/browse/RVS-4161,Vector Unzip Instruction (Zvzip),Specification Under Stabilization,No,2026-03-26T10:54:24.871-0700,ISA,https://github.com/riscv/riscv-isa-manual/pull/2529,26Q4,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-793,Input/Output Physical Memory Protection (IOPMP),Specification in Freeze,Yes,2026-03-26T08:37:45.191-0700,NON-ISA,https://github.com/riscv-non-isa/iopmp-spec,25Q4,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-921,S-mode Physical Memory Protection (SPMP),Specification in Freeze,Yes,2026-03-26T08:37:43.393-0700,ISA,https://github.com/riscv/riscv-spmp,24Q3,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-1153,Security Model,Specification in Freeze,Yes,2026-03-26T08:37:41.322-0700,NON-ISA,https://github.com/riscv-non-isa/riscv-security-model,24Q4,26Q3,On Track,On Track
@@ -44,7 +45,6 @@ https://riscv.atlassian.net/browse/RVS-2940,RISC-V Worlds,Specification in Freez
 https://riscv.atlassian.net/browse/RVS-1915,Extra Vector Carry-Less/Crypto Extensions,Specification in Freeze,No,2026-03-19T16:42:58.728-0700,ISA,https://github.com/riscv/riscv-isa-manual/pull/2369,24Q4,26Q3,On Track,Exposed
 https://riscv.atlassian.net/browse/RVS-4335,'Shadow Stacks s for M-mode, M+U systems, and SPMP',Specification Under Stabilization,No,2026-03-19T16:42:43.703-0700,ISA,https://github.com/ved-rivos/riscv-isa-manual/blob/smpmpss/src/smcfiss.adoc,26Q3,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-3828,Branch with Immediate (Zibi),Specification Under Stabilization,No,2026-03-19T16:42:42.812-0700,ISA,https://github.com/riscv/zibi,26Q2,26Q3,On Track,On Track
-https://riscv.atlassian.net/browse/RVS-4161,Vector Unzip Instruction (Zvzip),Specification Under Stabilization,No,2026-03-19T16:42:42.221-0700,ISA,https://github.com/ved-rivos/riscv-isa-manual/blob/zvzip/src/zvzip.adoc,26Q4,26Q3,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-4146,Platform Management Interface - RPMI (2.0),Specification Under Development,No,2026-03-19T16:42:39.006-0700,NON-ISA,Not Set Yet,27Q1,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-3982,Sdtrig Enhancements (Sdtrigpend and Sdtrigepm),Specification Under Development,No,2026-03-19T16:42:38.423-0700,ISA,Not Set Yet,25Q4,26Q4,On Track,On Track
 https://riscv.atlassian.net/browse/RVS-2770,Performance Event Sampling,Specification Under Development,No,2026-03-19T16:42:36.245-0700,ISA,https://github.com/riscv/riscv-performance-event-sampling,25Q3,26Q4,On Track,On Track
