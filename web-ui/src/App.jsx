@@ -65,6 +65,44 @@ function calculateProgress(status) {
   return { currentPhase: normalized, nextPhase };
 }
 
+const ARC_REVIEW_APPROVED_STATES = new Set([
+  "approved",
+  "ar approved",
+  "ar review not required",
+  "approval not required",
+  "not required",
+  "done",
+]);
+
+const ARC_REVIEW_IN_PROGRESS_STATES = new Set([
+  "in progress",
+  "in review",
+  "under review",
+  "ar review in progress",
+]);
+
+function getArcReviewState(row) {
+  const raw = String(row.arcReviewStatus || "").trim();
+  const lowered = raw.toLowerCase();
+  const currentIndex = WORKFLOW_PHASES.indexOf(row.currentPhase);
+  const freezeIndex = WORKFLOW_PHASES.indexOf("Freeze");
+
+  if (ARC_REVIEW_APPROVED_STATES.has(lowered)) {
+    return { kind: "completed", label: raw };
+  }
+  // If the spec has already moved past Freeze, ARC review must have happened.
+  if (currentIndex > freezeIndex) {
+    return { kind: "completed", label: raw || "Approved" };
+  }
+  if (ARC_REVIEW_IN_PROGRESS_STATES.has(lowered)) {
+    return { kind: "in-progress", label: raw };
+  }
+  if (row.currentPhase === "Freeze") {
+    return { kind: "in-progress", label: raw || "Pending ARC Review" };
+  }
+  return { kind: "upcoming", label: raw || "ARC Review" };
+}
+
 function isBodReport(value) {
   if (value === null || value === undefined) return false;
   const normalized = String(value).trim().toLowerCase();
@@ -225,6 +263,8 @@ function normalizeRow(raw) {
     github: raw["GitHub"] || "",
     bodReport,
     bodFlag: isBodReport(bodReport),
+    arcReviewStatus: raw["ARC Review Status"] || "",
+    fastTrack: /^(yes|true|y|1)$/i.test(String(raw["Fast Track"] || "").trim()),
     currentPhase,
     nextPhase,
   };
@@ -277,6 +317,7 @@ function buildEmailBody(row, phases) {
     `- Planning: ${phases["Planning"] || "N/A"}`,
     `- Development: ${phases["Development"] || "N/A"}`,
     `- Stabilization: ${phases["Stabilization"] || "N/A"}`,
+    `- ARC Review: ${phases["ARC Review"] || "N/A"}`,
     `- Freeze: ${phases["Freeze"] || "N/A"}`,
     `- Ratification-Ready: ${phases["Ratification-Ready"] || "N/A"}`,
     `- Planned Ratification Quarter: ${row.plannedQuarter || "N/A"}`,
@@ -530,10 +571,18 @@ function App() {
   const handleShare = (row) => {
     const phases = getPhaseDisplay(row);
     const subject = `Specification Details: ${row.summary || "N/A"}`;
+    const arc = getArcReviewState(row);
+    const arcLabel =
+      arc.kind === "completed"
+        ? `\u2713${arc.label ? ` (${arc.label})` : ""}`
+        : arc.kind === "in-progress"
+          ? `In Progress${arc.label ? ` (${arc.label})` : ""}`
+          : "...";
     const body = buildEmailBody(row, {
       "Planning": phases["Planning"],
       "Development": phases["Development"],
       "Stabilization": phases["Stabilization"],
+      "ARC Review": arcLabel,
       "Freeze": phases["Freeze"],
       "Ratification-Ready": phases["Ratification-Ready"],
     });
@@ -675,6 +724,7 @@ function App() {
               <th className="narrow-column">Planning</th>
               <th className="narrow-column">Dev</th>
               <th className="narrow-column">Stabilization</th>
+              <th className="narrow-column">ARC Review</th>
               <th className="narrow-column">Freeze</th>
               <th className="narrow-column">Ratification-Ready</th>
               <th className="narrow-column publication-header">Publication</th>
@@ -714,6 +764,18 @@ function App() {
                         View in Jira
                       </a>
                     </div>
+                    {row.fastTrack ? (
+                      <span
+                        className="fast-track-badge"
+                        title="Fast-Track Specification"
+                        aria-label="Fast-Track"
+                      >
+                        <span className="ft-label">FT</span>
+                        <span className="ft-rabbit" aria-hidden="true">
+                          {"\uD83D\uDC07"}
+                        </span>
+                      </span>
+                    ) : null}
                   </td>
                   <td className="narrow-column">{row.isaOrNonIsa}</td>
                   {DISPLAY_PHASES.map((phase) => {
@@ -732,13 +794,41 @@ function App() {
                       title = `Completed Phase: ${phase}`;
                     }
 
-                    return (
+                    const cell = (
                       <td className="text-center" key={`${row.summary}-${phase}`}>
                         <span className={className} title={title} style={{ whiteSpace: "nowrap" }}>
                           {content}
                         </span>
                       </td>
                     );
+
+                    if (phase !== "Stabilization") {
+                      return cell;
+                    }
+
+                    const arc = getArcReviewState(row);
+                    let arcContent = "...";
+                    let arcClass = "bg-upcoming";
+                    let arcTitle = `Upcoming: ARC Review${arc.label ? ` (${arc.label})` : ""}`;
+                    if (arc.kind === "completed") {
+                      arcContent = "\u2713";
+                      arcClass = "bg-completed";
+                      arcTitle = `ARC Review Complete${arc.label ? `: ${arc.label}` : ""}`;
+                    } else if (arc.kind === "in-progress") {
+                      arcContent = "\u23F3";
+                      arcClass = "in-progress";
+                      arcTitle = `ARC Review In Progress${arc.label ? `: ${arc.label}` : ""}`;
+                    }
+
+                    const arcCell = (
+                      <td className="text-center" key={`${row.summary}-arc-review`}>
+                        <span className={arcClass} title={arcTitle} style={{ whiteSpace: "nowrap" }}>
+                          {arcContent}
+                        </span>
+                      </td>
+                    );
+
+                    return [cell, arcCell];
                   })}
                   <td className="narrow-column">{row.plannedQuarter}</td>
                   <td className="narrow-column">{row.trendingQuarter}</td>
