@@ -65,6 +65,36 @@ function calculateProgress(status) {
   return { currentPhase: normalized, nextPhase };
 }
 
+const ARC_REVIEW_APPROVED_STATES = new Set([
+  "approved",
+  "ar approved",
+  "ar review not required",
+  "approval not required",
+  "not required",
+  "done",
+]);
+
+const ARC_REVIEW_IN_PROGRESS_STATES = new Set([
+  "approval in progress",
+  "in progress",
+  "in review",
+  "under review",
+  "ar review in progress",
+]);
+
+function getArcReviewState(row) {
+  const raw = String(row.arcReviewStatus || "").trim();
+  const lowered = raw.toLowerCase();
+
+  if (ARC_REVIEW_APPROVED_STATES.has(lowered)) {
+    return { kind: "completed", label: raw };
+  }
+  if (ARC_REVIEW_IN_PROGRESS_STATES.has(lowered)) {
+    return { kind: "in-progress", label: raw };
+  }
+  return { kind: "upcoming", label: raw || "Not Started" };
+}
+
 function isBodReport(value) {
   if (value === null || value === undefined) return false;
   const normalized = String(value).trim().toLowerCase();
@@ -133,6 +163,23 @@ function getYearProgressFraction(date = new Date()) {
   const elapsed = date - startOfYear;
   const total = startOfNextYear - startOfYear;
   return Math.min(Math.max(elapsed / total, 0), 1);
+}
+
+function getQuarterEndFractionOfYear(quarter, year = new Date().getFullYear()) {
+  const startOfYear = new Date(year, 0, 1);
+  const startOfNextYear = new Date(year + 1, 0, 1);
+  const quarterEndMonths = { 1: 2, 2: 5, 3: 8, 4: 11 };
+  const quarterEndDays = { 1: 31, 2: 30, 3: 30, 4: 31 };
+  const endOfQuarter = new Date(
+    year,
+    quarterEndMonths[quarter],
+    quarterEndDays[quarter],
+    23,
+    59,
+    59,
+    999,
+  );
+  return (endOfQuarter - startOfYear) / (startOfNextYear - startOfYear);
 }
 
 function getDaysLeftInYear(date = new Date()) {
@@ -225,6 +272,8 @@ function normalizeRow(raw) {
     github: raw["GitHub"] || "",
     bodReport,
     bodFlag: isBodReport(bodReport),
+    arcReviewStatus: raw["ARC Review Status"] || "",
+    fastTrack: /^(yes|true|y|1)$/i.test(String(raw["Fast Track"] || "").trim()),
     currentPhase,
     nextPhase,
   };
@@ -277,6 +326,7 @@ function buildEmailBody(row, phases) {
     `- Planning: ${phases["Planning"] || "N/A"}`,
     `- Development: ${phases["Development"] || "N/A"}`,
     `- Stabilization: ${phases["Stabilization"] || "N/A"}`,
+    `- ARC Review: ${phases["ARC Review"] || "N/A"}`,
     `- Freeze: ${phases["Freeze"] || "N/A"}`,
     `- Ratification-Ready: ${phases["Ratification-Ready"] || "N/A"}`,
     `- Planned Ratification Quarter: ${row.plannedQuarter || "N/A"}`,
@@ -530,10 +580,18 @@ function App() {
   const handleShare = (row) => {
     const phases = getPhaseDisplay(row);
     const subject = `Specification Details: ${row.summary || "N/A"}`;
+    const arc = getArcReviewState(row);
+    const arcLabel =
+      arc.kind === "completed"
+        ? `\u2713${arc.label ? ` (${arc.label})` : ""}`
+        : arc.kind === "in-progress"
+          ? `In Progress${arc.label ? ` (${arc.label})` : ""}`
+          : "...";
     const body = buildEmailBody(row, {
       "Planning": phases["Planning"],
       "Development": phases["Development"],
       "Stabilization": phases["Stabilization"],
+      "ARC Review": arcLabel,
       "Freeze": phases["Freeze"],
       "Ratification-Ready": phases["Ratification-Ready"],
     });
@@ -586,10 +644,15 @@ function App() {
           <div className="timeline-fill">
             <div className="timeline-fill-past" style={{ width: `${yearProgress}%` }}></div>
           </div>
-          {[1, 2, 3, 4].map((quarter) => (
+          {[1, 2, 3, 4].map((quarter) => {
+            let pointState = "";
+            if (quarter < currentQuarter) pointState = " completed";
+            else if (quarter === currentQuarter) pointState = " current";
+            return (
             <div
               key={quarter}
-              className={`timeline-point${quarter === currentQuarter ? " current" : ""}`}
+              className={`timeline-point${pointState}`}
+              style={{ left: `${getQuarterEndFractionOfYear(quarter) * 100}%` }}
             >
               <div className="timeline-label">
                 <div>
@@ -606,7 +669,8 @@ function App() {
                 ) : null}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         <div id="searchContainer">
@@ -675,6 +739,7 @@ function App() {
               <th className="narrow-column">Planning</th>
               <th className="narrow-column">Dev</th>
               <th className="narrow-column">Stabilization</th>
+              <th className="narrow-column">ARC Review</th>
               <th className="narrow-column">Freeze</th>
               <th className="narrow-column">Ratification-Ready</th>
               <th className="narrow-column publication-header">Publication</th>
@@ -714,6 +779,15 @@ function App() {
                         View in Jira
                       </a>
                     </div>
+                    {row.fastTrack ? (
+                      <span
+                        className="fast-track-badge"
+                        title="Fast-Track Specification"
+                        aria-label="Fast-Track"
+                      >
+                        <span className="ft-label">FT</span>
+                      </span>
+                    ) : null}
                   </td>
                   <td className="narrow-column">{row.isaOrNonIsa}</td>
                   {DISPLAY_PHASES.map((phase) => {
@@ -732,13 +806,41 @@ function App() {
                       title = `Completed Phase: ${phase}`;
                     }
 
-                    return (
+                    const cell = (
                       <td className="text-center" key={`${row.summary}-${phase}`}>
                         <span className={className} title={title} style={{ whiteSpace: "nowrap" }}>
                           {content}
                         </span>
                       </td>
                     );
+
+                    if (phase !== "Stabilization") {
+                      return cell;
+                    }
+
+                    const arc = getArcReviewState(row);
+                    let arcContent = "...";
+                    let arcClass = "bg-upcoming";
+                    let arcTitle = `Upcoming: ARC Review${arc.label ? ` (${arc.label})` : ""}`;
+                    if (arc.kind === "completed") {
+                      arcContent = "\u2713";
+                      arcClass = "bg-completed";
+                      arcTitle = `ARC Review Complete${arc.label ? `: ${arc.label}` : ""}`;
+                    } else if (arc.kind === "in-progress") {
+                      arcContent = "\u23F3";
+                      arcClass = "in-progress";
+                      arcTitle = `ARC Review In Progress${arc.label ? `: ${arc.label}` : ""}`;
+                    }
+
+                    const arcCell = (
+                      <td className="text-center" key={`${row.summary}-arc-review`}>
+                        <span className={arcClass} title={arcTitle} style={{ whiteSpace: "nowrap" }}>
+                          {arcContent}
+                        </span>
+                      </td>
+                    );
+
+                    return [cell, arcCell];
                   })}
                   <td className="narrow-column">{row.plannedQuarter}</td>
                   <td className="narrow-column">{row.trendingQuarter}</td>
