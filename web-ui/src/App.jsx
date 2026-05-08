@@ -326,8 +326,8 @@ function buildEmailBody(row, phases) {
     `- Planning: ${phases["Planning"] || "N/A"}`,
     `- Development: ${phases["Development"] || "N/A"}`,
     `- Stabilization: ${phases["Stabilization"] || "N/A"}`,
-    `- ARC Review: ${phases["ARC Review"] || "N/A"}`,
-    `- Freeze: ${phases["Freeze"] || "N/A"}`,
+    `- Freeze - ARC Approval: ${phases["ARC Review"] || "N/A"}`,
+    `- Freeze - Tasks: ${phases["Freeze"] || "N/A"}`,
     `- Ratification-Ready: ${phases["Ratification-Ready"] || "N/A"}`,
     `- Planned Ratification Quarter: ${row.plannedQuarter || "N/A"}`,
     `- Target Ratification Quarter: ${row.trendingQuarter || "N/A"}`,
@@ -734,20 +734,23 @@ function App() {
         <table className={`table table-bordered${bodOnly ? " bod-view" : ""}`} ref={tableRef}>
           <thead>
             <tr>
-              <th className="specification-column">Specification</th>
-              <th className="narrow-column">ISA?</th>
-              <th className="narrow-column">Planning</th>
-              <th className="narrow-column">Dev</th>
-              <th className="narrow-column">Stabilization</th>
-              <th className="narrow-column">ARC Review</th>
-              <th className="narrow-column">Freeze</th>
-              <th className="narrow-column">Ratification-Ready</th>
-              <th className="narrow-column publication-header">Publication</th>
-              <th className="narrow-column">Planned Ratification Quarter</th>
-              <th className="narrow-column">Target Ratification Quarter</th>
-              <th className="narrow-column">Current Status</th>
-              <th className="github-column">GitHub</th>
-              {!bodOnly && <th className="share-column">Share</th>}
+              <th className="specification-column" rowSpan={2}>Specification</th>
+              <th className="narrow-column" rowSpan={2}>ISA?</th>
+              <th className="narrow-column" rowSpan={2}>Planning</th>
+              <th className="narrow-column" rowSpan={2}>Dev</th>
+              <th className="narrow-column" rowSpan={2}>Stabilization</th>
+              <th className="narrow-column freeze-group-header" colSpan={2}>Freeze</th>
+              <th className="narrow-column" rowSpan={2}>Ratification-Ready</th>
+              <th className="narrow-column publication-header" rowSpan={2}>Publication</th>
+              <th className="narrow-column" rowSpan={2}>Planned Ratification Quarter</th>
+              <th className="narrow-column" rowSpan={2}>Target Ratification Quarter</th>
+              <th className="narrow-column" rowSpan={2}>Current Status</th>
+              <th className="github-column" rowSpan={2}>GitHub</th>
+              {!bodOnly && <th className="share-column" rowSpan={2}>Share</th>}
+            </tr>
+            <tr>
+              <th className="narrow-column freeze-subheader">ARC Approval</th>
+              <th className="narrow-column freeze-subheader">Tasks</th>
             </tr>
           </thead>
           <tbody>
@@ -821,15 +824,15 @@ function App() {
                     const arc = getArcReviewState(row);
                     let arcContent = "...";
                     let arcClass = "bg-upcoming";
-                    let arcTitle = `Upcoming: ARC Review${arc.label ? ` (${arc.label})` : ""}`;
+                    let arcTitle = `Upcoming: ARC Approval${arc.label ? ` (${arc.label})` : ""}`;
                     if (arc.kind === "completed") {
                       arcContent = "\u2713";
                       arcClass = "bg-completed";
-                      arcTitle = `ARC Review Complete${arc.label ? `: ${arc.label}` : ""}`;
+                      arcTitle = `ARC Approval Complete${arc.label ? `: ${arc.label}` : ""}`;
                     } else if (arc.kind === "in-progress") {
                       arcContent = "\u23F3";
                       arcClass = "in-progress";
-                      arcTitle = `ARC Review In Progress${arc.label ? `: ${arc.label}` : ""}`;
+                      arcTitle = `ARC Approval In Progress${arc.label ? `: ${arc.label}` : ""}`;
                     }
 
                     const arcCell = (

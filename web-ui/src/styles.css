@@ -189,15 +189,38 @@ th {
   font-weight: 600;
   white-space: normal;
   vertical-align: middle;
-  min-height: 10px;
+  min-height: 0;
+  padding: 3px 8px;
+  line-height: 1.1;
   position: sticky;
   top: 0;
   z-index: 2;
 }
 
+th.freeze-group-header {
+  background-color: #eef2f8;
+  border-bottom: 1px solid var(--border);
+  padding: 2px 8px;
+}
+
+th.freeze-subheader {
+  background-color: #f5f7fb;
+  font-weight: 500;
+  font-size: 9pt;
+  padding: 2px 8px;
+  position: sticky;
+  top: var(--freeze-subheader-top, 22px);
+  z-index: 2;
+}
+
+.bod-view th.freeze-subheader {
+  font-size: 10.5pt;
+  top: var(--freeze-subheader-top, 26px);
+}
+
 th.publication-header {
   position: sticky;
-  padding-top: 18px;
+  padding-top: 14px;
 }
 
 th.publication-header::before {
