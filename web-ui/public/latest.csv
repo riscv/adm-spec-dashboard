@@ -1,5 +1,6 @@
 Jira URL,Summary,Status,BoD Report,ARC Review Status,Fast Track,Updated,ISA or NON-ISA?,GitHub,Baseline Ratification Quarter,Target Ratification Quarter,Ratification Progress,Previous Ratification Progress
 https://riscv.atlassian.net/browse/RVS-3102,Trigger Delegation,Specification in Planning,No,,Yes,2026-03-24T08:19:00.664-0700,ISA,https://github.com/riscv/ft-trigger-delegation,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
+https://riscv.atlassian.net/browse/RVS-4752,Instrumentation Trace,Specification Inception,No,,No,2026-06-04T09:46:13.235-0700,NON-ISA,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-1930,Integrated Matrix Extension (IME),Specification Under Stabilization,Yes,,No,2026-06-01T09:24:56.567-0700,ISA,https://github.com/riscv/integrated-matrix-extension,26Q3,26Q4,On Track,Exposed
 https://riscv.atlassian.net/browse/RVS-1790,Attached Matrix Extension (AME),Specification in Planning,Yes,,No,2026-06-01T08:24:25.530-0700,ISA,https://github.com/riscv/riscv-riscv-ame,Not Set Yet,27Q1,Not Set Yet,Not Set Yet
 https://riscv.atlassian.net/browse/RVS-921,S-mode Physical Memory Protection (SPMP),Specification in Ratification-Ready,Yes,AR Approved,No,2026-05-22T12:02:45.802-0700,ISA,https://github.com/riscv/riscv-spmp,24Q3,26Q3,On Track,On Track
