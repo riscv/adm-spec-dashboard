@@ -129,15 +129,20 @@ h2 {
 .table-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--surface);
   border-radius: 16px;
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
   padding: 8px;
   position: relative;
+}
+
+.table-scroll {
+  width: 100%;
 }
 
 .table-toolbar {
@@ -691,5 +696,136 @@ th.share-column {
 @media (max-width: 900px) {
   #searchInput {
     width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 12px 10px 32px;
+  }
+
+  h2 {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .title-logo {
+    height: 26px;
+  }
+
+  /* Toolbar items stack instead of colliding */
+  .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 8px 8px 0;
+  }
+
+  .ratification-forecast {
+    margin-right: 0;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .toolbar-divider {
+    display: none;
+  }
+
+  /* Legend wraps onto multiple lines */
+  .status-legend {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 8px 16px;
+    white-space: normal;
+  }
+
+  /* The inner pane becomes the scroll viewport so BOTH the header row
+     (sticky top) and the first column (sticky left) freeze against it,
+     spreadsheet-style. The toolbar/legend stay above it, outside the scroll. */
+  .table-container {
+    border-radius: 12px;
+    padding: 6px;
+    overflow: visible;
+  }
+
+  .table-scroll {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: 72vh;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  /* Shrink the forced-wide Specification column so the table fits better */
+  th.specification-column,
+  td.specification-column {
+    width: auto !important;
+    min-width: 160px;
+    max-width: 200px;
+  }
+
+  th.specification-column {
+    white-space: normal;
+  }
+
+  /* Freeze the Specification column while scrolling the table sideways.
+     Sticky cells must be opaque, so give them a solid background that
+     matches the row's status color, plus a shadow to mark the frozen edge. */
+  th.specification-column,
+  td.specification-column {
+    position: sticky;
+    left: 0;
+    box-shadow: 2px 0 5px rgba(23, 64, 103, 0.12);
+  }
+
+  td.specification-column {
+    z-index: 1;
+    background-color: #ffffff;
+  }
+
+  th.specification-column {
+    /* top corner: above both the sticky header row and the sticky column */
+    z-index: 4;
+  }
+
+  tr.on-track td.specification-column {
+    background-color: #d7f1dc;
+  }
+  tr.exposed td.specification-column {
+    background-color: #fef3d6;
+  }
+  tr.late td.specification-column {
+    background-color: #fde2e2;
+  }
+  tr.completed td.specification-column {
+    background-color: #dceff2;
+  }
+  tr.not-set-yet td.specification-column {
+    background-color: #e3e2e2;
+  }
+
+  table {
+    font-size: 8pt;
+    /* overflow:hidden (set for rounded corners) breaks sticky cells —
+       it would make the table itself the sticky context, so the frozen
+       column would scroll along with everything else. */
+    overflow: visible;
+  }
+
+  th,
+  td {
+    padding: 4px 5px;
+    font-size: 8pt;
+  }
+
+  .bod-view th,
+  .bod-view td {
+    font-size: 9pt;
+  }
+
+  .back-to-top {
+    right: 12px;
+    bottom: 12px;
+    padding: 8px 12px;
   }
 }

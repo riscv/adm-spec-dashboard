@@ -731,6 +731,7 @@ function App() {
           </div>
         </div>
 
+        <div className="table-scroll">
         <table className={`table table-bordered${bodOnly ? " bod-view" : ""}`} ref={tableRef}>
           <thead>
             <tr>
@@ -924,6 +925,7 @@ function App() {
             })}
           </tbody>
         </table>
+        </div>
       </div>
 
       {showBackToTop ? (
