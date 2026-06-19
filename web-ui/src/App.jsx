@@ -270,6 +270,7 @@ function normalizeRow(raw) {
     ratificationProgress: raw["Ratification Progress"] || "",
     previousRatificationProgress: raw["Previous Ratification Progress"] || "",
     github: raw["GitHub"] || "",
+    latestReleasePdf: raw["Latest Release PDF"] || "",
     bodReport,
     bodFlag: isBodReport(bodReport),
     arcReviewStatus: raw["ARC Review Status"] || "",
@@ -298,6 +299,15 @@ function getLatestReleaseUrl(rawUrl) {
   const owner = parts[0];
   const repo = parts[1].replace(/\.git$/, "");
   return `https://github.com/${owner}/${repo}/releases/latest`;
+}
+
+// GitHub release assets are served with `Content-Disposition: attachment`,
+// which forces a download instead of rendering inline. The asset host grants
+// no CORS, so a pdf.js viewer can't fetch it cross-origin. Routing through the
+// Google Docs viewer (which fetches server-side) renders the PDF in the browser.
+function getPdfViewerUrl(pdfUrl) {
+  if (!pdfUrl) return "";
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
 }
 
 function getPhaseDisplay(row) {
@@ -334,6 +344,7 @@ function buildEmailBody(row, phases) {
     `- Current Ratification Status: ${row.ratificationProgress || "N/A"}`,
     `- Previous Ratification Status: ${row.previousRatificationProgress || "N/A"}`,
     `- GitHub Link: ${row.github || "N/A"}`,
+    `- Latest Release PDF: ${row.latestReleasePdf || "N/A"}`,
     "",
     "This email was generated using the RISC-V Specification Dashboard. For more information, visit the dashboard at: https://tech.riscv.org/bod.",
     "",
@@ -890,6 +901,50 @@ function App() {
                             <img
                               src={`${assetBase}release-tag.svg`}
                               alt="No releases available"
+                              width="18"
+                              height="18"
+                              className="icon-img"
+                            />
+                          </span>
+                        )}
+                        {row.latestReleasePdf ? (
+                          <>
+                            <a
+                              href={getPdfViewerUrl(row.latestReleasePdf)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="icon-link"
+                              title="View latest release PDF in browser"
+                            >
+                              <img
+                                src={`${assetBase}pdf.svg`}
+                                alt="View latest release PDF"
+                                width="18"
+                                height="18"
+                                className="icon-img"
+                              />
+                            </a>
+                            <a
+                              href={row.latestReleasePdf}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="icon-link"
+                              title="Download latest release PDF"
+                            >
+                              <img
+                                src={`${assetBase}download.svg`}
+                                alt="Download latest release PDF"
+                                width="18"
+                                height="18"
+                                className="icon-img"
+                              />
+                            </a>
+                          </>
+                        ) : (
+                          <span className="icon-disabled" title="No release PDF available">
+                            <img
+                              src={`${assetBase}pdf.svg`}
+                              alt="No release PDF available"
                               width="18"
                               height="18"
                               className="icon-img"

@@ -10,7 +10,74 @@ import csv
 import os
 import re
 from datetime import datetime
+
+import requests
 from atlassian import Jira
+
+# Cache resolved latest-release PDFs per owner/repo so we hit the GitHub API
+# at most once per repository during a single run.
+_release_pdf_cache = {}
+
+
+def get_latest_release_pdf(github_url):
+    """Return the direct download URL of the latest GitHub release's PDF asset.
+
+    Given a spec's GitHub repository URL, query the GitHub API for the latest
+    release and return the ``browser_download_url`` of the first ``.pdf`` asset.
+    Returns an empty string when there is no repo, no release, no PDF asset, or
+    on any API/network error. Uses ``GITHUB_TOKEN`` when available to lift the
+    unauthenticated rate limit (60/hr -> 5000/hr).
+    """
+    if not github_url or not isinstance(github_url, str):
+        return ""
+
+    url = github_url.strip()
+    if not url.lower().startswith("http") or "github.com" not in url.lower():
+        return ""
+
+    try:
+        path = url.split("github.com/", 1)[1]
+    except IndexError:
+        return ""
+
+    parts = [segment for segment in path.split("/") if segment]
+    if len(parts) < 2:
+        return ""
+
+    owner, repo = parts[0], parts[1]
+    if repo.endswith(".git"):
+        repo = repo[:-4]
+
+    cache_key = f"{owner}/{repo}"
+    if cache_key in _release_pdf_cache:
+        return _release_pdf_cache[cache_key]
+
+    pdf_url = ""
+    headers = {"Accept": "application/vnd.github+json"}
+    token = os.getenv("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"token {token}"
+
+    try:
+        response = requests.get(
+            f"https://api.github.com/repos/{owner}/{repo}/releases/latest",
+            headers=headers,
+            timeout=15,
+        )
+        if response.status_code == 200:
+            assets = response.json().get("assets", []) or []
+            for asset in assets:
+                name = (asset.get("name") or "").lower()
+                if name.endswith(".pdf"):
+                    pdf_url = asset.get("browser_download_url", "") or ""
+                    break
+        else:
+            print(f"  No latest-release PDF for {cache_key} (HTTP {response.status_code})")
+    except Exception as exc:  # network errors, JSON decode, etc.
+        print(f"  Failed to resolve release PDF for {cache_key}: {exc}")
+
+    _release_pdf_cache[cache_key] = pdf_url
+    return pdf_url
 
 
 def extract_field_value(value):
@@ -263,11 +330,15 @@ def get_data_from_jira(jira_token, jira_email):
             'Baseline Ratification Quarter',
             'Target Ratification Quarter',
             'Ratification Progress',
-            'Previous Ratification Progress'
+            'Previous Ratification Progress',
+            'Latest Release PDF'
         ])
 
         # Writing each issue to the CSV file
         for issue in parsed_issues:
+            latest_release_pdf = get_latest_release_pdf(
+                issue['GitHub'] if isinstance(issue['GitHub'], str) else ""
+            )
             writer.writerow([
                 issue['URL'],
                 issue['Summary'],
@@ -281,7 +352,8 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Baseline Ratification Quarter'],
                 issue['Target Ratification Quarter'],
                 issue['Ratification Progress'],
-                issue['Previous Ratification Progress']
+                issue['Previous Ratification Progress'],
+                latest_release_pdf
             ])
 
     print(f"Data successfully written to {csv_filename}")
