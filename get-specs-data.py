@@ -8,6 +8,7 @@ Author: Rafael Sene, rafael@riscv.org - Initial implementation
 
 import csv
 import os
+import re
 from datetime import datetime
 
 import requests
@@ -90,6 +91,72 @@ def extract_field_value(value):
     return str(value)
 
 
+ARC_REVIEW_APPROVED_STATES = {
+    "approved",
+    "ar approved",
+    "ar review not required",
+    "approval not required",
+    "not required",
+    "done",
+}
+
+ARC_REVIEW_IN_PROGRESS_STATES = {
+    "in progress",
+    "in review",
+    "under review",
+    "ar review in progress",
+}
+
+
+FREEZE_ARC_REVIEW_PATTERN = re.compile(
+    r"^\s*\[freeze\]\s*-\s*arc\s*review\b",
+    re.IGNORECASE,
+)
+
+FAST_TRACK_PATTERN = re.compile(r"^\s*\[fast-?track\]", re.IGNORECASE)
+
+
+def is_fast_track(subtasks):
+    """Return True if any subtask is tagged with a `[Fast-Track]` prefix."""
+    if not subtasks:
+        return False
+    for sub in subtasks:
+        if not isinstance(sub, dict):
+            continue
+        sub_fields = sub.get('fields', {}) or {}
+        summary = (sub_fields.get('summary') or "").strip()
+        if FAST_TRACK_PATTERN.match(summary):
+            return True
+    return False
+
+
+def extract_arc_review_status(subtasks):
+    """Return the status of the `[Freeze] - ARC Review (required)` subtask.
+
+    Only Freeze-phase ARC Review subtasks are considered — Plan/Development
+    ARC Review subtasks are ignored. If a spec has more than one matching
+    subtask (e.g. issuetype `ARC Review` plus a duplicate `Approval`),
+    prefer an approved status; otherwise return the first match.
+    """
+    if not subtasks:
+        return ""
+
+    found_status = ""
+    for sub in subtasks:
+        if not isinstance(sub, dict):
+            continue
+        sub_fields = sub.get('fields', {}) or {}
+        summary = (sub_fields.get('summary') or "").strip()
+        if not FREEZE_ARC_REVIEW_PATTERN.match(summary):
+            continue
+        status_name = ((sub_fields.get('status') or {}).get('name') or "").strip()
+        if status_name.lower() in ARC_REVIEW_APPROVED_STATES:
+            return status_name
+        if not found_status:
+            found_status = status_name
+    return found_status
+
+
 def normalize_bod_report_value(value):
     text = extract_field_value(value).strip()
     if not text:
@@ -100,6 +167,61 @@ def normalize_bod_report_value(value):
     if lowered in ["no", "false", "n", "0"]:
         return "No"
     return text
+
+
+REQUIRED_FIELDS = [
+    "summary",
+    "status",
+    "updated",
+    "subtasks",
+    "customfield_10037",
+    "customfield_10038",
+    "customfield_10039",
+    "customfield_10040",
+    "customfield_10042",
+    "customfield_10043",
+    "customfield_10136",
+]
+
+
+def fetch_all_issues(jira, jql, page_size=100):
+    issues = []
+    fields_param = ",".join(REQUIRED_FIELDS)
+
+    if jira.cloud:
+        next_page_token = None
+        while True:
+            response = jira.enhanced_jql(
+                jql=jql,
+                limit=page_size,
+                nextPageToken=next_page_token,
+                fields=fields_param,
+            )
+            batch = response.get('issues', []) if response else []
+            if not batch:
+                break
+
+            issues.extend(batch)
+            next_page_token = response.get('nextPageToken')
+            if not next_page_token:
+                break
+
+        return issues
+
+    start = 0
+    while True:
+        response = jira.jql(jql=jql, start=start, limit=page_size, fields=fields_param)
+        batch = response.get('issues', []) if response else []
+        if not batch:
+            break
+
+        issues.extend(batch)
+        start += len(batch)
+        total = response.get('total')
+        if total is not None and start >= total:
+            break
+
+    return issues
 
 
 # Function to parse and extract issue details
@@ -138,6 +260,8 @@ def parse_issues(issues):
             fields.get('customfield_10043', {}) if fields.get('customfield_10043') else "Not Set Yet"
         )
         bod_report = normalize_bod_report_value(fields.get('customfield_10037'))
+        arc_review_status = extract_arc_review_status(fields.get('subtasks'))
+        fast_track = "Yes" if is_fast_track(fields.get('subtasks')) else "No"
 
         # Collect issue information
         parsed_issues.append({
@@ -147,6 +271,8 @@ def parse_issues(issues):
             'Summary': summary,
             'Status': status,
             'BoD Report': bod_report,
+            'ARC Review Status': arc_review_status,
+            'Fast Track': fast_track,
             'Updated': updated,
             'GitHub': github,
             'ISA or NON-ISA': isa_or_non_isa,
@@ -175,12 +301,12 @@ def get_data_from_jira(jira_token, jira_email):
 
     # JQL query to fetch required issues
     jql = ('project = RVS AND '
-           'issuetype not in subTaskIssueTypes() '
+           'issuetype not in subTaskIssueTypes() AND '
+           'status NOT IN ("Specification Ratified", "Specification Not Ratified") '
            'ORDER BY priority DESC, updated DESC')
 
     # Extract issues from the JSON data
-    all_issues = jira.jql(jql)
-    issues = all_issues.get('issues', [])
+    issues = fetch_all_issues(jira, jql)
     parsed_issues = parse_issues(issues)
 
     # Generating the CSV filename with current date and time
@@ -196,6 +322,8 @@ def get_data_from_jira(jira_token, jira_email):
             'Summary',
             'Status',
             'BoD Report',
+            'ARC Review Status',
+            'Fast Track',
             'Updated',
             'ISA or NON-ISA?',
             'GitHub',
@@ -208,24 +336,25 @@ def get_data_from_jira(jira_token, jira_email):
 
         # Writing each issue to the CSV file
         for issue in parsed_issues:
-            if issue['Status'] != "Specification Ratified" and issue['Status'] != "Specification Not Ratified":
-                latest_release_pdf = get_latest_release_pdf(
-                    issue['GitHub'] if isinstance(issue['GitHub'], str) else ""
-                )
-                writer.writerow([
-                    issue['URL'],
-                    issue['Summary'],
-                    issue['Status'],
-                    issue['BoD Report'],
-                    issue['Updated'],
-                    issue['ISA or NON-ISA'],
-                    issue['GitHub'],
-                    issue['Baseline Ratification Quarter'],
-                    issue['Target Ratification Quarter'],
-                    issue['Ratification Progress'],
-                    issue['Previous Ratification Progress'],
-                    latest_release_pdf
-                ])
+            latest_release_pdf = get_latest_release_pdf(
+                issue['GitHub'] if isinstance(issue['GitHub'], str) else ""
+            )
+            writer.writerow([
+                issue['URL'],
+                issue['Summary'],
+                issue['Status'],
+                issue['BoD Report'],
+                issue['ARC Review Status'],
+                issue['Fast Track'],
+                issue['Updated'],
+                issue['ISA or NON-ISA'],
+                issue['GitHub'],
+                issue['Baseline Ratification Quarter'],
+                issue['Target Ratification Quarter'],
+                issue['Ratification Progress'],
+                issue['Previous Ratification Progress'],
+                latest_release_pdf
+            ])
 
     print(f"Data successfully written to {csv_filename}")
 

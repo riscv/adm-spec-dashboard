@@ -65,6 +65,36 @@ function calculateProgress(status) {
   return { currentPhase: normalized, nextPhase };
 }
 
+const ARC_REVIEW_APPROVED_STATES = new Set([
+  "approved",
+  "ar approved",
+  "ar review not required",
+  "approval not required",
+  "not required",
+  "done",
+]);
+
+const ARC_REVIEW_IN_PROGRESS_STATES = new Set([
+  "approval in progress",
+  "in progress",
+  "in review",
+  "under review",
+  "ar review in progress",
+]);
+
+function getArcReviewState(row) {
+  const raw = String(row.arcReviewStatus || "").trim();
+  const lowered = raw.toLowerCase();
+
+  if (ARC_REVIEW_APPROVED_STATES.has(lowered)) {
+    return { kind: "completed", label: raw };
+  }
+  if (ARC_REVIEW_IN_PROGRESS_STATES.has(lowered)) {
+    return { kind: "in-progress", label: raw };
+  }
+  return { kind: "upcoming", label: raw || "Not Started" };
+}
+
 function isBodReport(value) {
   if (value === null || value === undefined) return false;
   const normalized = String(value).trim().toLowerCase();
@@ -133,6 +163,23 @@ function getYearProgressFraction(date = new Date()) {
   const elapsed = date - startOfYear;
   const total = startOfNextYear - startOfYear;
   return Math.min(Math.max(elapsed / total, 0), 1);
+}
+
+function getQuarterEndFractionOfYear(quarter, year = new Date().getFullYear()) {
+  const startOfYear = new Date(year, 0, 1);
+  const startOfNextYear = new Date(year + 1, 0, 1);
+  const quarterEndMonths = { 1: 2, 2: 5, 3: 8, 4: 11 };
+  const quarterEndDays = { 1: 31, 2: 30, 3: 30, 4: 31 };
+  const endOfQuarter = new Date(
+    year,
+    quarterEndMonths[quarter],
+    quarterEndDays[quarter],
+    23,
+    59,
+    59,
+    999,
+  );
+  return (endOfQuarter - startOfYear) / (startOfNextYear - startOfYear);
 }
 
 function getDaysLeftInYear(date = new Date()) {
@@ -226,6 +273,8 @@ function normalizeRow(raw) {
     latestReleasePdf: raw["Latest Release PDF"] || "",
     bodReport,
     bodFlag: isBodReport(bodReport),
+    arcReviewStatus: raw["ARC Review Status"] || "",
+    fastTrack: /^(yes|true|y|1)$/i.test(String(raw["Fast Track"] || "").trim()),
     currentPhase,
     nextPhase,
   };
@@ -287,7 +336,8 @@ function buildEmailBody(row, phases) {
     `- Planning: ${phases["Planning"] || "N/A"}`,
     `- Development: ${phases["Development"] || "N/A"}`,
     `- Stabilization: ${phases["Stabilization"] || "N/A"}`,
-    `- Freeze: ${phases["Freeze"] || "N/A"}`,
+    `- Freeze - ARC Approval: ${phases["ARC Review"] || "N/A"}`,
+    `- Freeze - Tasks: ${phases["Freeze"] || "N/A"}`,
     `- Ratification-Ready: ${phases["Ratification-Ready"] || "N/A"}`,
     `- Planned Ratification Quarter: ${row.plannedQuarter || "N/A"}`,
     `- Target Ratification Quarter: ${row.trendingQuarter || "N/A"}`,
@@ -541,10 +591,18 @@ function App() {
   const handleShare = (row) => {
     const phases = getPhaseDisplay(row);
     const subject = `Specification Details: ${row.summary || "N/A"}`;
+    const arc = getArcReviewState(row);
+    const arcLabel =
+      arc.kind === "completed"
+        ? `\u2713${arc.label ? ` (${arc.label})` : ""}`
+        : arc.kind === "in-progress"
+          ? `In Progress${arc.label ? ` (${arc.label})` : ""}`
+          : "...";
     const body = buildEmailBody(row, {
       "Planning": phases["Planning"],
       "Development": phases["Development"],
       "Stabilization": phases["Stabilization"],
+      "ARC Review": arcLabel,
       "Freeze": phases["Freeze"],
       "Ratification-Ready": phases["Ratification-Ready"],
     });
@@ -597,10 +655,15 @@ function App() {
           <div className="timeline-fill">
             <div className="timeline-fill-past" style={{ width: `${yearProgress}%` }}></div>
           </div>
-          {[1, 2, 3, 4].map((quarter) => (
+          {[1, 2, 3, 4].map((quarter) => {
+            let pointState = "";
+            if (quarter < currentQuarter) pointState = " completed";
+            else if (quarter === currentQuarter) pointState = " current";
+            return (
             <div
               key={quarter}
-              className={`timeline-point${quarter === currentQuarter ? " current" : ""}`}
+              className={`timeline-point${pointState}`}
+              style={{ left: `${getQuarterEndFractionOfYear(quarter) * 100}%` }}
             >
               <div className="timeline-label">
                 <div>
@@ -617,7 +680,8 @@ function App() {
                 ) : null}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         <div id="searchContainer">
@@ -649,7 +713,7 @@ function App() {
           </label>
           <span className="toolbar-divider" aria-hidden="true">|</span>
           <a
-            href="https://riscv-admin.github.io/riscv-sde/"
+            href="https://riscv.github.io/adm-riscv-sde/"
             target="_blank"
             rel="noreferrer"
             className="toolbar-link"
@@ -657,7 +721,7 @@ function App() {
             <span className="toolbar-text">Specification Development Explorer</span>
           </a>
         </div>
-        
+
         <div className="status-legend">
           <span className="legend-label">Target Ratification Quarter:</span>
           <div className="legend-item">
@@ -678,22 +742,27 @@ function App() {
           </div>
         </div>
 
+        <div className="table-scroll">
         <table className={`table table-bordered${bodOnly ? " bod-view" : ""}`} ref={tableRef}>
           <thead>
             <tr>
-              <th className="specification-column">Specification</th>
-              <th className="narrow-column">ISA?</th>
-              <th className="narrow-column">Planning</th>
-              <th className="narrow-column">Dev</th>
-              <th className="narrow-column">Stabilization</th>
-              <th className="narrow-column">Freeze</th>
-              <th className="narrow-column">Ratification-Ready</th>
-              <th className="narrow-column publication-header">Publication</th>
-              <th className="narrow-column">Planned Ratification Quarter</th>
-              <th className="narrow-column">Target Ratification Quarter</th>
-              <th className="narrow-column">Current Status</th>
-              {!bodOnly && <th className="github-column">GitHub</th>}
-              {!bodOnly && <th className="share-column">Share</th>}
+              <th className="specification-column" rowSpan={2}>Specification</th>
+              <th className="narrow-column" rowSpan={2}>ISA?</th>
+              <th className="narrow-column" rowSpan={2}>Planning</th>
+              <th className="narrow-column" rowSpan={2}>Dev</th>
+              <th className="narrow-column" rowSpan={2}>Stabilization</th>
+              <th className="narrow-column freeze-group-header" colSpan={2}>Freeze</th>
+              <th className="narrow-column" rowSpan={2}>Ratification-Ready</th>
+              <th className="narrow-column publication-header" rowSpan={2}>Publication</th>
+              <th className="narrow-column" rowSpan={2}>Planned Ratification Quarter</th>
+              <th className="narrow-column" rowSpan={2}>Target Ratification Quarter</th>
+              <th className="narrow-column" rowSpan={2}>Current Status</th>
+              <th className="github-column" rowSpan={2}>GitHub</th>
+              {!bodOnly && <th className="share-column" rowSpan={2}>Share</th>}
+            </tr>
+            <tr>
+              <th className="narrow-column freeze-subheader">ARC Approval</th>
+              <th className="narrow-column freeze-subheader">Tasks</th>
             </tr>
           </thead>
           <tbody>
@@ -725,6 +794,15 @@ function App() {
                         View in Jira
                       </a>
                     </div>
+                    {row.fastTrack ? (
+                      <span
+                        className="fast-track-badge"
+                        title="Fast-Track Specification"
+                        aria-label="Fast-Track"
+                      >
+                        <span className="ft-label">FT</span>
+                      </span>
+                    ) : null}
                   </td>
                   <td className="narrow-column">{row.isaOrNonIsa}</td>
                   {DISPLAY_PHASES.map((phase) => {
@@ -743,115 +821,141 @@ function App() {
                       title = `Completed Phase: ${phase}`;
                     }
 
-                    return (
+                    const cell = (
                       <td className="text-center" key={`${row.summary}-${phase}`}>
                         <span className={className} title={title} style={{ whiteSpace: "nowrap" }}>
                           {content}
                         </span>
                       </td>
                     );
+
+                    if (phase !== "Stabilization") {
+                      return cell;
+                    }
+
+                    const arc = getArcReviewState(row);
+                    let arcContent = "...";
+                    let arcClass = "bg-upcoming";
+                    let arcTitle = `Upcoming: ARC Approval${arc.label ? ` (${arc.label})` : ""}`;
+                    if (arc.kind === "completed") {
+                      arcContent = "\u2713";
+                      arcClass = "bg-completed";
+                      arcTitle = `ARC Approval Complete${arc.label ? `: ${arc.label}` : ""}`;
+                    } else if (arc.kind === "in-progress") {
+                      arcContent = "\u23F3";
+                      arcClass = "in-progress";
+                      arcTitle = `ARC Approval In Progress${arc.label ? `: ${arc.label}` : ""}`;
+                    }
+
+                    const arcCell = (
+                      <td className="text-center" key={`${row.summary}-arc-review`}>
+                        <span className={arcClass} title={arcTitle} style={{ whiteSpace: "nowrap" }}>
+                          {arcContent}
+                        </span>
+                      </td>
+                    );
+
+                    return [cell, arcCell];
                   })}
                   <td className="narrow-column">{row.plannedQuarter}</td>
                   <td className="narrow-column">{row.trendingQuarter}</td>
                   <td className={`narrow-column ${statusClassName(row.ratificationProgress)}`}>
                     {row.ratificationProgress}
                   </td>
-                  {!bodOnly && (
-                    <td>
-                      {hasGithub ? (
-                        <div className="icon-group">
+                  <td>
+                    {hasGithub ? (
+                      <div className="icon-group">
+                        <a
+                          href={githubValue}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="icon-link"
+                          title="GitHub Repository"
+                        >
+                          <img
+                            src={`${assetBase}github-mark.svg`}
+                            alt="GitHub Logo"
+                            width="20"
+                            height="20"
+                            className="icon-img"
+                          />
+                        </a>
+                        {latestReleaseUrl ? (
                           <a
-                            href={githubValue}
+                            href={latestReleaseUrl}
                             target="_blank"
                             rel="noreferrer"
                             className="icon-link"
-                            title="GitHub Repository"
+                            title="Latest Release"
                           >
                             <img
-                              src={`${assetBase}github-mark.svg`}
-                              alt="GitHub Logo"
-                              width="20"
-                              height="20"
+                              src={`${assetBase}release-tag.svg`}
+                              alt="Latest release"
+                              width="18"
+                              height="18"
                               className="icon-img"
                             />
                           </a>
-                          {latestReleaseUrl ? (
+                        ) : (
+                          <span className="icon-disabled" title="No releases available">
+                            <img
+                              src={`${assetBase}release-tag.svg`}
+                              alt="No releases available"
+                              width="18"
+                              height="18"
+                              className="icon-img"
+                            />
+                          </span>
+                        )}
+                        {row.latestReleasePdf ? (
+                          <>
                             <a
-                              href={latestReleaseUrl}
+                              href={getPdfViewerUrl(row.latestReleasePdf)}
                               target="_blank"
                               rel="noreferrer"
                               className="icon-link"
-                              title="Latest Release"
+                              title="View latest release PDF in browser"
                             >
                               <img
-                                src={`${assetBase}release-tag.svg`}
-                                alt="Latest release"
+                                src={`${assetBase}pdf.svg`}
+                                alt="View latest release PDF"
                                 width="18"
                                 height="18"
                                 className="icon-img"
                               />
                             </a>
-                          ) : (
-                            <span className="icon-disabled" title="No releases available">
+                            <a
+                              href={row.latestReleasePdf}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="icon-link"
+                              title="Download latest release PDF"
+                            >
                               <img
-                                src={`${assetBase}release-tag.svg`}
-                                alt="No releases available"
+                                src={`${assetBase}download.svg`}
+                                alt="Download latest release PDF"
                                 width="18"
                                 height="18"
                                 className="icon-img"
                               />
-                            </span>
-                          )}
-                          {row.latestReleasePdf ? (
-                            <>
-                              <a
-                                href={getPdfViewerUrl(row.latestReleasePdf)}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="icon-link"
-                                title="View latest release PDF in browser"
-                              >
-                                <img
-                                  src={`${assetBase}pdf.svg`}
-                                  alt="View latest release PDF"
-                                  width="18"
-                                  height="18"
-                                  className="icon-img"
-                                />
-                              </a>
-                              <a
-                                href={row.latestReleasePdf}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="icon-link"
-                                title="Download latest release PDF"
-                              >
-                                <img
-                                  src={`${assetBase}download.svg`}
-                                  alt="Download latest release PDF"
-                                  width="18"
-                                  height="18"
-                                  className="icon-img"
-                                />
-                              </a>
-                            </>
-                          ) : (
-                            <span className="icon-disabled" title="No release PDF available">
-                              <img
-                                src={`${assetBase}pdf.svg`}
-                                alt="No release PDF available"
-                                width="18"
-                                height="18"
-                                className="icon-img"
-                              />
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        "N/A"
-                      )}
-                    </td>
-                  )}
+                            </a>
+                          </>
+                        ) : (
+                          <span className="icon-disabled" title="No release PDF available">
+                            <img
+                              src={`${assetBase}pdf.svg`}
+                              alt="No release PDF available"
+                              width="18"
+                              height="18"
+                              className="icon-img"
+                            />
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      "N/A"
+                    )}
+                  </td>
                   {!bodOnly && (
                     <td className="narrow-column">
                       <button
@@ -876,6 +980,7 @@ function App() {
             })}
           </tbody>
         </table>
+        </div>
       </div>
 
       {showBackToTop ? (
