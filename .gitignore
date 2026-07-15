@@ -167,3 +167,6 @@ cython_debug/
 
 # Re-hosted PR-build PDFs (published to the spec-pdfs release, never committed)
 pdf-cache/
+
+# Local Claude Code settings (never publish)
+.claude/
