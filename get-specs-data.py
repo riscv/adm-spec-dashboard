@@ -35,15 +35,17 @@ _GENERIC_PDF_NAMES = {
     "riscv-isa.pdf",
 }
 
-# Specs still under development often live only as a pull request against the
-# shared riscv-isa-manual monorepo — they have no dedicated repo or release. The
-# manual's PR build does produce a PDF (the full manual with the PR's changes
-# integrated), but only as an auth-gated, zipped, 7-day GitHub Actions artifact
-# that an anonymous dashboard visitor cannot open. For those specs we download
-# that artifact (the pipeline is authenticated) and re-host it as a stable,
-# public asset on this repo's own "spec-pdfs" release, then link that URL.
-_ISA_MANUAL_PR_PATTERN = re.compile(
-    r"github\.com/([^/]+)/riscv-isa-manual/pull/(\d+)",
+# Specs still under development often live only as a reference into the shared
+# riscv-isa-manual monorepo — a pull request, a specific commit, or a file/dir
+# on a branch — with no dedicated repo or release. The manual's build does
+# produce a PDF (the full manual with those changes integrated), but only as an
+# auth-gated, zipped, 7-day GitHub Actions artifact that an anonymous dashboard
+# visitor cannot open. For those specs we resolve the reference to a commit,
+# download that commit's build artifact (the pipeline is authenticated) and
+# re-host it as a stable, public asset on this repo's own "spec-pdfs" release.
+# Captures (owner, kind, ident) for /pull/<n>, /commit(s)/<sha>, /blob|tree/<ref>.
+_ISA_MANUAL_REF_PATTERN = re.compile(
+    r"github\.com/([^/]+)/riscv-isa-manual/(pull|commit|commits|blob|tree)/([^/#?\s]+)",
     re.IGNORECASE,
 )
 
@@ -177,47 +179,22 @@ def get_latest_release_pdf(github_url):
     return pdf_url
 
 
-def get_isa_manual_pr_pdf(github_url):
-    """Re-host and return the public URL of a riscv-isa-manual PR build's PDF.
+def _fetch_isa_build_pdf(owner, head_sha, asset_name, label):
+    """Download commit ``head_sha``'s ISA-manual build PDF and cache it locally.
 
-    When a spec's GitHub field points at a ``riscv-isa-manual`` pull request,
-    find that PR's latest successful ISA-manual build, download its
-    ``riscv-spec*.pdf`` artifact (the full manual with the PR integrated) into
-    :data:`PR_PDF_CACHE_DIR`, and return the deterministic public URL under this
-    repo's stable ``spec-pdfs`` release. The workflow uploads the cached files
-    to that release after this script runs. Falls back to an already-published
-    copy so links survive the upstream 7-day artifact expiry, and returns ""
-    when nothing is available. Never raises.
+    Finds the newest successful ISA Build run for ``head_sha``, downloads its
+    (unexpired) ``riscv-spec*.pdf`` artifact, and writes the extracted PDF to
+    ``PR_PDF_CACHE_DIR/asset_name``. Returns the deterministic public URL under
+    this repo's ``spec-pdfs`` release on success, falls back to an
+    already-published copy so links survive the upstream 7-day artifact expiry,
+    and returns "" when nothing is available. Never raises.
     """
-    if not github_url or not isinstance(github_url, str):
-        return ""
-
-    match = _ISA_MANUAL_PR_PATTERN.search(github_url)
-    if not match:
-        return ""
-
-    owner, pr_number = match.group(1), match.group(2)
-    cache_key = f"{owner}/riscv-isa-manual/pull/{pr_number}"
-    if cache_key in _pr_pdf_cache:
-        return _pr_pdf_cache[cache_key]
-
-    asset_name = f"riscv-isa-manual-pr-{pr_number}.pdf"
     public_url = f"{PR_PDF_PUBLIC_BASE}/{asset_name}"
     headers = _github_headers()
     api = f"https://api.github.com/repos/{owner}/riscv-isa-manual"
     result = ""
 
     try:
-        # 1. Resolve the PR's head commit.
-        pr_resp = requests.get(f"{api}/pulls/{pr_number}", headers=headers, timeout=15)
-        head_sha = (
-            (pr_resp.json().get("head") or {}).get("sha")
-            if pr_resp.status_code == 200
-            else None
-        )
-
-        # 2. Find the newest successful ISA Build run for that commit and its
-        #    (unexpired) riscv-spec*.pdf artifact.
         artifact = None
         if head_sha:
             runs_resp = requests.get(
@@ -255,7 +232,6 @@ def get_isa_manual_pr_pdf(github_url):
                 if artifact:
                     break
 
-        # 3. Download the artifact zip and extract the PDF into the cache dir.
         if artifact:
             dl_resp = requests.get(
                 artifact["archive_download_url"], headers=headers, timeout=120
@@ -272,14 +248,78 @@ def get_isa_manual_pr_pdf(github_url):
                         with archive.open(pdf_member) as src, open(out_path, "wb") as dst:
                             dst.write(src.read())
                         result = public_url
-                        print(f"  Cached PR PDF for {cache_key} -> {asset_name}")
+                        print(f"  Cached ISA-manual PDF for {label} -> {asset_name}")
     except Exception as exc:  # network errors, bad zip, etc.
-        print(f"  Failed to resolve PR PDF for {cache_key}: {exc}")
+        print(f"  Failed to resolve ISA-manual PDF for {label}: {exc}")
 
     # Fall back to a previously published copy so the link survives expiry.
     if not result and asset_name in _get_existing_pr_pdf_assets():
         result = public_url
 
+    return result
+
+
+def _slugify(text):
+    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+
+def get_isa_manual_ref_pdf(github_url):
+    """Re-host and return the public URL of a riscv-isa-manual reference's PDF.
+
+    Handles any GitHub field that points into the shared ``riscv-isa-manual``
+    monorepo via a pull request, a commit, or a file/dir on a branch
+    (``/pull/<n>``, ``/commit(s)/<sha>``, ``/blob|tree/<ref>/...``). Resolves the
+    reference to a commit SHA, then downloads and re-hosts that commit's build
+    PDF (the full manual with the change integrated). Returns "" for anything
+    else or when no build artifact is available. Never raises.
+    """
+    if not github_url or not isinstance(github_url, str):
+        return ""
+
+    match = _ISA_MANUAL_REF_PATTERN.search(github_url)
+    if not match:
+        return ""
+
+    owner, kind, ident = match.group(1), match.group(2).lower(), match.group(3)
+    cache_key = f"{owner}/riscv-isa-manual/{kind}/{ident}"
+    if cache_key in _pr_pdf_cache:
+        return _pr_pdf_cache[cache_key]
+
+    headers = _github_headers()
+    api = f"https://api.github.com/repos/{owner}/riscv-isa-manual"
+    head_sha = None
+    asset_name = None
+    label = cache_key
+
+    try:
+        if kind == "pull":
+            resp = requests.get(f"{api}/pulls/{ident}", headers=headers, timeout=15)
+            if resp.status_code == 200:
+                head_sha = (resp.json().get("head") or {}).get("sha")
+            asset_name = f"riscv-isa-manual-pr-{ident}.pdf"
+            label = f"pull/{ident}"
+        else:
+            # commit / commits / blob / tree — ``ident`` is a commit SHA or a
+            # branch/ref. Resolve it to a full commit SHA (the runs API's
+            # head_sha filter requires the full SHA).
+            is_sha = bool(re.fullmatch(r"[0-9a-fA-F]{7,40}", ident))
+            resp = requests.get(f"{api}/commits/{ident}", headers=headers, timeout=15)
+            if resp.status_code == 200:
+                head_sha = resp.json().get("sha")
+            elif is_sha:
+                head_sha = ident
+            if is_sha:
+                short = (head_sha or ident)[:12]
+                asset_name = f"riscv-isa-manual-commit-{short}.pdf"
+                label = f"commit/{short}"
+            else:
+                # A branch/ref: name by branch so rebuilds clobber one asset.
+                asset_name = f"riscv-isa-manual-{_slugify(owner)}-{_slugify(ident)}.pdf"
+                label = f"{kind}/{ident}"
+    except Exception as exc:
+        print(f"  Failed to resolve ISA-manual ref for {cache_key}: {exc}")
+
+    result = _fetch_isa_build_pdf(owner, head_sha, asset_name, label) if asset_name else ""
     _pr_pdf_cache[cache_key] = result
     return result
 
@@ -542,10 +582,11 @@ def get_data_from_jira(jira_token, jira_email):
         for issue in parsed_issues:
             github_url = issue['GitHub'] if isinstance(issue['GitHub'], str) else ""
             # Prefer a dedicated repo's release PDF; otherwise, for specs that
-            # live only as a riscv-isa-manual PR, re-host that PR build's PDF.
+            # live only as a riscv-isa-manual reference (PR, commit, or branch
+            # file/dir), re-host that reference's build PDF.
             latest_release_pdf = (
                 get_latest_release_pdf(github_url)
-                or get_isa_manual_pr_pdf(github_url)
+                or get_isa_manual_ref_pdf(github_url)
             )
             writer.writerow([
                 issue['URL'],
