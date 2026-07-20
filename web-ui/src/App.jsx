@@ -95,6 +95,26 @@ function getArcReviewState(row) {
   return { kind: "upcoming", label: raw || "Not Started" };
 }
 
+// Ordering requested for the dashboard: specs furthest along the lifecycle
+// float to the top. Within the Freeze phase, ARC-approved comes before a
+// pending ARC review, which comes before "nothing started" (pending tasks and
+// ARC review). Lower rank sorts first.
+function getPhaseSortRank(row) {
+  const phase = row.currentPhase;
+  if (phase === "Specification in Publication") return 0;
+  if (phase === "Ratification-Ready") return 1;
+  if (phase === "Freeze") {
+    const arc = getArcReviewState(row).kind;
+    if (arc === "completed") return 2; // Freeze with ARC approval
+    if (arc === "in-progress") return 3; // Freeze with pending ARC review
+    return 4; // Freeze with pending tasks and ARC review
+  }
+  if (phase === "Stabilization") return 5;
+  if (phase === "Development") return 6;
+  if (phase === "Planning") return 7;
+  return 8;
+}
+
 function isBodReport(value) {
   if (value === null || value === undefined) return false;
   const normalized = String(value).trim().toLowerCase();
@@ -468,6 +488,10 @@ function App() {
         };
 
         const sorted = withoutCancelled.sort((a, b) => {
+          const phaseRankA = getPhaseSortRank(a);
+          const phaseRankB = getPhaseSortRank(b);
+          if (phaseRankA !== phaseRankB) return phaseRankA - phaseRankB;
+
           const progressAKey = String(a.ratificationProgress || "").toLowerCase();
           const progressBKey = String(b.ratificationProgress || "").toLowerCase();
           const progressA = progressOrder[progressAKey] ?? 99;
@@ -741,7 +765,7 @@ function App() {
               <th className="narrow-column" rowSpan={2}>Dev</th>
               <th className="narrow-column" rowSpan={2}>Stabilization</th>
               <th className="narrow-column freeze-group-header" colSpan={2}>Freeze</th>
-              <th className="narrow-column" rowSpan={2}>Ratification-Ready</th>
+              <th className="narrow-column ratification-divider" rowSpan={2}>Ratification-Ready</th>
               <th className="narrow-column publication-header" rowSpan={2}>Publication</th>
               <th className="narrow-column" rowSpan={2}>Planned Ratification Quarter</th>
               <th className="narrow-column" rowSpan={2}>Target Ratification Quarter</th>
@@ -810,8 +834,12 @@ function App() {
                       title = `Completed Phase: ${phase}`;
                     }
 
+                    const cellClass =
+                      phase === "Ratification-Ready"
+                        ? "text-center ratification-divider"
+                        : "text-center";
                     const cell = (
-                      <td className="text-center" key={`${row.summary}-${phase}`}>
+                      <td className={cellClass} key={`${row.summary}-${phase}`}>
                         <span className={className} title={title} style={{ whiteSpace: "nowrap" }}>
                           {content}
                         </span>

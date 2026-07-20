@@ -249,6 +249,13 @@ th.publication-header:hover::before {
   transform: translateX(-50%) translateY(0);
 }
 
+/* Fine blue line setting apart the Ratification-Ready and Publication columns
+   from the development pipeline that ends at Freeze. */
+th.ratification-divider,
+td.ratification-divider {
+  border-left: 2px solid var(--berkeley-blue);
+}
+
 th.specification-column,
 td.specification-column {
   width: 500px !important;
