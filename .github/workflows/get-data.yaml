@@ -48,7 +48,7 @@ jobs:
       - name: Run Container
         id: run_container
         if: steps.build_container.outcome == 'success'
-        run: docker run --rm -e JIRA_TOKEN=${{ secrets.JIRATOKEN }} -e JIRA_EMAIL=${{ secrets.JIRA_EMAIL }} -v ./:/usr/src/app/ riscvintl/bod-jira-data-image:latest
+        run: docker run --rm -e JIRA_TOKEN=${{ secrets.JIRATOKEN }} -e JIRA_EMAIL=${{ secrets.JIRA_EMAIL }} -e GHTOKEN=${{ secrets.GHTOKEN }} -v ./:/usr/src/app/ riscvintl/bod-jira-data-image:latest
 
       - name: Upload Data
         if: steps.run_container.outcome == 'success'

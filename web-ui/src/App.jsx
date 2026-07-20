@@ -294,9 +294,47 @@ function normalizeRow(raw) {
     bodFlag: isBodReport(bodReport),
     arcReviewStatus: raw["ARC Review Status"] || "",
     fastTrack: /^(yes|true|y|1)$/i.test(String(raw["Fast Track"] || "").trim()),
+    lastContribution: raw["Last Contribution"] || "",
+    lastContributionSource: raw["Last Contribution Source"] || "",
     currentPhase,
     nextPhase,
   };
+}
+
+function daysSince(value) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function formatRelativeAge(value) {
+  const days = daysSince(value);
+  if (days === null) return "";
+  if (days <= 0) return "today";
+  if (days === 1) return "1 day ago";
+  if (days < 31) return `${days} days ago`;
+  if (days < 365) {
+    const months = Math.round(days / 30);
+    return `${months} mo ago`;
+  }
+  const years = Math.floor(days / 365);
+  const months = Math.round((days % 365) / 30);
+  return months ? `${years}y ${months}mo ago` : `${years}y ago`;
+}
+
+// Recency bucket driving the activity dot. Post-Freeze phases legitimately
+// have little code activity, so they are marked neutral rather than "stale".
+function activityRecencyClass(row) {
+  const postFreeze =
+    row.currentPhase === "Ratification-Ready" ||
+    row.currentPhase === "Specification in Publication";
+  const days = daysSince(row.lastContribution);
+  if (days === null) return "activity-none";
+  if (postFreeze) return "activity-neutral";
+  if (days <= 14) return "activity-fresh";
+  if (days <= 45) return "activity-slowing";
+  return "activity-stale";
 }
 
 function getLatestReleaseUrl(rawUrl) {
@@ -795,10 +833,28 @@ function App() {
                     <a href={row.jiraUrl} target="_blank" rel="noreferrer">
                       {row.summary}
                     </a>
-                    {!bodOnly && row.updated ? (
-                      <div className="spec-updated">
-                        Last Update . {formatUpdateDate(row.updated)}
-                      </div>
+                    {!bodOnly ? (
+                      row.lastContribution ? (
+                        <div
+                          className="spec-updated"
+                          title={
+                            row.lastContributionSource
+                              ? `Source: ${row.lastContributionSource}`
+                              : undefined
+                          }
+                        >
+                          <span
+                            className={`activity-dot ${activityRecencyClass(row)}`}
+                            aria-hidden="true"
+                          />
+                          Last contribution · {formatUpdateDate(row.lastContribution)} · {formatRelativeAge(row.lastContribution)}
+                        </div>
+                      ) : (
+                        <div className="spec-updated no-activity">
+                          <span className="activity-dot activity-none" aria-hidden="true" />
+                          No recent contribution found
+                        </div>
+                      )
                     ) : null}
                     <div className="tooltip-text">
                       {row.summary}

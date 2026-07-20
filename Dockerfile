@@ -8,12 +8,14 @@ WORKDIR /usr/src/app
 COPY get-specs-data.py .
 
 # Install the necessary Python packages
-RUN pip install --no-cache-dir atlassian-python-api
+RUN pip install --no-cache-dir atlassian-python-api requests
 
 # Define environment variable
 ENV JIRA_TOKEN=""
 
 ENV JIRA_EMAIL=""
+
+ENV GHTOKEN=""
 
 # Run the application
 CMD ["python", "./get-specs-data.py"]

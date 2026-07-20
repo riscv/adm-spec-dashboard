@@ -10,7 +10,177 @@ import csv
 import os
 import re
 from datetime import datetime
+from urllib.parse import urlparse
+
+import requests
 from atlassian import Jira
+
+
+GITHUB_API = "https://api.github.com"
+
+
+def make_github_session():
+    """Return an authenticated requests session for the GitHub API, or None.
+
+    Uses GITHUB_TOKEN when available (raises the rate limit from 60 to 5000
+    requests/hour). Works unauthenticated too, just more slowly.
+    """
+    session = requests.Session()
+    session.headers.update({
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "riscv-adm-spec-dashboard",
+    })
+    token = os.getenv("GHTOKEN") or os.getenv("GITHUB_TOKEN")
+    if token:
+        session.headers["Authorization"] = f"Bearer {token}"
+    return session
+
+
+def _gh_get(session, path, params=None):
+    try:
+        resp = session.get(f"{GITHUB_API}{path}", params=params, timeout=20)
+    except requests.RequestException:
+        return None
+    if resp.status_code == 200:
+        try:
+            return resp.json()
+        except ValueError:
+            return None
+    return None
+
+
+def _commit_date(commit):
+    """Pull the committer (fallback author) date out of a GitHub commit object."""
+    if not isinstance(commit, dict):
+        return ""
+    inner = commit.get("commit") or {}
+    committer = inner.get("committer") or {}
+    if committer.get("date"):
+        return committer["date"]
+    author = inner.get("author") or {}
+    return author.get("date") or ""
+
+
+def parse_github_url(url):
+    """Classify a GitHub URL into the shape we know how to resolve.
+
+    Handles repo roots, pull requests, blob/tree (a path on a branch), and
+    commit URLs. Returns None for anything that isn't a GitHub URL.
+    """
+    if not url:
+        return None
+    try:
+        parsed = urlparse(str(url).strip())
+    except ValueError:
+        return None
+    if "github.com" not in (parsed.netloc or "").lower():
+        return None
+
+    parts = [segment for segment in parsed.path.split("/") if segment]
+    if len(parts) < 2:
+        return None
+
+    owner = parts[0]
+    repo = parts[1][:-4] if parts[1].endswith(".git") else parts[1]
+    rest = parts[2:]
+    if not rest:
+        return {"owner": owner, "repo": repo, "kind": "repo"}
+
+    head = rest[0]
+    if head == "pull" and len(rest) >= 2:
+        return {"owner": owner, "repo": repo, "kind": "pr", "number": rest[1]}
+    if head in ("tree", "blob") and len(rest) >= 2:
+        return {
+            "owner": owner,
+            "repo": repo,
+            "kind": "path",
+            "branch": rest[1],
+            "path": "/".join(rest[2:]),
+        }
+    if head == "commit" and len(rest) >= 2:
+        return {"owner": owner, "repo": repo, "kind": "commit", "sha": rest[1]}
+    return {"owner": owner, "repo": repo, "kind": "repo"}
+
+
+def get_last_contribution(github_url, session):
+    """Resolve the most recent code contribution for a spec's GitHub link.
+
+    Returns a (iso_timestamp, source_label) tuple. Covers every way new code
+    reaches a repo: pushes to any branch, open/merged pull requests, and
+    commits touching a specific path on a branch. Returns ("", "") when there
+    is no resolvable GitHub activity.
+    """
+    info = parse_github_url(github_url)
+    if not info:
+        return "", ""
+
+    owner, repo, kind = info["owner"], info["repo"], info["kind"]
+
+    if kind == "repo":
+        data = _gh_get(session, f"/repos/{owner}/{repo}")
+        if not data:
+            return "", ""
+        best = data.get("pushed_at") or ""
+        source = "push" if best else ""
+        # Catch fork-based PRs, whose commits don't move the base repo's
+        # pushed_at, by checking the most recently updated open PR head.
+        prs = _gh_get(
+            session,
+            f"/repos/{owner}/{repo}/pulls",
+            {"state": "open", "sort": "updated", "direction": "desc", "per_page": 1},
+        )
+        if prs:
+            pr = prs[0]
+            sha = (pr.get("head") or {}).get("sha")
+            commit = _gh_get(session, f"/repos/{owner}/{repo}/commits/{sha}") if sha else None
+            cdate = _commit_date(commit)
+            if cdate and cdate > best:
+                best = cdate
+                source = f"PR #{pr.get('number')}"
+        return best, source
+
+    if kind == "pr":
+        number = info["number"]
+        pr = _gh_get(session, f"/repos/{owner}/{repo}/pulls/{number}")
+        if not pr:
+            return "", ""
+        if pr.get("merged_at"):
+            return pr["merged_at"], f"PR #{number} merged"
+        commits = _gh_get(
+            session,
+            f"/repos/{owner}/{repo}/pulls/{number}/commits",
+            {"per_page": 100},
+        )
+        if commits:
+            cdate = _commit_date(commits[-1])
+            if cdate:
+                return cdate, f"PR #{number} {pr.get('state', 'open')}"
+        return pr.get("updated_at", ""), f"PR #{number}"
+
+    if kind == "path":
+        commits = _gh_get(
+            session,
+            f"/repos/{owner}/{repo}/commits",
+            {"sha": info["branch"], "path": info["path"], "per_page": 1},
+        )
+        if commits:
+            cdate = _commit_date(commits[0])
+            if cdate:
+                return cdate, f"branch:{info['branch']}"
+        return "", ""
+
+    if kind == "commit":
+        commit = _gh_get(session, f"/repos/{owner}/{repo}/commits/{info['sha']}")
+        cdate = _commit_date(commit)
+        if cdate:
+            return cdate, f"commit {info['sha'][:7]}"
+        data = _gh_get(session, f"/repos/{owner}/{repo}")
+        if data and data.get("pushed_at"):
+            return data["pushed_at"], "push"
+        return "", ""
+
+    return "", ""
 
 
 def extract_field_value(value):
@@ -158,8 +328,12 @@ def fetch_all_issues(jira, jql, page_size=100):
 
 
 # Function to parse and extract issue details
-def parse_issues(issues):
+def parse_issues(issues, github_session=None):
+    if github_session is None:
+        github_session = make_github_session()
+
     parsed_issues = []
+    contribution_cache = {}
     for issue in issues:
         issue_id = issue.get('id')
         issue_key = issue.get('key')
@@ -196,6 +370,18 @@ def parse_issues(issues):
         arc_review_status = extract_arc_review_status(fields.get('subtasks'))
         fast_track = "Yes" if is_fast_track(fields.get('subtasks')) else "No"
 
+        # Resolve the last real code contribution from the spec's GitHub link.
+        github_url = str(github).strip() if github and github != "Not Set Yet" else ""
+        if github_url in contribution_cache:
+            last_contribution, last_contribution_source = contribution_cache[github_url]
+        elif github_url:
+            last_contribution, last_contribution_source = get_last_contribution(
+                github_url, github_session
+            )
+            contribution_cache[github_url] = (last_contribution, last_contribution_source)
+        else:
+            last_contribution, last_contribution_source = "", ""
+
         # Collect issue information
         parsed_issues.append({
             'URL': url,
@@ -212,7 +398,9 @@ def parse_issues(issues):
             'Baseline Ratification Quarter': baseline_ratification_quarter,
             'Target Ratification Quarter': target_ratification_quarter,
             'Ratification Progress': ratification_progress,
-            'Previous Ratification Progress': previous_ratification_progress
+            'Previous Ratification Progress': previous_ratification_progress,
+            'Last Contribution': last_contribution,
+            'Last Contribution Source': last_contribution_source
         })
     return parsed_issues
 
@@ -263,7 +451,9 @@ def get_data_from_jira(jira_token, jira_email):
             'Baseline Ratification Quarter',
             'Target Ratification Quarter',
             'Ratification Progress',
-            'Previous Ratification Progress'
+            'Previous Ratification Progress',
+            'Last Contribution',
+            'Last Contribution Source'
         ])
 
         # Writing each issue to the CSV file
@@ -281,7 +471,9 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Baseline Ratification Quarter'],
                 issue['Target Ratification Quarter'],
                 issue['Ratification Progress'],
-                issue['Previous Ratification Progress']
+                issue['Previous Ratification Progress'],
+                issue['Last Contribution'],
+                issue['Last Contribution Source']
             ])
 
     print(f"Data successfully written to {csv_filename}")

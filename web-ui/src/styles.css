@@ -324,6 +324,42 @@ tbody tr:hover td {
   letter-spacing: 0.2px;
 }
 
+.spec-updated.no-activity {
+  font-style: italic;
+  opacity: 0.75;
+}
+
+/* Recent-activity indicator: last real code contribution to the spec's repo. */
+.activity-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+  background: #9aa5b1;
+}
+
+.activity-dot.activity-fresh {
+  background: #2e9e5b; /* active: contribution within 14 days */
+}
+
+.activity-dot.activity-slowing {
+  background: #e0a325; /* slowing: 15–45 days */
+}
+
+.activity-dot.activity-stale {
+  background: #d1495b; /* stalled: over 45 days */
+}
+
+.activity-dot.activity-neutral {
+  background: #6b7a90; /* post-Freeze: code activity not expected */
+}
+
+.activity-dot.activity-none {
+  background: #c4ccd6; /* no resolvable GitHub contribution */
+}
+
 .fast-track-badge {
   position: absolute;
   right: 6px;
