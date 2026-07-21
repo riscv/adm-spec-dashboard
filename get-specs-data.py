@@ -6,13 +6,15 @@ and the data is written to a CSV file named with the current date and time.
 Author: Rafael Sene, rafael@riscv.org - Initial implementation
 """
 
+import base64
 import csv
 import os
 import re
-from datetime import datetime
+from datetime import date, datetime
 from urllib.parse import urlparse
 
 import requests
+import yaml
 from atlassian import Jira
 
 
@@ -276,6 +278,7 @@ REQUIRED_FIELDS = [
     "summary",
     "status",
     "updated",
+    "created",
     "subtasks",
     "customfield_10037",
     "customfield_10038",
@@ -362,6 +365,91 @@ def derive_ratification_progress(fields, work_open, gate_open, total, last_contr
     return "On Track"
 
 
+# ---- Look-ahead: driven by the SINGLE source of truth (spec-plan-editor) ----
+ACTIVITIES_REPO = "riscv-admin/spec-plan-editor"
+ACTIVITIES_PATH = "web/activities.yaml"
+# activities.yaml uses "Freezing"; Jira status uses "Specification in Freeze".
+STATUS_TO_PHASE = {
+    "Specification Inception": "Inception",
+    "Specification in Planning": "Planning",
+    "Specification Under Development": "Development",
+    "Specification Under Stabilization": "Stabilization",
+    "Specification in Freeze": "Freezing",
+    "Specification in Ratification-Ready": "Ratification-Ready",
+    "Specification in Publication": "Publication",
+}
+# Embedded fallback ONLY if the repo is unreachable during a build — keeps the
+# build alive; the live values always come from activities.yaml.
+_FALLBACK_ACTIVITIES = {
+    "Inception": [["x", 30]],
+    "Planning": [["x", 30], ["x", 14], ["x", 14]],
+    "Development": [["x", 60], ["x", 14], ["x", 14]],
+    "Stabilization": [["x", 14], ["x", 30], ["x", 14]],
+    "Freezing": [["x", 45], ["x", 7], ["x", 15], ["x", 14]],
+    "Ratification-Ready": [["x", 30], ["x", 15], ["x", 0], ["x", 14]],
+    "Publication": [["x", 1]],
+}
+
+
+def load_phase_model(github_session):
+    """Ingest activities.yaml from spec-plan-editor (single source of truth).
+
+    Returns (phase_order, phase_dur, gate_dur). Falls back to an embedded
+    snapshot only if the repo cannot be fetched, so a build never breaks.
+    """
+    acts = None
+    data = _gh_get(github_session, f"/repos/{ACTIVITIES_REPO}/contents/{ACTIVITIES_PATH}")
+    if isinstance(data, dict) and data.get("content"):
+        try:
+            acts = yaml.safe_load(base64.b64decode(data["content"]).decode())["activities"]
+            print(f"activities.yaml: loaded from {ACTIVITIES_REPO}/{ACTIVITIES_PATH}")
+        except Exception as exc:  # noqa: BLE001
+            print(f"WARN: could not parse activities.yaml ({exc}); using fallback")
+    if acts is None:
+        print("WARN: using embedded activities fallback (repo unreachable)")
+        acts = _FALLBACK_ACTIVITIES
+    phase_order = list(acts.keys())
+    phase_dur = {p: sum(int(a[1]) for a in acts[p]) for p in phase_order}
+    gate_dur = {p: (int(acts[p][-1][1]) if acts[p] else 14) for p in phase_order}
+    return phase_order, phase_dur, gate_dur
+
+
+def get_days_in_phase(jira, issue_key, full_status, created):
+    """Days since the spec entered its current status (via changelog)."""
+    entry = (created or "")[:10]
+    try:
+        cl = jira.get_issue_changelog(issue_key, start=0, limit=1000)
+        for h in (cl.get("values") or cl.get("histories") or []):
+            for it in h.get("items", []):
+                if it.get("field") == "status" and it.get("toString") == full_status:
+                    entry = h["created"][:10]
+    except Exception:  # noqa: BLE001 - if changelog unavailable, fall back to created
+        pass
+    try:
+        return (date.today() - date.fromisoformat(entry)).days
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def compute_lookahead(phase_model, phase, dip, awaiting):
+    """Earliest plan-based ratification date from the current phase.
+
+    Uses activities.yaml durations only. Remaining-in-phase = the phase's final
+    gate duration if awaiting a vote (or over budget), else phase_dur - dip.
+    Returns (runway_days, lookahead_date_str, reaches_year_bool) or (None, "", None).
+    """
+    phase_order, phase_dur, gate_dur = phase_model
+    if phase not in phase_order:
+        return None, "", None
+    idx = phase_order.index(phase)
+    floor = gate_dur[phase]
+    rem_cur = floor if awaiting else max(phase_dur[phase] - (dip or 0), floor)
+    downstream = sum(phase_dur[p] for p in phase_order[idx + 1:])
+    runway = rem_cur + downstream
+    la = date.fromordinal(date.today().toordinal() + runway)
+    return runway, str(la), (la <= date(date.today().year, 12, 31))
+
+
 def fetch_all_issues(jira, jql, page_size=100):
     issues = []
     fields_param = ",".join(REQUIRED_FIELDS)
@@ -403,9 +491,11 @@ def fetch_all_issues(jira, jql, page_size=100):
 
 
 # Function to parse and extract issue details
-def parse_issues(issues, github_session=None):
+def parse_issues(issues, jira=None, github_session=None, phase_model=None):
     if github_session is None:
         github_session = make_github_session()
+    if phase_model is None:
+        phase_model = load_phase_model(github_session)
 
     parsed_issues = []
     contribution_cache = {}
@@ -466,6 +556,14 @@ def parse_issues(issues, github_session=None):
             fields.get('customfield_10038', {}).get('value') if fields.get('customfield_10038') else None
         )
 
+        # Look-ahead from the current phase, using activities.yaml durations
+        awaiting_vote = total > 0 and work_open == 0 and gate_open >= 1
+        phase = STATUS_TO_PHASE.get(status)
+        dip = get_days_in_phase(jira, issue_key, status, fields.get('created')) if jira else None
+        runway_days, lookahead_date, reaches_year = compute_lookahead(
+            phase_model, phase, dip, awaiting_vote
+        )
+
         # Collect issue information
         parsed_issues.append({
             'URL': url,
@@ -491,6 +589,9 @@ def parse_issues(issues, github_session=None):
             '% Complete': pct_complete,
             'Computed Progress': computed_progress,
             'Current Progress Raw': current_progress_raw,
+            'Days In Phase': dip if dip is not None else '',
+            'Look-ahead Date': lookahead_date,
+            'Reaches Year': ('Yes' if reaches_year else 'No') if reaches_year is not None else '',
         })
     return parsed_issues
 
@@ -546,7 +647,13 @@ def get_data_from_jira(jira_token, jira_email):
 
     # Extract issues from the JSON data
     issues = fetch_all_issues(jira, jql)
-    parsed_issues = parse_issues(issues)
+
+    # Single source of truth for phase durations: spec-plan-editor/activities.yaml
+    github_session = make_github_session()
+    phase_model = load_phase_model(github_session)
+
+    parsed_issues = parse_issues(issues, jira=jira, github_session=github_session,
+                                 phase_model=phase_model)
 
     # Write the computed Ratification Progress back to Jira (idempotent)
     update_progress_in_jira(jira, parsed_issues)
@@ -574,6 +681,9 @@ def get_data_from_jira(jira_token, jira_email):
             '% Complete',
             'Ratification Progress',
             'Previous Ratification Progress',
+            'Days In Phase',
+            'Look-ahead Date',
+            'Reaches Year',
             'Last Contribution',
             'Last Contribution Source'
         ])
@@ -596,6 +706,9 @@ def get_data_from_jira(jira_token, jira_email):
                 # dashboard shows the computed value (source of truth for cf10038)
                 issue['Computed Progress'],
                 issue['Previous Ratification Progress'],
+                issue['Days In Phase'],
+                issue['Look-ahead Date'],
+                issue['Reaches Year'],
                 issue['Last Contribution'],
                 issue['Last Contribution Source']
             ])
