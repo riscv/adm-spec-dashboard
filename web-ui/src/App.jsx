@@ -296,6 +296,7 @@ function normalizeRow(raw) {
     fastTrack: /^(yes|true|y|1)$/i.test(String(raw["Fast Track"] || "").trim()),
     lastContribution: raw["Last Contribution"] || "",
     lastContributionSource: raw["Last Contribution Source"] || "",
+    latestReleasePdf: raw["Latest Release PDF"] || "",
     currentPhase,
     nextPhase,
   };
@@ -356,6 +357,14 @@ function getLatestReleaseUrl(rawUrl) {
   const owner = parts[0];
   const repo = parts[1].replace(/\.git$/, "");
   return `https://github.com/${owner}/${repo}/releases/latest`;
+}
+
+// GitHub release assets are served with Content-Disposition: attachment (forces
+// download) and no CORS, so a pdf.js viewer can't fetch them cross-origin. The
+// Google Docs viewer fetches server-side and renders the PDF inline in-browser.
+function getPdfViewerUrl(pdfUrl) {
+  if (!pdfUrl) return "";
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
 }
 
 function getPhaseDisplay(row) {
@@ -774,23 +783,13 @@ function App() {
         </div>
 
         <div className="status-legend">
-          <span className="legend-label">Target Ratification Quarter:</span>
-          <div className="legend-item">
-            <span className="legend-color status-cell on-track">On Track</span>
-            <span className="legend-text">Likely to meet.</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell exposed">Exposed</span>
-            <span className="legend-text">At risk.</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell late">Late</span>
-            <span className="legend-text">Will miss, replan required.</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell not-set">Not Yet Defined</span>
-            <span className="legend-text">Undefined.</span>
-          </div>
+          <span className="legend-label">Status:</span>
+          <span className="legend-color status-cell on-track" title="On Track — likely to meet the target ratification quarter.">On Track</span>
+          <span className="legend-color status-cell awaiting-vote" title="Awaiting Vote — work complete; only an approval/vote is pending.">Awaiting Vote</span>
+          <span className="legend-color status-cell exposed" title="Exposed — behind the baseline; at risk of missing the target.">Exposed</span>
+          <span className="legend-color status-cell watch" title="Watch — active but concerning (scope change, leadership transition, low momentum).">Watch</span>
+          <span className="legend-color status-cell stalled" title="Stalled — no activity anywhere (GitHub, mailing list, meetings).">Stalled</span>
+          <span className="legend-color status-cell not-set" title="Not Yet Defined — no target set.">Not Yet Defined</span>
         </div>
 
         <div className="table-scroll">
@@ -974,6 +973,50 @@ function App() {
                             <img
                               src={`${assetBase}release-tag.svg`}
                               alt="No releases available"
+                              width="18"
+                              height="18"
+                              className="icon-img"
+                            />
+                          </span>
+                        )}
+                        {row.latestReleasePdf ? (
+                          <>
+                            <a
+                              href={getPdfViewerUrl(row.latestReleasePdf)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="icon-link"
+                              title="View latest release PDF in browser"
+                            >
+                              <img
+                                src={`${assetBase}pdf.svg`}
+                                alt="View latest release PDF"
+                                width="18"
+                                height="18"
+                                className="icon-img"
+                              />
+                            </a>
+                            <a
+                              href={row.latestReleasePdf}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="icon-link"
+                              title="Download latest release PDF"
+                            >
+                              <img
+                                src={`${assetBase}download.svg`}
+                                alt="Download latest release PDF"
+                                width="18"
+                                height="18"
+                                className="icon-img"
+                              />
+                            </a>
+                          </>
+                        ) : (
+                          <span className="icon-disabled" title="No release PDF available">
+                            <img
+                              src={`${assetBase}pdf.svg`}
+                              alt="No release PDF available"
                               width="18"
                               height="18"
                               className="icon-img"

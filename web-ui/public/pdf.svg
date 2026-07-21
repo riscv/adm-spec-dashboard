@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <path d="M7 2.5h6L19 8.5V19.5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4.5a2 2 0 0 1 2-2Z" stroke="#1f2328" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M13 2.5V8.5h6" stroke="#1f2328" stroke-width="1.5" stroke-linejoin="round"/>
+  <text x="12" y="18.2" font-family="Arial, Helvetica, sans-serif" font-size="6" font-weight="700" letter-spacing="-0.3" text-anchor="middle" fill="#1f2328">PDF</text>
+</svg>

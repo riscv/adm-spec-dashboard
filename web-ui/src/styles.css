@@ -401,6 +401,21 @@ tbody tr:hover td {
   color: #7a2226;
 }
 
+.awaiting-vote {
+  background-color: #dbeafe !important;   /* work done, ready for the vote */
+  color: #1e40af;
+}
+
+.watch {
+  background-color: #efe6fb !important;    /* active but concerning */
+  color: #5b3a8c;
+}
+
+.stalled {
+  background-color: #f7cccc !important;  /* solid & readable; distinguished by the left accent bar */
+  color: #6e1e22;
+}
+
 .not-set-yet {
   background-color: #e3e2e2;
   color: #e3e2e2;
@@ -443,6 +458,21 @@ tbody tr:hover td {
 .status-cell.late {
   background-color: #f7d3d3;
   color: #7a2226;
+}
+
+.status-cell.awaiting-vote {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-cell.watch {
+  background-color: #efe6fb;
+  color: #5b3a8c;
+}
+
+.status-cell.stalled {
+  background-color: #f0bcbc;
+  color: #6e1e22;
 }
 
 .status-cell.completed {
@@ -839,6 +869,16 @@ th.share-column {
   }
   tr.late td.specification-column {
     background-color: #fde2e2;
+  }
+  tr.awaiting-vote td.specification-column {
+    background-color: #dbeafe;
+  }
+  tr.watch td.specification-column {
+    background-color: #efe6fb;
+  }
+  tr.stalled td.specification-column {
+    background-color: #f7cccc;
+    border-left: 4px solid #b23a48;
   }
   tr.completed td.specification-column {
     background-color: #dceff2;
