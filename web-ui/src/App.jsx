@@ -296,6 +296,7 @@ function normalizeRow(raw) {
     fastTrack: /^(yes|true|y|1)$/i.test(String(raw["Fast Track"] || "").trim()),
     lastContribution: raw["Last Contribution"] || "",
     lastContributionSource: raw["Last Contribution Source"] || "",
+    latestReleasePdf: raw["Latest Release PDF"] || "",
     currentPhase,
     nextPhase,
   };
@@ -825,7 +826,7 @@ function App() {
                 githubValue &&
                 githubValue.toLowerCase() !== "not set yet" &&
                 githubValue.toLowerCase() !== "n/a";
-              const latestReleaseUrl = hasGithub ? getLatestReleaseUrl(githubValue) : "";
+              const latestReleaseUrl = row.latestReleasePdf || (hasGithub ? getLatestReleaseUrl(githubValue) : "");
 
               return (
                 <tr key={`${row.jiraUrl || row.summary}-${index}`} className={progressClass}>
