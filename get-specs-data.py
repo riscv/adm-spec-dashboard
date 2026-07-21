@@ -8,8 +8,10 @@ Author: Rafael Sene, rafael@riscv.org - Initial implementation
 
 import base64
 import csv
+import io
 import os
 import re
+import zipfile
 from datetime import date, datetime
 from urllib.parse import urlparse
 
@@ -272,6 +274,224 @@ def normalize_bod_report_value(value):
     if lowered in ["no", "false", "n", "0"]:
         return "No"
     return text
+
+
+# ---- Spec PDF re-hosting (restored feature) --------------------------------
+# For each spec we surface a public PDF link: either an extension repo's own
+# latest-release PDF, or — for specs that live only as a reference into the
+# shared riscv-isa-manual monorepo (PR / commit / branch) — the manual build
+# PDF, downloaded from the (auth-gated, 7-day) Actions artifact and re-hosted
+# on this repo's stable "spec-pdfs" release so anonymous dashboard users can open it.
+_release_pdf_cache = {}
+_pr_pdf_cache = {}
+_existing_pr_assets = None
+_MONOREPO_NAMES = {"riscv-isa-manual"}
+_GENERIC_PDF_NAMES = {"riscv-privileged.pdf", "riscv-unprivileged.pdf", "riscv-isa.pdf"}
+_ISA_MANUAL_REF_PATTERN = re.compile(
+    r"github\.com/([^/]+)/riscv-isa-manual/(pull|commit|commits|blob|tree)/([^/#?\s]+)",
+    re.IGNORECASE,
+)
+PR_PDF_CACHE_DIR = "pdf-cache"
+PR_PDF_RELEASE_TAG = "spec-pdfs"
+PR_PDF_PUBLIC_BASE = (
+    "https://github.com/riscv/adm-spec-dashboard/releases/download/" + PR_PDF_RELEASE_TAG
+)
+
+
+def _github_headers():
+    """GitHub API headers, authenticated when a token is available.
+
+    Honors GHTOKEN (what the workflow injects into the container) and falls
+    back to GITHUB_TOKEN. Using the token lifts the rate limit 60/hr -> 5000/hr.
+    """
+    headers = {"Accept": "application/vnd.github+json"}
+    token = os.getenv("GHTOKEN") or os.getenv("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"token {token}"
+    return headers
+
+
+def _get_existing_pr_pdf_assets():
+    """Set of PDF asset names already on the stable spec-pdfs release.
+
+    Lets a link survive the upstream artifact's 7-day expiry: if we cannot
+    re-download a PR build this run but published a copy before, the public URL
+    still resolves. Cached for the run; empty set on any error.
+    """
+    global _existing_pr_assets
+    if _existing_pr_assets is not None:
+        return _existing_pr_assets
+    _existing_pr_assets = set()
+    try:
+        resp = requests.get(
+            "https://api.github.com/repos/riscv/adm-spec-dashboard/releases/tags/"
+            + PR_PDF_RELEASE_TAG,
+            headers=_github_headers(), timeout=15)
+        if resp.status_code == 200:
+            for asset in resp.json().get("assets", []) or []:
+                if asset.get("name"):
+                    _existing_pr_assets.add(asset["name"])
+    except Exception as exc:  # noqa: BLE001
+        print(f"  Could not list existing {PR_PDF_RELEASE_TAG} assets: {exc}")
+    return _existing_pr_assets
+
+
+def get_latest_release_pdf(github_url):
+    """Direct download URL of a spec's extension-specific latest-release PDF.
+
+    Returns "" for the shared riscv-isa-manual monorepo, the generic full-manual
+    volumes, or when there is no repo/release/PDF asset or any error — a wrong
+    link (the whole manual) is worse than none.
+    """
+    if not github_url or not isinstance(github_url, str):
+        return ""
+    url = github_url.strip()
+    if not url.lower().startswith("http") or "github.com" not in url.lower():
+        return ""
+    try:
+        path = url.split("github.com/", 1)[1]
+    except IndexError:
+        return ""
+    parts = [seg for seg in path.split("/") if seg]
+    if len(parts) < 2:
+        return ""
+    owner, repo = parts[0], parts[1]
+    if repo.endswith(".git"):
+        repo = repo[:-4]
+    if repo.lower() in _MONOREPO_NAMES:
+        return ""
+    cache_key = f"{owner}/{repo}"
+    if cache_key in _release_pdf_cache:
+        return _release_pdf_cache[cache_key]
+    pdf_url = ""
+    try:
+        response = requests.get(
+            f"https://api.github.com/repos/{owner}/{repo}/releases/latest",
+            headers=_github_headers(), timeout=15, allow_redirects=True)
+        if response.status_code == 200:
+            for asset in response.json().get("assets", []) or []:
+                name = (asset.get("name") or "").lower()
+                if not name.endswith(".pdf") or name in _GENERIC_PDF_NAMES:
+                    continue
+                pdf_url = asset.get("browser_download_url", "") or ""
+                break
+        else:
+            print(f"  No latest-release PDF for {cache_key} (HTTP {response.status_code})")
+    except Exception as exc:  # noqa: BLE001
+        print(f"  Failed to resolve release PDF for {cache_key}: {exc}")
+    _release_pdf_cache[cache_key] = pdf_url
+    return pdf_url
+
+
+def _fetch_isa_build_pdf(owner, head_sha, asset_name, label):
+    """Download commit head_sha's ISA-manual build PDF and cache it locally.
+
+    Writes the extracted PDF to PR_PDF_CACHE_DIR/asset_name and returns the
+    deterministic public spec-pdfs URL; falls back to an already-published copy
+    so links survive the 7-day artifact expiry; "" when nothing is available.
+    """
+    public_url = f"{PR_PDF_PUBLIC_BASE}/{asset_name}"
+    headers = _github_headers()
+    api = f"https://api.github.com/repos/{owner}/riscv-isa-manual"
+    result = ""
+    try:
+        artifact = None
+        if head_sha:
+            runs_resp = requests.get(f"{api}/actions/runs", headers=headers,
+                                     params={"head_sha": head_sha, "per_page": 30}, timeout=15)
+            build_runs = []
+            if runs_resp.status_code == 200:
+                for run in runs_resp.json().get("workflow_runs", []) or []:
+                    if "isa build" in (run.get("name") or "").lower() and run.get("conclusion") == "success":
+                        build_runs.append(run)
+            build_runs.sort(key=lambda r: r.get("run_number", 0), reverse=True)
+            for run in build_runs:
+                arts_resp = requests.get(f"{api}/actions/runs/{run['id']}/artifacts",
+                                         headers=headers, timeout=15)
+                if arts_resp.status_code != 200:
+                    continue
+                for asset in arts_resp.json().get("artifacts", []) or []:
+                    name = (asset.get("name") or "").lower()
+                    if name.endswith(".pdf") and "riscv-spec" in name and not asset.get("expired", False):
+                        artifact = asset
+                        break
+                if artifact:
+                    break
+        if artifact:
+            dl_resp = requests.get(artifact["archive_download_url"], headers=headers, timeout=120)
+            if dl_resp.status_code == 200:
+                with zipfile.ZipFile(io.BytesIO(dl_resp.content)) as archive:
+                    pdf_member = next((n for n in archive.namelist() if n.lower().endswith(".pdf")), None)
+                    if pdf_member:
+                        os.makedirs(PR_PDF_CACHE_DIR, exist_ok=True)
+                        out_path = os.path.join(PR_PDF_CACHE_DIR, asset_name)
+                        with archive.open(pdf_member) as src, open(out_path, "wb") as dst:
+                            dst.write(src.read())
+                        result = public_url
+                        print(f"  Cached ISA-manual PDF for {label} -> {asset_name}")
+    except Exception as exc:  # noqa: BLE001
+        print(f"  Failed to resolve ISA-manual PDF for {label}: {exc}")
+    if not result and asset_name in _get_existing_pr_pdf_assets():
+        result = public_url
+    return result
+
+
+def _slugify(text):
+    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+
+def get_isa_manual_ref_pdf(github_url):
+    """Re-host and return the public URL of a riscv-isa-manual reference's PDF.
+
+    Handles /pull/<n>, /commit(s)/<sha>, /blob|tree/<ref> into the shared
+    monorepo: resolve to a commit SHA, then download+re-host that commit's build
+    PDF. "" for anything else or when no build artifact exists. Never raises.
+    """
+    if not github_url or not isinstance(github_url, str):
+        return ""
+    match = _ISA_MANUAL_REF_PATTERN.search(github_url)
+    if not match:
+        return ""
+    owner, kind, ident = match.group(1), match.group(2).lower(), match.group(3)
+    cache_key = f"{owner}/riscv-isa-manual/{kind}/{ident}"
+    if cache_key in _pr_pdf_cache:
+        return _pr_pdf_cache[cache_key]
+    headers = _github_headers()
+    api = f"https://api.github.com/repos/{owner}/riscv-isa-manual"
+    head_sha = None
+    asset_name = None
+    label = cache_key
+    try:
+        if kind == "pull":
+            resp = requests.get(f"{api}/pulls/{ident}", headers=headers, timeout=15)
+            if resp.status_code == 200:
+                head_sha = (resp.json().get("head") or {}).get("sha")
+            asset_name = f"riscv-isa-manual-pr-{ident}.pdf"
+            label = f"pull/{ident}"
+        else:
+            is_sha = bool(re.fullmatch(r"[0-9a-fA-F]{7,40}", ident))
+            resp = requests.get(f"{api}/commits/{ident}", headers=headers, timeout=15)
+            if resp.status_code == 200:
+                head_sha = resp.json().get("sha")
+            elif is_sha:
+                head_sha = ident
+            if is_sha:
+                short = (head_sha or ident)[:12]
+                asset_name = f"riscv-isa-manual-commit-{short}.pdf"
+                label = f"commit/{short}"
+            else:
+                asset_name = f"riscv-isa-manual-{_slugify(owner)}-{_slugify(ident)}.pdf"
+                label = f"{kind}/{ident}"
+    except Exception as exc:  # noqa: BLE001
+        print(f"  Failed to resolve ISA-manual ref for {cache_key}: {exc}")
+    result = _fetch_isa_build_pdf(owner, head_sha, asset_name, label) if asset_name else ""
+    _pr_pdf_cache[cache_key] = result
+    return result
+
+
+def resolve_spec_pdf(github_url):
+    """Prefer a dedicated repo's release PDF; else re-host a monorepo ref's build PDF."""
+    return get_latest_release_pdf(github_url) or get_isa_manual_ref_pdf(github_url)
 
 
 REQUIRED_FIELDS = [
@@ -564,6 +784,9 @@ def parse_issues(issues, jira=None, github_session=None, phase_model=None):
             phase_model, phase, dip, awaiting_vote
         )
 
+        # Public spec PDF (extension release PDF, or re-hosted monorepo-ref build PDF)
+        pdf_link = resolve_spec_pdf(github_url)
+
         # Collect issue information
         parsed_issues.append({
             'URL': url,
@@ -592,6 +815,7 @@ def parse_issues(issues, jira=None, github_session=None, phase_model=None):
             'Days In Phase': dip if dip is not None else '',
             'Look-ahead Date': lookahead_date,
             'Reaches Year': ('Yes' if reaches_year else 'No') if reaches_year is not None else '',
+            'Latest Release PDF': pdf_link,
         })
     return parsed_issues
 
@@ -685,7 +909,8 @@ def get_data_from_jira(jira_token, jira_email):
             'Look-ahead Date',
             'Reaches Year',
             'Last Contribution',
-            'Last Contribution Source'
+            'Last Contribution Source',
+            'Latest Release PDF'
         ])
 
         # Writing each issue to the CSV file
@@ -710,7 +935,8 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Look-ahead Date'],
                 issue['Reaches Year'],
                 issue['Last Contribution'],
-                issue['Last Contribution Source']
+                issue['Last Contribution Source'],
+                issue['Latest Release PDF']
             ])
 
     print(f"Data successfully written to {csv_filename}")
