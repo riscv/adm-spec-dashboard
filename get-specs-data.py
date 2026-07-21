@@ -284,7 +284,82 @@ REQUIRED_FIELDS = [
     "customfield_10042",
     "customfield_10043",
     "customfield_10136",
+    "customfield_10970",  # BoD Ratification Approval Baseline (schedule signal)
+    "customfield_10989",  # BoD Ratification Approval Projection (schedule signal)
 ]
+
+# ---- Ratification Progress computation (dashboard view; BoD Report cf10037 untouched) ----
+GATE_KEYWORDS = ("approval", "vote", "ratification")
+_DONE_STATUS_NAMES = ("done", "closed", "approved", "resolved", "ar review not required", "not required")
+
+
+def _subtask_is_done(sub):
+    st = (sub.get("fields") or {}).get("status") or {}
+    cat = ((st.get("statusCategory") or {}).get("key") or "").lower()
+    if cat:
+        return cat == "done"
+    return (st.get("name") or "").strip().lower() in _DONE_STATUS_NAMES
+
+
+def _is_gate(summary):
+    low = (summary or "").lower()
+    return any(k in low for k in GATE_KEYWORDS)
+
+
+def subtask_stats(subtasks):
+    """Return (done, total, pct, work_open, gate_open) for a spec's subtasks.
+
+    work_open  = open subtasks that are real work (not an approval/vote gate)
+    gate_open  = open approval/vote subtasks (unassigned-by-design, expected)
+    """
+    subs = subtasks or []
+    total = len(subs)
+    done = work_open = gate_open = 0
+    for s in subs:
+        if _subtask_is_done(s):
+            done += 1
+        elif _is_gate((s.get("fields") or {}).get("summary")):
+            gate_open += 1
+        else:
+            work_open += 1
+    pct = round(100 * done / total) if total else 0
+    return done, total, pct, work_open, gate_open
+
+
+def _days_since(date_str):
+    if not date_str:
+        return None
+    try:
+        return (datetime.now() - datetime.strptime(str(date_str)[:10], "%Y-%m-%d")).days
+    except ValueError:
+        return None
+
+
+def derive_ratification_progress(fields, work_open, gate_open, total, last_contribution):
+    """Compute Ratification Progress from Jira + GitHub signals.
+
+    Precedence: Completed > Awaiting Vote > Stalled > Exposed > On Track.
+    'Watch' is intentionally never auto-set (human escalation only), so a
+    manually-set Watch is preserved by the caller's change check.
+    """
+    status = (fields.get("status") or {}).get("name") or ""
+    if status == "Specification Ratified":
+        return "Completed"
+    # all work subtasks done, only an approval/vote pending -> on track, not behind
+    if total > 0 and work_open == 0 and gate_open >= 1:
+        return "Awaiting Vote"
+    # activity axis: real dev contribution (GitHub) or a recent Jira update
+    contrib_age = _days_since(last_contribution)
+    updated_age = _days_since(fields.get("updated"))
+    active = (contrib_age is not None and contrib_age <= 90) or (updated_age is not None and updated_age <= 45)
+    if not active:
+        return "Stalled"
+    # schedule axis: BoD projection later than baseline -> behind -> exposed
+    base = fields.get("customfield_10970")
+    proj = fields.get("customfield_10989")
+    if base and proj and str(proj)[:10] > str(base)[:10]:
+        return "Exposed"
+    return "On Track"
 
 
 def fetch_all_issues(jira, jql, page_size=100):
@@ -382,6 +457,15 @@ def parse_issues(issues, github_session=None):
         else:
             last_contribution, last_contribution_source = "", ""
 
+        # Task completion % and computed Ratification Progress (dashboard view)
+        done, total, pct_complete, work_open, gate_open = subtask_stats(fields.get('subtasks'))
+        computed_progress = derive_ratification_progress(
+            fields, work_open, gate_open, total, last_contribution
+        )
+        current_progress_raw = (
+            fields.get('customfield_10038', {}).get('value') if fields.get('customfield_10038') else None
+        )
+
         # Collect issue information
         parsed_issues.append({
             'URL': url,
@@ -400,9 +484,43 @@ def parse_issues(issues, github_session=None):
             'Ratification Progress': ratification_progress,
             'Previous Ratification Progress': previous_ratification_progress,
             'Last Contribution': last_contribution,
-            'Last Contribution Source': last_contribution_source
+            'Last Contribution Source': last_contribution_source,
+            # computed fields
+            'Tasks Done': done,
+            'Tasks Total': total,
+            '% Complete': pct_complete,
+            'Computed Progress': computed_progress,
+            'Current Progress Raw': current_progress_raw,
         })
     return parsed_issues
+
+
+def update_progress_in_jira(jira, parsed_issues):
+    """Write the computed Ratification Progress back to Jira, idempotently.
+
+    Only writes when the computed value differs from the current one, so daily
+    runs do NOT churn the 'Updated' timestamp (staff automation must not look
+    like developer activity). Never touches BoD Report (cf10037). 'Watch' is
+    manual, so a manually-set value is only replaced when the computed status
+    genuinely changes.
+    """
+    print("Updating Ratification Progress in Jira (only where changed)...")
+    updated = 0
+    for it in parsed_issues:
+        computed = it.get('Computed Progress')
+        current = it.get('Current Progress Raw')
+        if not computed or computed == current:
+            continue
+        payload = {'customfield_10038': {'value': computed}}
+        if current:
+            payload['customfield_10136'] = {'value': current}  # preserve history
+        try:
+            jira.update_issue_field(it['Key'], payload)
+            it['Previous Ratification Progress'] = current or it.get('Previous Ratification Progress')
+            updated += 1
+        except Exception as exc:  # noqa: BLE001 - log and continue
+            print(f"  WARN: could not update {it['Key']}: {exc}")
+    print(f"Ratification Progress updated on {updated} issue(s).")
 
 def get_data_from_jira(jira_token, jira_email):
     """
@@ -430,6 +548,9 @@ def get_data_from_jira(jira_token, jira_email):
     issues = fetch_all_issues(jira, jql)
     parsed_issues = parse_issues(issues)
 
+    # Write the computed Ratification Progress back to Jira (idempotent)
+    update_progress_in_jira(jira, parsed_issues)
+
     # Generating the CSV filename with current date and time
     print("Generating csv file...")
     csv_filename = f"specs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
@@ -450,6 +571,7 @@ def get_data_from_jira(jira_token, jira_email):
             'GitHub',
             'Baseline Ratification Quarter',
             'Target Ratification Quarter',
+            '% Complete',
             'Ratification Progress',
             'Previous Ratification Progress',
             'Last Contribution',
@@ -470,7 +592,9 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['GitHub'],
                 issue['Baseline Ratification Quarter'],
                 issue['Target Ratification Quarter'],
-                issue['Ratification Progress'],
+                issue['% Complete'],
+                # dashboard shows the computed value (source of truth for cf10038)
+                issue['Computed Progress'],
                 issue['Previous Ratification Progress'],
                 issue['Last Contribution'],
                 issue['Last Contribution Source']
