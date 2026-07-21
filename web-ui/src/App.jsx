@@ -783,35 +783,13 @@ function App() {
         </div>
 
         <div className="status-legend">
-          <span className="legend-label">Target Ratification Quarter:</span>
-          <div className="legend-item">
-            <span className="legend-color status-cell on-track">On Track</span>
-            <span className="legend-text">Likely to meet.</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell awaiting-vote">Awaiting Vote</span>
-            <span className="legend-text">Work done; only a vote pending.</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell exposed">Exposed</span>
-            <span className="legend-text">At risk.</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell watch">Watch</span>
-            <span className="legend-text">Active but concerning.</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell late">Late</span>
-            <span className="legend-text">Will miss, replan required.</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell stalled">Stalled</span>
-            <span className="legend-text">No activity anywhere.</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell not-set">Not Yet Defined</span>
-            <span className="legend-text">Undefined.</span>
-          </div>
+          <span className="legend-label">Status:</span>
+          <span className="legend-color status-cell on-track" title="On Track — likely to meet the target ratification quarter.">On Track</span>
+          <span className="legend-color status-cell awaiting-vote" title="Awaiting Vote — work complete; only an approval/vote is pending.">Awaiting Vote</span>
+          <span className="legend-color status-cell exposed" title="Exposed — behind the baseline; at risk of missing the target.">Exposed</span>
+          <span className="legend-color status-cell watch" title="Watch — active but concerning (scope change, leadership transition, low momentum).">Watch</span>
+          <span className="legend-color status-cell stalled" title="Stalled — no activity anywhere (GitHub, mailing list, meetings).">Stalled</span>
+          <span className="legend-color status-cell not-set" title="Not Yet Defined — no target set.">Not Yet Defined</span>
         </div>
 
         <div className="table-scroll">
