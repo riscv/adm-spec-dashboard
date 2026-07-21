@@ -359,6 +359,14 @@ function getLatestReleaseUrl(rawUrl) {
   return `https://github.com/${owner}/${repo}/releases/latest`;
 }
 
+// GitHub release assets are served with Content-Disposition: attachment (forces
+// download) and no CORS, so a pdf.js viewer can't fetch them cross-origin. The
+// Google Docs viewer fetches server-side and renders the PDF inline in-browser.
+function getPdfViewerUrl(pdfUrl) {
+  if (!pdfUrl) return "";
+  return `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
+}
+
 function getPhaseDisplay(row) {
   const currentIndex = WORKFLOW_PHASES.indexOf(row.currentPhase);
   const phaseStates = {};
@@ -781,12 +789,24 @@ function App() {
             <span className="legend-text">Likely to meet.</span>
           </div>
           <div className="legend-item">
+            <span className="legend-color status-cell awaiting-vote">Awaiting Vote</span>
+            <span className="legend-text">Work done; only a vote pending.</span>
+          </div>
+          <div className="legend-item">
             <span className="legend-color status-cell exposed">Exposed</span>
             <span className="legend-text">At risk.</span>
           </div>
           <div className="legend-item">
+            <span className="legend-color status-cell watch">Watch</span>
+            <span className="legend-text">Active but concerning.</span>
+          </div>
+          <div className="legend-item">
             <span className="legend-color status-cell late">Late</span>
             <span className="legend-text">Will miss, replan required.</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color status-cell stalled">Stalled</span>
+            <span className="legend-text">No activity anywhere.</span>
           </div>
           <div className="legend-item">
             <span className="legend-color status-cell not-set">Not Yet Defined</span>
@@ -826,7 +846,7 @@ function App() {
                 githubValue &&
                 githubValue.toLowerCase() !== "not set yet" &&
                 githubValue.toLowerCase() !== "n/a";
-              const latestReleaseUrl = row.latestReleasePdf || (hasGithub ? getLatestReleaseUrl(githubValue) : "");
+              const latestReleaseUrl = hasGithub ? getLatestReleaseUrl(githubValue) : "";
 
               return (
                 <tr key={`${row.jiraUrl || row.summary}-${index}`} className={progressClass}>
@@ -975,6 +995,50 @@ function App() {
                             <img
                               src={`${assetBase}release-tag.svg`}
                               alt="No releases available"
+                              width="18"
+                              height="18"
+                              className="icon-img"
+                            />
+                          </span>
+                        )}
+                        {row.latestReleasePdf ? (
+                          <>
+                            <a
+                              href={getPdfViewerUrl(row.latestReleasePdf)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="icon-link"
+                              title="View latest release PDF in browser"
+                            >
+                              <img
+                                src={`${assetBase}pdf.svg`}
+                                alt="View latest release PDF"
+                                width="18"
+                                height="18"
+                                className="icon-img"
+                              />
+                            </a>
+                            <a
+                              href={row.latestReleasePdf}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="icon-link"
+                              title="Download latest release PDF"
+                            >
+                              <img
+                                src={`${assetBase}download.svg`}
+                                alt="Download latest release PDF"
+                                width="18"
+                                height="18"
+                                className="icon-img"
+                              />
+                            </a>
+                          </>
+                        ) : (
+                          <span className="icon-disabled" title="No release PDF available">
+                            <img
+                              src={`${assetBase}pdf.svg`}
+                              alt="No release PDF available"
                               width="18"
                               height="18"
                               className="icon-img"
