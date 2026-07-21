@@ -412,9 +412,8 @@ tbody tr:hover td {
 }
 
 .stalled {
-  /* hazard stripes: no activity = stopped, distinct from flat-red Late */
-  background: repeating-linear-gradient(45deg, #fddede, #fddede 9px, #f6c6c6 9px, #f6c6c6 18px) !important;
-  color: #7a2226;
+  background-color: #f7cccc !important;  /* solid & readable; distinguished by the left accent bar */
+  color: #6e1e22;
 }
 
 .not-set-yet {
@@ -472,8 +471,8 @@ tbody tr:hover td {
 }
 
 .status-cell.stalled {
-  background: repeating-linear-gradient(45deg, #f7d3d3, #f7d3d3 6px, #eebcbc 6px, #eebcbc 12px);
-  color: #7a2226;
+  background-color: #f0bcbc;
+  color: #6e1e22;
 }
 
 .status-cell.completed {
@@ -878,7 +877,8 @@ th.share-column {
     background-color: #efe6fb;
   }
   tr.stalled td.specification-column {
-    background: repeating-linear-gradient(45deg, #fddede, #fddede 9px, #f6c6c6 9px, #f6c6c6 18px);
+    background-color: #f7cccc;
+    border-left: 4px solid #b23a48;
   }
   tr.completed td.specification-column {
     background-color: #dceff2;
