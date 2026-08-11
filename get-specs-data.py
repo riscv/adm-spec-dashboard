@@ -6,13 +6,17 @@ and the data is written to a CSV file named with the current date and time.
 Author: Rafael Sene, rafael@riscv.org - Initial implementation
 """
 
+import base64
 import csv
+import io
 import os
 import re
-from datetime import datetime
+import zipfile
+from datetime import date, datetime
 from urllib.parse import urlparse
 
 import requests
+import yaml
 from atlassian import Jira
 
 
@@ -272,10 +276,229 @@ def normalize_bod_report_value(value):
     return text
 
 
+# ---- Spec PDF re-hosting (restored feature) --------------------------------
+# For each spec we surface a public PDF link: either an extension repo's own
+# latest-release PDF, or — for specs that live only as a reference into the
+# shared riscv-isa-manual monorepo (PR / commit / branch) — the manual build
+# PDF, downloaded from the (auth-gated, 7-day) Actions artifact and re-hosted
+# on this repo's stable "spec-pdfs" release so anonymous dashboard users can open it.
+_release_pdf_cache = {}
+_pr_pdf_cache = {}
+_existing_pr_assets = None
+_MONOREPO_NAMES = {"riscv-isa-manual"}
+_GENERIC_PDF_NAMES = {"riscv-privileged.pdf", "riscv-unprivileged.pdf", "riscv-isa.pdf"}
+_ISA_MANUAL_REF_PATTERN = re.compile(
+    r"github\.com/([^/]+)/riscv-isa-manual/(pull|commit|commits|blob|tree)/([^/#?\s]+)",
+    re.IGNORECASE,
+)
+PR_PDF_CACHE_DIR = "pdf-cache"
+PR_PDF_RELEASE_TAG = "spec-pdfs"
+PR_PDF_PUBLIC_BASE = (
+    "https://github.com/riscv/adm-spec-dashboard/releases/download/" + PR_PDF_RELEASE_TAG
+)
+
+
+def _github_headers():
+    """GitHub API headers, authenticated when a token is available.
+
+    Honors GHTOKEN (what the workflow injects into the container) and falls
+    back to GITHUB_TOKEN. Using the token lifts the rate limit 60/hr -> 5000/hr.
+    """
+    headers = {"Accept": "application/vnd.github+json"}
+    token = os.getenv("GHTOKEN") or os.getenv("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"token {token}"
+    return headers
+
+
+def _get_existing_pr_pdf_assets():
+    """Set of PDF asset names already on the stable spec-pdfs release.
+
+    Lets a link survive the upstream artifact's 7-day expiry: if we cannot
+    re-download a PR build this run but published a copy before, the public URL
+    still resolves. Cached for the run; empty set on any error.
+    """
+    global _existing_pr_assets
+    if _existing_pr_assets is not None:
+        return _existing_pr_assets
+    _existing_pr_assets = set()
+    try:
+        resp = requests.get(
+            "https://api.github.com/repos/riscv/adm-spec-dashboard/releases/tags/"
+            + PR_PDF_RELEASE_TAG,
+            headers=_github_headers(), timeout=15)
+        if resp.status_code == 200:
+            for asset in resp.json().get("assets", []) or []:
+                if asset.get("name"):
+                    _existing_pr_assets.add(asset["name"])
+    except Exception as exc:  # noqa: BLE001
+        print(f"  Could not list existing {PR_PDF_RELEASE_TAG} assets: {exc}")
+    return _existing_pr_assets
+
+
+def get_latest_release_pdf(github_url):
+    """Direct download URL of a spec's extension-specific latest-release PDF.
+
+    Returns "" for the shared riscv-isa-manual monorepo, the generic full-manual
+    volumes, or when there is no repo/release/PDF asset or any error — a wrong
+    link (the whole manual) is worse than none.
+    """
+    if not github_url or not isinstance(github_url, str):
+        return ""
+    url = github_url.strip()
+    if not url.lower().startswith("http") or "github.com" not in url.lower():
+        return ""
+    try:
+        path = url.split("github.com/", 1)[1]
+    except IndexError:
+        return ""
+    parts = [seg for seg in path.split("/") if seg]
+    if len(parts) < 2:
+        return ""
+    owner, repo = parts[0], parts[1]
+    if repo.endswith(".git"):
+        repo = repo[:-4]
+    if repo.lower() in _MONOREPO_NAMES:
+        return ""
+    cache_key = f"{owner}/{repo}"
+    if cache_key in _release_pdf_cache:
+        return _release_pdf_cache[cache_key]
+    pdf_url = ""
+    try:
+        response = requests.get(
+            f"https://api.github.com/repos/{owner}/{repo}/releases/latest",
+            headers=_github_headers(), timeout=15, allow_redirects=True)
+        if response.status_code == 200:
+            for asset in response.json().get("assets", []) or []:
+                name = (asset.get("name") or "").lower()
+                if not name.endswith(".pdf") or name in _GENERIC_PDF_NAMES:
+                    continue
+                pdf_url = asset.get("browser_download_url", "") or ""
+                break
+        else:
+            print(f"  No latest-release PDF for {cache_key} (HTTP {response.status_code})")
+    except Exception as exc:  # noqa: BLE001
+        print(f"  Failed to resolve release PDF for {cache_key}: {exc}")
+    _release_pdf_cache[cache_key] = pdf_url
+    return pdf_url
+
+
+def _fetch_isa_build_pdf(owner, head_sha, asset_name, label):
+    """Download commit head_sha's ISA-manual build PDF and cache it locally.
+
+    Writes the extracted PDF to PR_PDF_CACHE_DIR/asset_name and returns the
+    deterministic public spec-pdfs URL; falls back to an already-published copy
+    so links survive the 7-day artifact expiry; "" when nothing is available.
+    """
+    public_url = f"{PR_PDF_PUBLIC_BASE}/{asset_name}"
+    headers = _github_headers()
+    api = f"https://api.github.com/repos/{owner}/riscv-isa-manual"
+    result = ""
+    try:
+        artifact = None
+        if head_sha:
+            runs_resp = requests.get(f"{api}/actions/runs", headers=headers,
+                                     params={"head_sha": head_sha, "per_page": 30}, timeout=15)
+            build_runs = []
+            if runs_resp.status_code == 200:
+                for run in runs_resp.json().get("workflow_runs", []) or []:
+                    if "isa build" in (run.get("name") or "").lower() and run.get("conclusion") == "success":
+                        build_runs.append(run)
+            build_runs.sort(key=lambda r: r.get("run_number", 0), reverse=True)
+            for run in build_runs:
+                arts_resp = requests.get(f"{api}/actions/runs/{run['id']}/artifacts",
+                                         headers=headers, timeout=15)
+                if arts_resp.status_code != 200:
+                    continue
+                for asset in arts_resp.json().get("artifacts", []) or []:
+                    name = (asset.get("name") or "").lower()
+                    if name.endswith(".pdf") and "riscv-spec" in name and not asset.get("expired", False):
+                        artifact = asset
+                        break
+                if artifact:
+                    break
+        if artifact:
+            dl_resp = requests.get(artifact["archive_download_url"], headers=headers, timeout=120)
+            if dl_resp.status_code == 200:
+                with zipfile.ZipFile(io.BytesIO(dl_resp.content)) as archive:
+                    pdf_member = next((n for n in archive.namelist() if n.lower().endswith(".pdf")), None)
+                    if pdf_member:
+                        os.makedirs(PR_PDF_CACHE_DIR, exist_ok=True)
+                        out_path = os.path.join(PR_PDF_CACHE_DIR, asset_name)
+                        with archive.open(pdf_member) as src, open(out_path, "wb") as dst:
+                            dst.write(src.read())
+                        result = public_url
+                        print(f"  Cached ISA-manual PDF for {label} -> {asset_name}")
+    except Exception as exc:  # noqa: BLE001
+        print(f"  Failed to resolve ISA-manual PDF for {label}: {exc}")
+    if not result and asset_name in _get_existing_pr_pdf_assets():
+        result = public_url
+    return result
+
+
+def _slugify(text):
+    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+
+def get_isa_manual_ref_pdf(github_url):
+    """Re-host and return the public URL of a riscv-isa-manual reference's PDF.
+
+    Handles /pull/<n>, /commit(s)/<sha>, /blob|tree/<ref> into the shared
+    monorepo: resolve to a commit SHA, then download+re-host that commit's build
+    PDF. "" for anything else or when no build artifact exists. Never raises.
+    """
+    if not github_url or not isinstance(github_url, str):
+        return ""
+    match = _ISA_MANUAL_REF_PATTERN.search(github_url)
+    if not match:
+        return ""
+    owner, kind, ident = match.group(1), match.group(2).lower(), match.group(3)
+    cache_key = f"{owner}/riscv-isa-manual/{kind}/{ident}"
+    if cache_key in _pr_pdf_cache:
+        return _pr_pdf_cache[cache_key]
+    headers = _github_headers()
+    api = f"https://api.github.com/repos/{owner}/riscv-isa-manual"
+    head_sha = None
+    asset_name = None
+    label = cache_key
+    try:
+        if kind == "pull":
+            resp = requests.get(f"{api}/pulls/{ident}", headers=headers, timeout=15)
+            if resp.status_code == 200:
+                head_sha = (resp.json().get("head") or {}).get("sha")
+            asset_name = f"riscv-isa-manual-pr-{ident}.pdf"
+            label = f"pull/{ident}"
+        else:
+            is_sha = bool(re.fullmatch(r"[0-9a-fA-F]{7,40}", ident))
+            resp = requests.get(f"{api}/commits/{ident}", headers=headers, timeout=15)
+            if resp.status_code == 200:
+                head_sha = resp.json().get("sha")
+            elif is_sha:
+                head_sha = ident
+            if is_sha:
+                short = (head_sha or ident)[:12]
+                asset_name = f"riscv-isa-manual-commit-{short}.pdf"
+                label = f"commit/{short}"
+            else:
+                asset_name = f"riscv-isa-manual-{_slugify(owner)}-{_slugify(ident)}.pdf"
+                label = f"{kind}/{ident}"
+    except Exception as exc:  # noqa: BLE001
+        print(f"  Failed to resolve ISA-manual ref for {cache_key}: {exc}")
+    result = _fetch_isa_build_pdf(owner, head_sha, asset_name, label) if asset_name else ""
+    _pr_pdf_cache[cache_key] = result
+    return result
+
+
+def resolve_spec_pdf(github_url):
+    """Prefer a dedicated repo's release PDF; else re-host a monorepo ref's build PDF."""
+    return get_latest_release_pdf(github_url) or get_isa_manual_ref_pdf(github_url)
+
+
 REQUIRED_FIELDS = [
     "summary",
     "status",
     "updated",
+    "created",
     "subtasks",
     "customfield_10037",
     "customfield_10038",
@@ -284,7 +507,167 @@ REQUIRED_FIELDS = [
     "customfield_10042",
     "customfield_10043",
     "customfield_10136",
+    "customfield_10970",  # BoD Ratification Approval Baseline (schedule signal)
+    "customfield_10989",  # BoD Ratification Approval Projection (schedule signal)
 ]
+
+# ---- Ratification Progress computation (dashboard view; BoD Report cf10037 untouched) ----
+GATE_KEYWORDS = ("approval", "vote", "ratification")
+_DONE_STATUS_NAMES = ("done", "closed", "approved", "resolved", "ar review not required", "not required")
+
+
+def _subtask_is_done(sub):
+    st = (sub.get("fields") or {}).get("status") or {}
+    cat = ((st.get("statusCategory") or {}).get("key") or "").lower()
+    if cat:
+        return cat == "done"
+    return (st.get("name") or "").strip().lower() in _DONE_STATUS_NAMES
+
+
+def _is_gate(summary):
+    low = (summary or "").lower()
+    return any(k in low for k in GATE_KEYWORDS)
+
+
+def subtask_stats(subtasks):
+    """Return (done, total, pct, work_open, gate_open) for a spec's subtasks.
+
+    work_open  = open subtasks that are real work (not an approval/vote gate)
+    gate_open  = open approval/vote subtasks (unassigned-by-design, expected)
+    """
+    subs = subtasks or []
+    total = len(subs)
+    done = work_open = gate_open = 0
+    for s in subs:
+        if _subtask_is_done(s):
+            done += 1
+        elif _is_gate((s.get("fields") or {}).get("summary")):
+            gate_open += 1
+        else:
+            work_open += 1
+    pct = round(100 * done / total) if total else 0
+    return done, total, pct, work_open, gate_open
+
+
+def _days_since(date_str):
+    if not date_str:
+        return None
+    try:
+        return (datetime.now() - datetime.strptime(str(date_str)[:10], "%Y-%m-%d")).days
+    except ValueError:
+        return None
+
+
+def derive_ratification_progress(fields, work_open, gate_open, total, last_contribution):
+    """Compute Ratification Progress from Jira + GitHub signals.
+
+    Precedence: Completed > Awaiting Vote > Stalled > Exposed > On Track.
+    'Watch' is intentionally never auto-set (human escalation only), so a
+    manually-set Watch is preserved by the caller's change check.
+    """
+    status = (fields.get("status") or {}).get("name") or ""
+    if status == "Specification Ratified":
+        return "Completed"
+    # all work subtasks done, only an approval/vote pending -> on track, not behind
+    if total > 0 and work_open == 0 and gate_open >= 1:
+        return "Awaiting Vote"
+    # activity axis: real dev contribution (GitHub) or a recent Jira update
+    contrib_age = _days_since(last_contribution)
+    updated_age = _days_since(fields.get("updated"))
+    active = (contrib_age is not None and contrib_age <= 90) or (updated_age is not None and updated_age <= 45)
+    if not active:
+        return "Stalled"
+    # schedule axis: BoD projection later than baseline -> behind -> exposed
+    base = fields.get("customfield_10970")
+    proj = fields.get("customfield_10989")
+    if base and proj and str(proj)[:10] > str(base)[:10]:
+        return "Exposed"
+    return "On Track"
+
+
+# ---- Look-ahead: driven by the SINGLE source of truth (spec-plan-editor) ----
+ACTIVITIES_REPO = "riscv-admin/spec-plan-editor"
+ACTIVITIES_PATH = "web/activities.yaml"
+# activities.yaml uses "Freezing"; Jira status uses "Specification in Freeze".
+STATUS_TO_PHASE = {
+    "Specification Inception": "Inception",
+    "Specification in Planning": "Planning",
+    "Specification Under Development": "Development",
+    "Specification Under Stabilization": "Stabilization",
+    "Specification in Freeze": "Freezing",
+    "Specification in Ratification-Ready": "Ratification-Ready",
+    "Specification in Publication": "Publication",
+}
+# Embedded fallback ONLY if the repo is unreachable during a build — keeps the
+# build alive; the live values always come from activities.yaml.
+_FALLBACK_ACTIVITIES = {
+    "Inception": [["x", 30]],
+    "Planning": [["x", 30], ["x", 14], ["x", 14]],
+    "Development": [["x", 60], ["x", 14], ["x", 14]],
+    "Stabilization": [["x", 14], ["x", 30], ["x", 14]],
+    "Freezing": [["x", 45], ["x", 7], ["x", 15], ["x", 14]],
+    "Ratification-Ready": [["x", 30], ["x", 15], ["x", 0], ["x", 14]],
+    "Publication": [["x", 1]],
+}
+
+
+def load_phase_model(github_session):
+    """Ingest activities.yaml from spec-plan-editor (single source of truth).
+
+    Returns (phase_order, phase_dur, gate_dur). Falls back to an embedded
+    snapshot only if the repo cannot be fetched, so a build never breaks.
+    """
+    acts = None
+    data = _gh_get(github_session, f"/repos/{ACTIVITIES_REPO}/contents/{ACTIVITIES_PATH}")
+    if isinstance(data, dict) and data.get("content"):
+        try:
+            acts = yaml.safe_load(base64.b64decode(data["content"]).decode())["activities"]
+            print(f"activities.yaml: loaded from {ACTIVITIES_REPO}/{ACTIVITIES_PATH}")
+        except Exception as exc:  # noqa: BLE001
+            print(f"WARN: could not parse activities.yaml ({exc}); using fallback")
+    if acts is None:
+        print("WARN: using embedded activities fallback (repo unreachable)")
+        acts = _FALLBACK_ACTIVITIES
+    phase_order = list(acts.keys())
+    phase_dur = {p: sum(int(a[1]) for a in acts[p]) for p in phase_order}
+    gate_dur = {p: (int(acts[p][-1][1]) if acts[p] else 14) for p in phase_order}
+    return phase_order, phase_dur, gate_dur
+
+
+def get_days_in_phase(jira, issue_key, full_status, created):
+    """Days since the spec entered its current status (via changelog)."""
+    entry = (created or "")[:10]
+    try:
+        cl = jira.get_issue_changelog(issue_key, start=0, limit=1000)
+        for h in (cl.get("values") or cl.get("histories") or []):
+            for it in h.get("items", []):
+                if it.get("field") == "status" and it.get("toString") == full_status:
+                    entry = h["created"][:10]
+    except Exception:  # noqa: BLE001 - if changelog unavailable, fall back to created
+        pass
+    try:
+        return (date.today() - date.fromisoformat(entry)).days
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def compute_lookahead(phase_model, phase, dip, awaiting):
+    """Earliest plan-based ratification date from the current phase.
+
+    Uses activities.yaml durations only. Remaining-in-phase = the phase's final
+    gate duration if awaiting a vote (or over budget), else phase_dur - dip.
+    Returns (runway_days, lookahead_date_str, reaches_year_bool) or (None, "", None).
+    """
+    phase_order, phase_dur, gate_dur = phase_model
+    if phase not in phase_order:
+        return None, "", None
+    idx = phase_order.index(phase)
+    floor = gate_dur[phase]
+    rem_cur = floor if awaiting else max(phase_dur[phase] - (dip or 0), floor)
+    downstream = sum(phase_dur[p] for p in phase_order[idx + 1:])
+    runway = rem_cur + downstream
+    la = date.fromordinal(date.today().toordinal() + runway)
+    return runway, str(la), (la <= date(date.today().year, 12, 31))
 
 
 def fetch_all_issues(jira, jql, page_size=100):
@@ -328,9 +711,11 @@ def fetch_all_issues(jira, jql, page_size=100):
 
 
 # Function to parse and extract issue details
-def parse_issues(issues, github_session=None):
+def parse_issues(issues, jira=None, github_session=None, phase_model=None):
     if github_session is None:
         github_session = make_github_session()
+    if phase_model is None:
+        phase_model = load_phase_model(github_session)
 
     parsed_issues = []
     contribution_cache = {}
@@ -382,6 +767,26 @@ def parse_issues(issues, github_session=None):
         else:
             last_contribution, last_contribution_source = "", ""
 
+        # Task completion % and computed Ratification Progress (dashboard view)
+        done, total, pct_complete, work_open, gate_open = subtask_stats(fields.get('subtasks'))
+        computed_progress = derive_ratification_progress(
+            fields, work_open, gate_open, total, last_contribution
+        )
+        current_progress_raw = (
+            fields.get('customfield_10038', {}).get('value') if fields.get('customfield_10038') else None
+        )
+
+        # Look-ahead from the current phase, using activities.yaml durations
+        awaiting_vote = total > 0 and work_open == 0 and gate_open >= 1
+        phase = STATUS_TO_PHASE.get(status)
+        dip = get_days_in_phase(jira, issue_key, status, fields.get('created')) if jira else None
+        runway_days, lookahead_date, reaches_year = compute_lookahead(
+            phase_model, phase, dip, awaiting_vote
+        )
+
+        # Public spec PDF (extension release PDF, or re-hosted monorepo-ref build PDF)
+        pdf_link = resolve_spec_pdf(github_url)
+
         # Collect issue information
         parsed_issues.append({
             'URL': url,
@@ -400,9 +805,47 @@ def parse_issues(issues, github_session=None):
             'Ratification Progress': ratification_progress,
             'Previous Ratification Progress': previous_ratification_progress,
             'Last Contribution': last_contribution,
-            'Last Contribution Source': last_contribution_source
+            'Last Contribution Source': last_contribution_source,
+            # computed fields
+            'Tasks Done': done,
+            'Tasks Total': total,
+            '% Complete': pct_complete,
+            'Computed Progress': computed_progress,
+            'Current Progress Raw': current_progress_raw,
+            'Days In Phase': dip if dip is not None else '',
+            'Look-ahead Date': lookahead_date,
+            'Reaches Year': ('Yes' if reaches_year else 'No') if reaches_year is not None else '',
+            'Latest Release PDF': pdf_link,
         })
     return parsed_issues
+
+
+def update_progress_in_jira(jira, parsed_issues):
+    """Write the computed Ratification Progress back to Jira, idempotently.
+
+    Only writes when the computed value differs from the current one, so daily
+    runs do NOT churn the 'Updated' timestamp (staff automation must not look
+    like developer activity). Never touches BoD Report (cf10037). 'Watch' is
+    manual, so a manually-set value is only replaced when the computed status
+    genuinely changes.
+    """
+    print("Updating Ratification Progress in Jira (only where changed)...")
+    updated = 0
+    for it in parsed_issues:
+        computed = it.get('Computed Progress')
+        current = it.get('Current Progress Raw')
+        if not computed or computed == current:
+            continue
+        payload = {'customfield_10038': {'value': computed}}
+        if current:
+            payload['customfield_10136'] = {'value': current}  # preserve history
+        try:
+            jira.update_issue_field(it['Key'], payload)
+            it['Previous Ratification Progress'] = current or it.get('Previous Ratification Progress')
+            updated += 1
+        except Exception as exc:  # noqa: BLE001 - log and continue
+            print(f"  WARN: could not update {it['Key']}: {exc}")
+    print(f"Ratification Progress updated on {updated} issue(s).")
 
 def get_data_from_jira(jira_token, jira_email):
     """
@@ -428,7 +871,16 @@ def get_data_from_jira(jira_token, jira_email):
 
     # Extract issues from the JSON data
     issues = fetch_all_issues(jira, jql)
-    parsed_issues = parse_issues(issues)
+
+    # Single source of truth for phase durations: spec-plan-editor/activities.yaml
+    github_session = make_github_session()
+    phase_model = load_phase_model(github_session)
+
+    parsed_issues = parse_issues(issues, jira=jira, github_session=github_session,
+                                 phase_model=phase_model)
+
+    # Write the computed Ratification Progress back to Jira (idempotent)
+    update_progress_in_jira(jira, parsed_issues)
 
     # Generating the CSV filename with current date and time
     print("Generating csv file...")
@@ -450,10 +902,15 @@ def get_data_from_jira(jira_token, jira_email):
             'GitHub',
             'Baseline Ratification Quarter',
             'Target Ratification Quarter',
+            '% Complete',
             'Ratification Progress',
             'Previous Ratification Progress',
+            'Days In Phase',
+            'Look-ahead Date',
+            'Reaches Year',
             'Last Contribution',
-            'Last Contribution Source'
+            'Last Contribution Source',
+            'Latest Release PDF'
         ])
 
         # Writing each issue to the CSV file
@@ -470,10 +927,16 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['GitHub'],
                 issue['Baseline Ratification Quarter'],
                 issue['Target Ratification Quarter'],
-                issue['Ratification Progress'],
+                issue['% Complete'],
+                # dashboard shows the computed value (source of truth for cf10038)
+                issue['Computed Progress'],
                 issue['Previous Ratification Progress'],
+                issue['Days In Phase'],
+                issue['Look-ahead Date'],
+                issue['Reaches Year'],
                 issue['Last Contribution'],
-                issue['Last Contribution Source']
+                issue['Last Contribution Source'],
+                issue['Latest Release PDF']
             ])
 
     print(f"Data successfully written to {csv_filename}")

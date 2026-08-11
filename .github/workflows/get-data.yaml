@@ -73,6 +73,30 @@ jobs:
         env:
             GITHUB_TOKEN: ${{ secrets.GHTOKEN }}
 
+      - name: Publish spec PR PDFs
+        if: steps.run_container.outcome == 'success' && (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+        env:
+          GH_TOKEN: ${{ secrets.GHTOKEN }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          pdfs=(pdf-cache/*.pdf)
+          if [ ${#pdfs[@]} -eq 0 ]; then
+            echo "No PR PDFs to publish this run."
+            exit 0
+          fi
+          echo "Publishing ${#pdfs[@]} PDF(s) to the spec-pdfs release."
+          # A single stable, non-"latest" release acts as the public PDF cache.
+          # --clobber replaces refreshed PDFs and leaves untouched ones intact,
+          # so links survive the upstream 7-day artifact expiry.
+          if ! gh release view spec-pdfs >/dev/null 2>&1; then
+            gh release create spec-pdfs \
+              --title "Spec PR PDFs" \
+              --notes "Full-manual PDFs built from in-development spec pull requests, re-hosted so the dashboard can link them publicly. Auto-updated by the Daily Data Fetch workflow." \
+              --latest=false
+          fi
+          gh release upload spec-pdfs "${pdfs[@]}" --clobber
+
       - name: Update latest CSV for UI
         if: steps.run_container.outcome == 'success' && (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
         run: |
