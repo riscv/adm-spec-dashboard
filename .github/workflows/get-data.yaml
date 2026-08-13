@@ -15,16 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.GHTOKEN }}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Set short SHA
         run: echo "SHORT_SHA=$(echo ${GITHUB_SHA::7})" >> $GITHUB_ENV
@@ -37,7 +37,7 @@ jobs:
 
       - name: Build Container Image
         id: build_container
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           load: true
           context: .
@@ -52,14 +52,14 @@ jobs:
 
       - name: Upload Data
         if: steps.run_container.outcome == 'success'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
             name: spec-data.csv
             path: ${{ github.workspace }}/*.csv
 
       - name: Create Release
         if: steps.run_container.outcome == 'success' && (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
-        uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631 #softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3 #softprops/action-gh-release@v2
         with:
           draft: false
           tag_name: bod-jira-data-${{ env.SHORT_SHA }}-${{ env.CURRENT_DATE }}-${{ env.CURRENT_TIME }}
