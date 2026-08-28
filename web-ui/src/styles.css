@@ -202,13 +202,17 @@ th {
   z-index: 2;
 }
 
-th.freeze-group-header {
+th.freeze-group-header,
+th.ratready-group-header,
+th.publication-group-header {
   background-color: #eef2f8;
   border-bottom: 1px solid var(--border);
   padding: 2px 8px;
 }
 
-th.freeze-subheader {
+th.freeze-subheader,
+th.ratready-subheader,
+th.publication-subheader {
   background-color: #f5f7fb;
   font-weight: 500;
   font-size: 9pt;
@@ -218,7 +222,9 @@ th.freeze-subheader {
   z-index: 2;
 }
 
-.bod-view th.freeze-subheader {
+.bod-view th.freeze-subheader,
+.bod-view th.ratready-subheader,
+.bod-view th.publication-subheader {
   font-size: 10.5pt;
   top: var(--freeze-subheader-top, 26px);
 }

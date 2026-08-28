@@ -82,6 +82,61 @@ const ARC_REVIEW_IN_PROGRESS_STATES = new Set([
   "ar review in progress",
 ]);
 
+const PUBLIC_REVIEW_DONE_STATES = new Set([
+  "public review done",
+  "public review not required",
+  "approved",
+  "not required",
+  "done",
+]);
+
+const PUBLIC_REVIEW_IN_PROGRESS_STATES = new Set([
+  "public review in progress",
+  "in progress",
+  "in review",
+  "under review",
+]);
+
+const BOD_APPROVAL_APPROVED_STATES = new Set([
+  "approved",
+  "approval not required",
+  "not required",
+  "done",
+]);
+
+const BOD_APPROVAL_IN_PROGRESS_STATES = new Set([
+  "approval in progress",
+  "in progress",
+  "in review",
+  "under review",
+]);
+
+function getBodApprovalState(row) {
+  const raw = String(row.bodApprovalStatus || "").trim();
+  const lowered = raw.toLowerCase();
+
+  if (BOD_APPROVAL_APPROVED_STATES.has(lowered)) {
+    return { kind: "completed", label: raw };
+  }
+  if (BOD_APPROVAL_IN_PROGRESS_STATES.has(lowered)) {
+    return { kind: "in-progress", label: raw };
+  }
+  return { kind: "upcoming", label: raw || "Not Started" };
+}
+
+function getPublicReviewState(row) {
+  const raw = String(row.publicReviewStatus || "").trim();
+  const lowered = raw.toLowerCase();
+
+  if (PUBLIC_REVIEW_DONE_STATES.has(lowered)) {
+    return { kind: "completed", label: raw };
+  }
+  if (PUBLIC_REVIEW_IN_PROGRESS_STATES.has(lowered)) {
+    return { kind: "in-progress", label: raw };
+  }
+  return { kind: "upcoming", label: raw || "Not Started" };
+}
+
 function getArcReviewState(row) {
   const raw = String(row.arcReviewStatus || "").trim();
   const lowered = raw.toLowerCase();
@@ -96,23 +151,33 @@ function getArcReviewState(row) {
 }
 
 // Ordering requested for the dashboard: specs furthest along the lifecycle
-// float to the top. Within the Freeze phase, ARC-approved comes before a
-// pending ARC review, which comes before "nothing started" (pending tasks and
-// ARC review). Lower rank sorts first.
+// float to the top. Within Ratification-Ready, a completed Public Review comes
+// before one in progress, which comes before "not started"; within Freeze, the
+// same ordering applies to the ARC review. Lower rank sorts first.
 function getPhaseSortRank(row) {
   const phase = row.currentPhase;
-  if (phase === "Specification in Publication") return 0;
-  if (phase === "Ratification-Ready") return 1;
+  if (phase === "Specification in Publication") {
+    const bod = getBodApprovalState(row).kind;
+    if (bod === "completed") return 0; // Publication with BoD approval
+    if (bod === "in-progress") return 1; // Publication with BoD approval running
+    return 2; // Publication with pending tasks and BoD approval
+  }
+  if (phase === "Ratification-Ready") {
+    const pr = getPublicReviewState(row).kind;
+    if (pr === "completed") return 3; // Rat-Ready with Public Review done
+    if (pr === "in-progress") return 4; // Rat-Ready with Public Review running
+    return 5; // Rat-Ready with pending tasks and Public Review
+  }
   if (phase === "Freeze") {
     const arc = getArcReviewState(row).kind;
-    if (arc === "completed") return 2; // Freeze with ARC approval
-    if (arc === "in-progress") return 3; // Freeze with pending ARC review
-    return 4; // Freeze with pending tasks and ARC review
+    if (arc === "completed") return 6; // Freeze with ARC approval
+    if (arc === "in-progress") return 7; // Freeze with pending ARC review
+    return 8; // Freeze with pending tasks and ARC review
   }
-  if (phase === "Stabilization") return 5;
-  if (phase === "Development") return 6;
-  if (phase === "Planning") return 7;
-  return 8;
+  if (phase === "Stabilization") return 9;
+  if (phase === "Development") return 10;
+  if (phase === "Planning") return 11;
+  return 12;
 }
 
 function isBodReport(value) {
@@ -293,6 +358,8 @@ function normalizeRow(raw) {
     bodReport,
     bodFlag: isBodReport(bodReport),
     arcReviewStatus: raw["ARC Review Status"] || "",
+    publicReviewStatus: raw["Public Review Status"] || "",
+    bodApprovalStatus: raw["BoD Approval Status"] || "",
     fastTrack: /^(yes|true|y|1)$/i.test(String(raw["Fast Track"] || "").trim()),
     lastContribution: raw["Last Contribution"] || "",
     lastContributionSource: raw["Last Contribution Source"] || "",
@@ -386,7 +453,10 @@ function buildEmailBody(row, phases) {
     `- Stabilization: ${phases["Stabilization"] || "N/A"}`,
     `- Freeze - ARC Approval: ${phases["ARC Review"] || "N/A"}`,
     `- Freeze - Tasks: ${phases["Freeze"] || "N/A"}`,
-    `- Ratification-Ready: ${phases["Ratification-Ready"] || "N/A"}`,
+    `- Ratification-Ready - Public Review: ${phases["Public Review"] || "N/A"}`,
+    `- Ratification-Ready - Tasks: ${phases["Ratification-Ready"] || "N/A"}`,
+    `- Publication - BoD Approval: ${phases["BoD Approval"] || "N/A"}`,
+    `- Publication - Tasks: ${phases["Specification in Publication"] || "N/A"}`,
     `- Planned Ratification Quarter: ${row.plannedQuarter || "N/A"}`,
     `- Target Ratification Quarter: ${row.trendingQuarter || "N/A"}`,
     `- Current Ratification Status: ${row.ratificationProgress || "N/A"}`,
@@ -642,20 +712,25 @@ function App() {
   const handleShare = (row) => {
     const phases = getPhaseDisplay(row);
     const subject = `Specification Details: ${row.summary || "N/A"}`;
-    const arc = getArcReviewState(row);
-    const arcLabel =
-      arc.kind === "completed"
-        ? `\u2713${arc.label ? ` (${arc.label})` : ""}`
-        : arc.kind === "in-progress"
-          ? `In Progress${arc.label ? ` (${arc.label})` : ""}`
+    const gateLabel = (state) =>
+      state.kind === "completed"
+        ? `\u2713${state.label ? ` (${state.label})` : ""}`
+        : state.kind === "in-progress"
+          ? `In Progress${state.label ? ` (${state.label})` : ""}`
           : "...";
+    const arcLabel = gateLabel(getArcReviewState(row));
+    const publicReviewLabel = gateLabel(getPublicReviewState(row));
+    const bodApprovalLabel = gateLabel(getBodApprovalState(row));
     const body = buildEmailBody(row, {
       "Planning": phases["Planning"],
       "Development": phases["Development"],
       "Stabilization": phases["Stabilization"],
       "ARC Review": arcLabel,
       "Freeze": phases["Freeze"],
+      "Public Review": publicReviewLabel,
       "Ratification-Ready": phases["Ratification-Ready"],
+      "BoD Approval": bodApprovalLabel,
+      "Specification in Publication": phases["Specification in Publication"],
     });
 
     const mailtoLink = `mailto:?subject=${encodeURIComponent(
@@ -803,8 +878,18 @@ function App() {
               <th className="narrow-column" rowSpan={2}>Dev</th>
               <th className="narrow-column" rowSpan={2}>Stabilization</th>
               <th className="narrow-column freeze-group-header" colSpan={2}>Freeze</th>
-              <th className="narrow-column ratification-divider" rowSpan={2}>Ratification-Ready</th>
-              <th className="narrow-column publication-header" rowSpan={2}>Publication</th>
+              <th
+                className="narrow-column ratready-group-header ratification-divider"
+                colSpan={2}
+              >
+                Ratification-Ready
+              </th>
+              <th
+                className="narrow-column publication-group-header publication-header"
+                colSpan={2}
+              >
+                Publication
+              </th>
               <th className="narrow-column" rowSpan={2}>Planned Ratification Quarter</th>
               <th className="narrow-column" rowSpan={2}>Target Ratification Quarter</th>
               <th className="narrow-column" rowSpan={2}>Current Status</th>
@@ -814,6 +899,12 @@ function App() {
             <tr>
               <th className="narrow-column freeze-subheader">ARC Approval</th>
               <th className="narrow-column freeze-subheader">Tasks</th>
+              <th className="narrow-column ratready-subheader ratification-divider">
+                Public Review
+              </th>
+              <th className="narrow-column ratready-subheader">Tasks</th>
+              <th className="narrow-column publication-subheader">BoD Approval</th>
+              <th className="narrow-column publication-subheader">Tasks</th>
             </tr>
           </thead>
           <tbody>
@@ -890,17 +981,90 @@ function App() {
                       title = `Completed Phase: ${phase}`;
                     }
 
-                    const cellClass =
-                      phase === "Ratification-Ready"
-                        ? "text-center ratification-divider"
-                        : "text-center";
+                    // The Ratification-Ready divider now sits on the Public
+                    // Review cell, which is the first column of that group.
                     const cell = (
-                      <td className={cellClass} key={`${row.summary}-${phase}`}>
+                      <td className="text-center" key={`${row.summary}-${phase}`}>
                         <span className={className} title={title} style={{ whiteSpace: "nowrap" }}>
                           {content}
                         </span>
                       </td>
                     );
+
+                    if (phase === "Specification in Publication") {
+                      const bod = getBodApprovalState(row);
+                      let bodContent = "...";
+                      let bodClass = "bg-upcoming";
+                      let bodTitle = `Upcoming: BoD Approval${
+                        bod.label ? ` (${bod.label})` : ""
+                      }`;
+                      if (bod.kind === "completed") {
+                        bodContent = "\u2713";
+                        bodClass = "bg-completed";
+                        bodTitle = `BoD Approval Complete${
+                          bod.label ? `: ${bod.label}` : ""
+                        }`;
+                      } else if (bod.kind === "in-progress") {
+                        bodContent = "\u23F3";
+                        bodClass = "in-progress";
+                        bodTitle = `BoD Approval In Progress${
+                          bod.label ? `: ${bod.label}` : ""
+                        }`;
+                      }
+
+                      const bodCell = (
+                        <td className="text-center" key={`${row.summary}-bod-approval`}>
+                          <span
+                            className={bodClass}
+                            title={bodTitle}
+                            style={{ whiteSpace: "nowrap" }}
+                          >
+                            {bodContent}
+                          </span>
+                        </td>
+                      );
+
+                      return [bodCell, cell];
+                    }
+
+                    if (phase === "Ratification-Ready") {
+                      const publicReview = getPublicReviewState(row);
+                      let prContent = "...";
+                      let prClass = "bg-upcoming";
+                      let prTitle = `Upcoming: Public Review${
+                        publicReview.label ? ` (${publicReview.label})` : ""
+                      }`;
+                      if (publicReview.kind === "completed") {
+                        prContent = "\u2713";
+                        prClass = "bg-completed";
+                        prTitle = `Public Review Complete${
+                          publicReview.label ? `: ${publicReview.label}` : ""
+                        }`;
+                      } else if (publicReview.kind === "in-progress") {
+                        prContent = "\u23F3";
+                        prClass = "in-progress";
+                        prTitle = `Public Review In Progress${
+                          publicReview.label ? `: ${publicReview.label}` : ""
+                        }`;
+                      }
+
+                      const publicReviewCell = (
+                        <td
+                          className="text-center ratification-divider"
+                          key={`${row.summary}-public-review`}
+                        >
+                          <span
+                            className={prClass}
+                            title={prTitle}
+                            style={{ whiteSpace: "nowrap" }}
+                          >
+                            {prContent}
+                          </span>
+                        </td>
+                      );
+
+                      return [publicReviewCell, cell];
+                    }
 
                     if (phase !== "Stabilization") {
                       return cell;
