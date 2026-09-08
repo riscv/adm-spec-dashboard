@@ -6,6 +6,12 @@ on:
     paths:
       - "web-ui/**"
       - ".github/workflows/deploy-pages.yaml"
+  # Always redeploy after the data fetch, so the published UI can never lag the
+  # data. Relying on the push trigger alone is not safe: "Daily Data Fetch"
+  # commits with --allow-empty, and an empty commit matches no path filter.
+  workflow_run:
+    workflows: ["Daily Data Fetch"]
+    types: [completed]
   workflow_dispatch:
 
 env:
@@ -22,6 +28,9 @@ concurrency:
 
 jobs:
   build:
+    # workflow_run fires on every completion, including failures. Only deploy
+    # when the data fetch was green; other triggers are unaffected.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
