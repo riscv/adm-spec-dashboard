@@ -8,6 +8,10 @@ on:
 
 permissions:
   contents: write
+  # The refresh is landed by a pull request so the DCO app can report on it;
+  # see .github/scripts/signed_pr_merge.py.
+  pull-requests: write
+  checks: read
 
 jobs:
   data-fetch:
@@ -89,12 +93,27 @@ jobs:
             "${GITHUB_RUN_ID}" \
             > web-ui/public/latest.csv.meta
 
-      - name: Commit latest CSV
+      # The org "Enforce DCO Compliance." ruleset requires a DCO check and
+      # verified signatures on the default branch, and a runner's `git commit`
+      # can satisfy neither. Commit through the API (which signs) and land it
+      # via a PR (so the DCO app runs). See the script header for detail.
+      #
+      # This no longer makes an empty commit when nothing changed. That is safe:
+      # Deploy Web UI also triggers on `workflow_run` for this workflow, so the
+      # published UI still refreshes even when no commit is produced.
+      - name: Land latest CSV via a signed, DCO-checked PR
         if: steps.run_container.outcome == 'success' && (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add web-ui/public/latest.csv web-ui/public/latest.csv.meta
-          git commit -m "Update latest CSV" --allow-empty
-          git push origin HEAD:main
+          if git diff --quiet -- web-ui/public/latest.csv web-ui/public/latest.csv.meta; then
+            echo "No changes."
+            exit 0
+          fi
+          python .github/scripts/signed_pr_merge.py \
+            --path web-ui/public/latest.csv \
+            --path web-ui/public/latest.csv.meta \
+            --branch-prefix bot/latest-csv \
+            --message "Update latest CSV" \
+            --pr-body "Automated refresh of the spec dashboard CSV, opened by the Daily Data Fetch workflow because the default branch requires a DCO check and verified signatures."
