@@ -392,6 +392,7 @@ function normalizeRow(raw) {
     publicReviewStatus: raw["Public Review Status"] || "",
     tscApprovalStatus: raw["TSC Approval Status"] || "",
     bodApprovalStatus: raw["BoD Approval Status"] || "",
+    phaseTasksStatus: raw["Phase Tasks Status"] || "",
     fastTrack: /^(yes|true|y|1)$/i.test(String(raw["Fast Track"] || "").trim()),
     lastContribution: raw["Last Contribution"] || "",
     lastContributionSource: raw["Last Contribution Source"] || "",
@@ -1029,7 +1030,12 @@ function App() {
                     let className = "bg-upcoming";
                     let title = `Upcoming Phase: ${phase}`;
 
-                    if (phase === row.currentPhase) {
+                    if (phase === row.currentPhase && row.phaseTasksStatus === "Done") {
+                      // Every task of the phase is done; only its gate is pending.
+                      content = "\u2713";
+                      className = "bg-completed";
+                      title = `Tasks Complete: ${phase}`;
+                    } else if (phase === row.currentPhase) {
                       content = "\u23F3";
                       className = "in-progress";
                       title = `In Progress: ${phase}`;
