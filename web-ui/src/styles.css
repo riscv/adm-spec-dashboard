@@ -222,13 +222,6 @@ th.publication-subheader {
   z-index: 2;
 }
 
-.bod-view th.freeze-subheader,
-.bod-view th.ratready-subheader,
-.bod-view th.publication-subheader {
-  font-size: 10.5pt;
-  top: var(--freeze-subheader-top, 26px);
-}
-
 th.publication-header {
   position: sticky;
   padding-top: 14px;
@@ -774,11 +767,6 @@ tbody tr.not-set-yet {
   color: var(--muted);
 }
 
-.bod-view th,
-.bod-view td {
-  font-size: 11pt;
-}
-
 .back-to-top {
   position: fixed;
   right: 24px;
@@ -930,11 +918,6 @@ tbody tr.not-set-yet {
   td {
     padding: 4px 5px;
     font-size: 8pt;
-  }
-
-  .bod-view th,
-  .bod-view td {
-    font-size: 9pt;
   }
 
   .back-to-top {
