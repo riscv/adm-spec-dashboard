@@ -411,8 +411,7 @@ function formatRelativeAge(value) {
   const days = daysSince(value);
   if (days === null) return "";
   if (days <= 0) return "today";
-  if (days === 1) return "1 day ago";
-  if (days < 31) return `${days} days ago`;
+  if (days < 31) return `${days}d ago`;
   if (days < 365) {
     const months = Math.round(days / 30);
     return `${months} mo ago`;
@@ -508,10 +507,14 @@ function formatUpdateDate(value) {
   if (!value) return "";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
-  const month = new Intl.DateTimeFormat("en-US", { month: "short" }).format(date);
-  const day = date.getDate();
-  const year = String(date.getFullYear()).slice(-2);
-  return `${month} ${day} ${year}`;
+  const pad = (part) => String(part).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+// "NON-ISA" wraps at its hyphen in the narrow ISA? column. Title case with a
+// non-breaking hyphen keeps it on one line; "ISA + Non-ISA" still wraps at spaces.
+function formatIsaLabel(value) {
+  return String(value || "").replace(/non-isa/gi, "Non\u2011ISA");
 }
 
 function getInitialBodOnly() {
@@ -774,6 +777,9 @@ function App() {
     window.location.href = mailtoLink;
   };
 
+  // The data only holds specs not yet ratified, so this counts what is left to
+  // ratify this year. Past quarters are shown only when a spec still targets
+  // them (it is overdue); otherwise they would always read 0.
   const ratificationForecast = useMemo(() => {
     const currentYear = new Date().getFullYear();
     const forecast = {
@@ -862,7 +868,12 @@ function App() {
       <div className="table-container" ref={tableContainerRef}>
         <div className="table-toolbar">
           <div className="ratification-forecast">
-            {ratificationForecast.year} Ratification Forecast: {ratificationForecast.total} (Q1: {ratificationForecast.q1} | Q2: {ratificationForecast.q2} | Q3: {ratificationForecast.q3} | Q4: {ratificationForecast.q4})
+            Remaining {ratificationForecast.year} Ratification Forecast: {ratificationForecast.total} (
+            {[1, 2, 3, 4]
+              .filter((quarter) => quarter >= currentQuarter || ratificationForecast[`q${quarter}`] > 0)
+              .map((quarter) => `Q${quarter}: ${ratificationForecast[`q${quarter}`]}`)
+              .join(" | ")}
+            )
           </div>
           <label className="bod-toggle">
             <input
@@ -884,18 +895,30 @@ function App() {
         </div>
 
         <div className="status-legend">
-          <span className="legend-label">Target Ratification Quarter:</span>
+          <span className="legend-label">Current Status:</span>
           <div className="legend-item">
             <span className="legend-color status-cell on-track">On Track</span>
             <span className="legend-text">Likely to meet.</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color status-cell awaiting-vote">Awaiting Vote</span>
+            <span className="legend-text">Work done, vote pending.</span>
           </div>
           <div className="legend-item">
             <span className="legend-color status-cell exposed">Exposed</span>
             <span className="legend-text">At risk.</span>
           </div>
           <div className="legend-item">
+            <span className="legend-color status-cell watch">Watch</span>
+            <span className="legend-text">Active but concerning.</span>
+          </div>
+          <div className="legend-item">
             <span className="legend-color status-cell late">Late</span>
             <span className="legend-text">Will miss, replan required.</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color status-cell stalled">Stalled</span>
+            <span className="legend-text">No recent activity.</span>
           </div>
           <div className="legend-item">
             <span className="legend-color status-cell not-set">Not Yet Defined</span>
@@ -963,17 +986,17 @@ function App() {
                       row.lastContribution ? (
                         <div
                           className="spec-updated"
-                          title={
+                          title={`Last contribution${
                             row.lastContributionSource
-                              ? `Source: ${row.lastContributionSource}`
-                              : undefined
-                          }
+                              ? ` (source: ${row.lastContributionSource})`
+                              : ""
+                          }`}
                         >
                           <span
                             className={`activity-dot ${activityRecencyClass(row)}`}
                             aria-hidden="true"
                           />
-                          Last contribution · {formatUpdateDate(row.lastContribution)} · {formatRelativeAge(row.lastContribution)}
+                          {formatUpdateDate(row.lastContribution)} · {formatRelativeAge(row.lastContribution)}
                         </div>
                       ) : (
                         <div className="spec-updated no-activity">
@@ -999,7 +1022,7 @@ function App() {
                       </span>
                     ) : null}
                   </td>
-                  <td className="narrow-column">{row.isaOrNonIsa}</td>
+                  <td className="narrow-column">{formatIsaLabel(row.isaOrNonIsa)}</td>
                   {DISPLAY_PHASES.map((phase) => {
                     const phaseIndex = WORKFLOW_PHASES.indexOf(phase);
                     let content = "...";
@@ -1164,7 +1187,7 @@ function App() {
                   <td className="narrow-column">{row.plannedQuarter}</td>
                   <td className="narrow-column">{row.trendingQuarter}</td>
                   <td className={`narrow-column ${statusClassName(row.ratificationProgress)}`}>
-                    {row.ratificationProgress}
+                    {String(row.ratificationProgress || "").replace(/^on track$/i, "On\u00A0Track")}
                   </td>
                   <td className="links-column">
                     <div className="icon-group">
