@@ -330,6 +330,11 @@ tbody tr:hover td {
   letter-spacing: 0.2px;
 }
 
+/* Keep the contribution line clear of the Fast-Track badge in the cell corner. */
+td.specification-column:has(.fast-track-badge) .spec-updated {
+  padding-right: 34px;
+}
+
 .spec-updated.no-activity {
   font-style: italic;
   opacity: 0.75;
@@ -407,6 +412,21 @@ tbody tr:hover td {
   color: #7a2226;
 }
 
+.awaiting-vote {
+  background-color: #dbeafe !important;
+  color: #1e40af;
+}
+
+.watch {
+  background-color: #efe6fb !important;
+  color: #5b3a8c;
+}
+
+.stalled {
+  background-color: #f7cccc !important;
+  color: #6e1e22;
+}
+
 .not-set-yet {
   background-color: #e3e2e2;
   color: #e3e2e2;
@@ -420,7 +440,7 @@ tbody tr:hover td {
 .in-progress {
   color: #007bff;
   font-weight: bold;
-  font-size: 16pt;
+  font-size: 10.5pt;
 }
 
 .bg-completed {
@@ -436,6 +456,33 @@ tbody tr:hover td {
   font-weight: bold;
 }
 
+/* Rows carry only a faint tint of their status; the Current Status cell keeps
+   the full color. */
+tbody tr.on-track {
+  background-color: #f1faf3 !important;
+}
+tbody tr.awaiting-vote {
+  background-color: #f0f6fe !important;
+}
+tbody tr.exposed {
+  background-color: #fffaeb !important;
+}
+tbody tr.watch {
+  background-color: #f8f4fd !important;
+}
+tbody tr.late {
+  background-color: #fef3f3 !important;
+}
+tbody tr.stalled {
+  background-color: #fcefef !important;
+}
+tbody tr.completed {
+  background-color: #f1f8fa !important;
+}
+tbody tr.not-set-yet {
+  background-color: #f5f5f5 !important;
+}
+
 .status-cell.on-track {
   background-color: #d7f1dc;
   color: #1f5632;
@@ -449,6 +496,21 @@ tbody tr:hover td {
 .status-cell.late {
   background-color: #f7d3d3;
   color: #7a2226;
+}
+
+.status-cell.awaiting-vote {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-cell.watch {
+  background-color: #efe6fb;
+  color: #5b3a8c;
+}
+
+.status-cell.stalled {
+  background-color: #f0bcbc;
+  color: #6e1e22;
 }
 
 .status-cell.completed {
@@ -634,15 +696,9 @@ tbody tr:hover td {
 }
 
 
-.github-column,
-.share-column {
-  width: 60px;
-  text-align: center;
-  vertical-align: middle;
-}
-
-th.github-column,
-th.share-column {
+/* GitHub repository, latest release and share icons share one column. */
+.links-column {
+  width: 90px;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
@@ -686,9 +742,9 @@ th.share-column {
   padding: 6px 16px;
   background: var(--surface-soft);
   border-radius: 8px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  row-gap: 6px;
   white-space: nowrap;
-  overflow-x: auto;
 }
 
 .legend-label {
@@ -838,19 +894,28 @@ th.share-column {
   }
 
   tr.on-track td.specification-column {
-    background-color: #d7f1dc;
+    background-color: #f1faf3;
+  }
+  tr.awaiting-vote td.specification-column {
+    background-color: #f0f6fe;
   }
   tr.exposed td.specification-column {
-    background-color: #fef3d6;
+    background-color: #fffaeb;
+  }
+  tr.watch td.specification-column {
+    background-color: #f8f4fd;
   }
   tr.late td.specification-column {
-    background-color: #fde2e2;
+    background-color: #fef3f3;
+  }
+  tr.stalled td.specification-column {
+    background-color: #fcefef;
   }
   tr.completed td.specification-column {
-    background-color: #dceff2;
+    background-color: #f1f8fa;
   }
   tr.not-set-yet td.specification-column {
-    background-color: #e3e2e2;
+    background-color: #f5f5f5;
   }
 
   table {

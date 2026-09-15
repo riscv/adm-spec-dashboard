@@ -97,6 +97,20 @@ const PUBLIC_REVIEW_IN_PROGRESS_STATES = new Set([
   "under review",
 ]);
 
+const TSC_APPROVAL_APPROVED_STATES = new Set([
+  "approved",
+  "approval not required",
+  "not required",
+  "done",
+]);
+
+const TSC_APPROVAL_IN_PROGRESS_STATES = new Set([
+  "approval in progress",
+  "in progress",
+  "in review",
+  "under review",
+]);
+
 const BOD_APPROVAL_APPROVED_STATES = new Set([
   "approved",
   "approval not required",
@@ -119,6 +133,19 @@ function getBodApprovalState(row) {
     return { kind: "completed", label: raw };
   }
   if (BOD_APPROVAL_IN_PROGRESS_STATES.has(lowered)) {
+    return { kind: "in-progress", label: raw };
+  }
+  return { kind: "upcoming", label: raw || "Not Started" };
+}
+
+function getTscApprovalState(row) {
+  const raw = String(row.tscApprovalStatus || "").trim();
+  const lowered = raw.toLowerCase();
+
+  if (TSC_APPROVAL_APPROVED_STATES.has(lowered)) {
+    return { kind: "completed", label: raw };
+  }
+  if (TSC_APPROVAL_IN_PROGRESS_STATES.has(lowered)) {
     return { kind: "in-progress", label: raw };
   }
   return { kind: "upcoming", label: raw || "Not Started" };
@@ -151,9 +178,10 @@ function getArcReviewState(row) {
 }
 
 // Ordering requested for the dashboard: specs furthest along the lifecycle
-// float to the top. Within Ratification-Ready, a completed Public Review comes
-// before one in progress, which comes before "not started"; within Freeze, the
-// same ordering applies to the ARC review. Lower rank sorts first.
+// float to the top. Within Ratification-Ready, a completed TSC Approval comes
+// first, then a TSC vote in progress, then the same ordering for Public Review
+// (completed, in progress, "not started"); within Freeze, the same ordering
+// applies to the ARC review. Lower rank sorts first.
 function getPhaseSortRank(row) {
   const phase = row.currentPhase;
   if (phase === "Specification in Publication") {
@@ -163,21 +191,24 @@ function getPhaseSortRank(row) {
     return 2; // Publication with pending tasks and BoD approval
   }
   if (phase === "Ratification-Ready") {
+    const tsc = getTscApprovalState(row).kind;
+    if (tsc === "completed") return 3; // Rat-Ready with TSC approval
+    if (tsc === "in-progress") return 4; // Rat-Ready with TSC vote running
     const pr = getPublicReviewState(row).kind;
-    if (pr === "completed") return 3; // Rat-Ready with Public Review done
-    if (pr === "in-progress") return 4; // Rat-Ready with Public Review running
-    return 5; // Rat-Ready with pending tasks and Public Review
+    if (pr === "completed") return 5; // Rat-Ready with Public Review done
+    if (pr === "in-progress") return 6; // Rat-Ready with Public Review running
+    return 7; // Rat-Ready with pending tasks and Public Review
   }
   if (phase === "Freeze") {
     const arc = getArcReviewState(row).kind;
-    if (arc === "completed") return 6; // Freeze with ARC approval
-    if (arc === "in-progress") return 7; // Freeze with pending ARC review
-    return 8; // Freeze with pending tasks and ARC review
+    if (arc === "completed") return 8; // Freeze with ARC approval
+    if (arc === "in-progress") return 9; // Freeze with pending ARC review
+    return 10; // Freeze with pending tasks and ARC review
   }
-  if (phase === "Stabilization") return 9;
-  if (phase === "Development") return 10;
-  if (phase === "Planning") return 11;
-  return 12;
+  if (phase === "Stabilization") return 11;
+  if (phase === "Development") return 12;
+  if (phase === "Planning") return 13;
+  return 14;
 }
 
 function isBodReport(value) {
@@ -359,6 +390,7 @@ function normalizeRow(raw) {
     bodFlag: isBodReport(bodReport),
     arcReviewStatus: raw["ARC Review Status"] || "",
     publicReviewStatus: raw["Public Review Status"] || "",
+    tscApprovalStatus: raw["TSC Approval Status"] || "",
     bodApprovalStatus: raw["BoD Approval Status"] || "",
     fastTrack: /^(yes|true|y|1)$/i.test(String(raw["Fast Track"] || "").trim()),
     lastContribution: raw["Last Contribution"] || "",
@@ -379,8 +411,7 @@ function formatRelativeAge(value) {
   const days = daysSince(value);
   if (days === null) return "";
   if (days <= 0) return "today";
-  if (days === 1) return "1 day ago";
-  if (days < 31) return `${days} days ago`;
+  if (days < 31) return `${days}d ago`;
   if (days < 365) {
     const months = Math.round(days / 30);
     return `${months} mo ago`;
@@ -454,6 +485,7 @@ function buildEmailBody(row, phases) {
     `- Freeze - ARC Approval: ${phases["ARC Review"] || "N/A"}`,
     `- Freeze - Tasks: ${phases["Freeze"] || "N/A"}`,
     `- Ratification-Ready - Public Review: ${phases["Public Review"] || "N/A"}`,
+    `- Ratification-Ready - TSC Approval: ${phases["TSC Approval"] || "N/A"}`,
     `- Ratification-Ready - Tasks: ${phases["Ratification-Ready"] || "N/A"}`,
     `- Publication - BoD Approval: ${phases["BoD Approval"] || "N/A"}`,
     `- Publication - Tasks: ${phases["Specification in Publication"] || "N/A"}`,
@@ -475,10 +507,14 @@ function formatUpdateDate(value) {
   if (!value) return "";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
-  const month = new Intl.DateTimeFormat("en-US", { month: "short" }).format(date);
-  const day = date.getDate();
-  const year = String(date.getFullYear()).slice(-2);
-  return `${month} ${day} ${year}`;
+  const pad = (part) => String(part).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+// "NON-ISA" wraps at its hyphen in the narrow ISA? column. Title case with a
+// non-breaking hyphen keeps it on one line; "ISA + Non-ISA" still wraps at spaces.
+function formatIsaLabel(value) {
+  return String(value || "").replace(/non-isa/gi, "Non\u2011ISA");
 }
 
 function getInitialBodOnly() {
@@ -720,6 +756,7 @@ function App() {
           : "...";
     const arcLabel = gateLabel(getArcReviewState(row));
     const publicReviewLabel = gateLabel(getPublicReviewState(row));
+    const tscApprovalLabel = gateLabel(getTscApprovalState(row));
     const bodApprovalLabel = gateLabel(getBodApprovalState(row));
     const body = buildEmailBody(row, {
       "Planning": phases["Planning"],
@@ -728,6 +765,7 @@ function App() {
       "ARC Review": arcLabel,
       "Freeze": phases["Freeze"],
       "Public Review": publicReviewLabel,
+      "TSC Approval": tscApprovalLabel,
       "Ratification-Ready": phases["Ratification-Ready"],
       "BoD Approval": bodApprovalLabel,
       "Specification in Publication": phases["Specification in Publication"],
@@ -739,6 +777,9 @@ function App() {
     window.location.href = mailtoLink;
   };
 
+  // The data only holds specs not yet ratified, so this counts what is left to
+  // ratify this year. Past quarters are shown only when a spec still targets
+  // them (it is overdue); otherwise they would always read 0.
   const ratificationForecast = useMemo(() => {
     const currentYear = new Date().getFullYear();
     const forecast = {
@@ -827,7 +868,12 @@ function App() {
       <div className="table-container" ref={tableContainerRef}>
         <div className="table-toolbar">
           <div className="ratification-forecast">
-            {ratificationForecast.year} Ratification Forecast: {ratificationForecast.total} (Q1: {ratificationForecast.q1} | Q2: {ratificationForecast.q2} | Q3: {ratificationForecast.q3} | Q4: {ratificationForecast.q4})
+            Remaining {ratificationForecast.year} Ratification Forecast: {ratificationForecast.total} (
+            {[1, 2, 3, 4]
+              .filter((quarter) => quarter >= currentQuarter || ratificationForecast[`q${quarter}`] > 0)
+              .map((quarter) => `Q${quarter}: ${ratificationForecast[`q${quarter}`]}`)
+              .join(" | ")}
+            )
           </div>
           <label className="bod-toggle">
             <input
@@ -849,18 +895,30 @@ function App() {
         </div>
 
         <div className="status-legend">
-          <span className="legend-label">Target Ratification Quarter:</span>
+          <span className="legend-label">Current Status:</span>
           <div className="legend-item">
             <span className="legend-color status-cell on-track">On Track</span>
             <span className="legend-text">Likely to meet.</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color status-cell awaiting-vote">Awaiting Vote</span>
+            <span className="legend-text">Work done, vote pending.</span>
           </div>
           <div className="legend-item">
             <span className="legend-color status-cell exposed">Exposed</span>
             <span className="legend-text">At risk.</span>
           </div>
           <div className="legend-item">
+            <span className="legend-color status-cell watch">Watch</span>
+            <span className="legend-text">Active but concerning.</span>
+          </div>
+          <div className="legend-item">
             <span className="legend-color status-cell late">Late</span>
             <span className="legend-text">Will miss, replan required.</span>
+          </div>
+          <div className="legend-item">
+            <span className="legend-color status-cell stalled">Stalled</span>
+            <span className="legend-text">No recent activity.</span>
           </div>
           <div className="legend-item">
             <span className="legend-color status-cell not-set">Not Yet Defined</span>
@@ -880,7 +938,7 @@ function App() {
               <th className="narrow-column freeze-group-header" colSpan={2}>Freeze</th>
               <th
                 className="narrow-column ratready-group-header ratification-divider"
-                colSpan={2}
+                colSpan={3}
               >
                 Ratification-Ready
               </th>
@@ -893,8 +951,7 @@ function App() {
               <th className="narrow-column" rowSpan={2}>Planned Ratification Quarter</th>
               <th className="narrow-column" rowSpan={2}>Target Ratification Quarter</th>
               <th className="narrow-column" rowSpan={2}>Current Status</th>
-              <th className="github-column" rowSpan={2}>GitHub</th>
-              {!bodOnly && <th className="share-column" rowSpan={2}>Share</th>}
+              <th className="links-column" rowSpan={2}>Links</th>
             </tr>
             <tr>
               <th className="narrow-column freeze-subheader">ARC Approval</th>
@@ -902,6 +959,7 @@ function App() {
               <th className="narrow-column ratready-subheader ratification-divider">
                 Public Review
               </th>
+              <th className="narrow-column ratready-subheader">TSC Approval</th>
               <th className="narrow-column ratready-subheader">Tasks</th>
               <th className="narrow-column publication-subheader">BoD Approval</th>
               <th className="narrow-column publication-subheader">Tasks</th>
@@ -928,17 +986,17 @@ function App() {
                       row.lastContribution ? (
                         <div
                           className="spec-updated"
-                          title={
+                          title={`Last contribution${
                             row.lastContributionSource
-                              ? `Source: ${row.lastContributionSource}`
-                              : undefined
-                          }
+                              ? ` (source: ${row.lastContributionSource})`
+                              : ""
+                          }`}
                         >
                           <span
                             className={`activity-dot ${activityRecencyClass(row)}`}
                             aria-hidden="true"
                           />
-                          Last contribution · {formatUpdateDate(row.lastContribution)} · {formatRelativeAge(row.lastContribution)}
+                          {formatUpdateDate(row.lastContribution)} · {formatRelativeAge(row.lastContribution)}
                         </div>
                       ) : (
                         <div className="spec-updated no-activity">
@@ -964,7 +1022,7 @@ function App() {
                       </span>
                     ) : null}
                   </td>
-                  <td className="narrow-column">{row.isaOrNonIsa}</td>
+                  <td className="narrow-column">{formatIsaLabel(row.isaOrNonIsa)}</td>
                   {DISPLAY_PHASES.map((phase) => {
                     const phaseIndex = WORKFLOW_PHASES.indexOf(phase);
                     let content = "...";
@@ -1063,7 +1121,39 @@ function App() {
                         </td>
                       );
 
-                      return [publicReviewCell, cell];
+                      const tscApproval = getTscApprovalState(row);
+                      let tscContent = "...";
+                      let tscClass = "bg-upcoming";
+                      let tscTitle = `Upcoming: TSC Approval${
+                        tscApproval.label ? ` (${tscApproval.label})` : ""
+                      }`;
+                      if (tscApproval.kind === "completed") {
+                        tscContent = "\u2713";
+                        tscClass = "bg-completed";
+                        tscTitle = `TSC Approval Complete${
+                          tscApproval.label ? `: ${tscApproval.label}` : ""
+                        }`;
+                      } else if (tscApproval.kind === "in-progress") {
+                        tscContent = "\u23F3";
+                        tscClass = "in-progress";
+                        tscTitle = `TSC Approval In Progress${
+                          tscApproval.label ? `: ${tscApproval.label}` : ""
+                        }`;
+                      }
+
+                      const tscApprovalCell = (
+                        <td className="text-center" key={`${row.summary}-tsc-approval`}>
+                          <span
+                            className={tscClass}
+                            title={tscTitle}
+                            style={{ whiteSpace: "nowrap" }}
+                          >
+                            {tscContent}
+                          </span>
+                        </td>
+                      );
+
+                      return [publicReviewCell, tscApprovalCell, cell];
                     }
 
                     if (phase !== "Stabilization") {
@@ -1097,11 +1187,11 @@ function App() {
                   <td className="narrow-column">{row.plannedQuarter}</td>
                   <td className="narrow-column">{row.trendingQuarter}</td>
                   <td className={`narrow-column ${statusClassName(row.ratificationProgress)}`}>
-                    {row.ratificationProgress}
+                    {String(row.ratificationProgress || "").replace(/^on track$/i, "On\u00A0Track")}
                   </td>
-                  <td>
-                    {hasGithub ? (
-                      <div className="icon-group">
+                  <td className="links-column">
+                    <div className="icon-group">
+                      {hasGithub ? (
                         <a
                           href={githubValue}
                           target="_blank"
@@ -1117,57 +1207,63 @@ function App() {
                             className="icon-img"
                           />
                         </a>
-                        {latestReleaseUrl ? (
-                          <a
-                            href={latestReleaseUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="icon-link"
-                            title="Latest Release"
-                          >
-                            <img
-                              src={`${assetBase}release-tag.svg`}
-                              alt="Latest release"
-                              width="18"
-                              height="18"
-                              className="icon-img"
-                            />
-                          </a>
-                        ) : (
-                          <span className="icon-disabled" title="No releases available">
-                            <img
-                              src={`${assetBase}release-tag.svg`}
-                              alt="No releases available"
-                              width="18"
-                              height="18"
-                              className="icon-img"
-                            />
-                          </span>
-                        )}
-                      </div>
-                    ) : (
-                      "N/A"
-                    )}
+                      ) : (
+                        <span className="icon-disabled" title="No GitHub repository set">
+                          <img
+                            src={`${assetBase}github-mark.svg`}
+                            alt="No GitHub repository set"
+                            width="20"
+                            height="20"
+                            className="icon-img"
+                          />
+                        </span>
+                      )}
+                      {latestReleaseUrl ? (
+                        <a
+                          href={latestReleaseUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="icon-link"
+                          title="Latest Release"
+                        >
+                          <img
+                            src={`${assetBase}release-tag.svg`}
+                            alt="Latest release"
+                            width="18"
+                            height="18"
+                            className="icon-img"
+                          />
+                        </a>
+                      ) : (
+                        <span className="icon-disabled" title="No releases available">
+                          <img
+                            src={`${assetBase}release-tag.svg`}
+                            alt="No releases available"
+                            width="18"
+                            height="18"
+                            className="icon-img"
+                          />
+                        </span>
+                      )}
+                      {!bodOnly && (
+                        <button
+                          type="button"
+                          className="icon-button"
+                          onClick={() => handleShare(row)}
+                          title="Share"
+                          style={{ background: "none", border: "none", padding: 0 }}
+                        >
+                          <img
+                            src={`${assetBase}paper-plane-2563.svg`}
+                            alt="Share"
+                            width="16"
+                            height="16"
+                            className="icon-img"
+                          />
+                        </button>
+                      )}
+                    </div>
                   </td>
-                  {!bodOnly && (
-                    <td className="narrow-column">
-                      <button
-                        type="button"
-                        className="icon-button"
-                        onClick={() => handleShare(row)}
-                        title="Share"
-                        style={{ background: "none", border: "none", padding: 0 }}
-                      >
-                        <img
-                          src={`${assetBase}paper-plane-2563.svg`}
-                          alt="Share"
-                          width="16"
-                          height="16"
-                          className="icon-img"
-                        />
-                      </button>
-                    </td>
-                  )}
                 </tr>
               );
             })}
