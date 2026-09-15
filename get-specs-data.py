@@ -238,6 +238,27 @@ PUBLIC_REVIEW_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+TSC_APPROVAL_APPROVED_STATES = {
+    "approved",
+    "approval not required",
+    "not required",
+    "done",
+}
+
+TSC_APPROVAL_IN_PROGRESS_STATES = {
+    "approval in progress",
+    "in progress",
+    "in review",
+    "under review",
+}
+
+# Only the Ratification-Ready TSC Approval subtask counts; the similarly named
+# `[Fast-Track] - Notify TSC of Fast-Track Approval` subtask does not match.
+TSC_APPROVAL_PATTERN = re.compile(
+    r"^\s*\[ratification-ready\]\s*-\s*tsc\s*approval\b",
+    re.IGNORECASE,
+)
+
 BOD_APPROVAL_APPROVED_STATES = {
     "approved",
     "approval not required",
@@ -324,6 +345,31 @@ def extract_public_review_status(subtasks):
             continue
         status_name = ((sub_fields.get('status') or {}).get('name') or "").strip()
         if status_name.lower() in PUBLIC_REVIEW_DONE_STATES:
+            return status_name
+        if not found_status:
+            found_status = status_name
+    return found_status
+
+
+def extract_tsc_approval_status(subtasks):
+    """Return the status of the `[Ratification-Ready] - TSC Approval` subtask.
+
+    If a spec has more than one matching subtask, prefer an approved status;
+    otherwise return the first match.
+    """
+    if not subtasks:
+        return ""
+
+    found_status = ""
+    for sub in subtasks:
+        if not isinstance(sub, dict):
+            continue
+        sub_fields = sub.get('fields', {}) or {}
+        summary = (sub_fields.get('summary') or "").strip()
+        if not TSC_APPROVAL_PATTERN.match(summary):
+            continue
+        status_name = ((sub_fields.get('status') or {}).get('name') or "").strip()
+        if status_name.lower() in TSC_APPROVAL_APPROVED_STATES:
             return status_name
         if not found_status:
             found_status = status_name
@@ -464,6 +510,7 @@ def parse_issues(issues, github_session=None):
         bod_report = normalize_bod_report_value(fields.get('customfield_10037'))
         arc_review_status = extract_arc_review_status(fields.get('subtasks'))
         public_review_status = extract_public_review_status(fields.get('subtasks'))
+        tsc_approval_status = extract_tsc_approval_status(fields.get('subtasks'))
         bod_approval_status = extract_bod_approval_status(fields.get('subtasks'))
         fast_track = "Yes" if is_fast_track(fields.get('subtasks')) else "No"
 
@@ -489,6 +536,7 @@ def parse_issues(issues, github_session=None):
             'BoD Report': bod_report,
             'ARC Review Status': arc_review_status,
             'Public Review Status': public_review_status,
+            'TSC Approval Status': tsc_approval_status,
             'BoD Approval Status': bod_approval_status,
             'Fast Track': fast_track,
             'Updated': updated,
@@ -544,6 +592,7 @@ def get_data_from_jira(jira_token, jira_email):
             'BoD Report',
             'ARC Review Status',
             'Public Review Status',
+            'TSC Approval Status',
             'BoD Approval Status',
             'Fast Track',
             'Updated',
@@ -566,6 +615,7 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['BoD Report'],
                 issue['ARC Review Status'],
                 issue['Public Review Status'],
+                issue['TSC Approval Status'],
                 issue['BoD Approval Status'],
                 issue['Fast Track'],
                 issue['Updated'],
