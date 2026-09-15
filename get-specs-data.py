@@ -401,6 +401,63 @@ def extract_bod_approval_status(subtasks):
     return found_status
 
 
+# Phases whose dashboard group shows its gate(s) apart from a Tasks column. The
+# Tasks column is done when every other subtask of that phase is done.
+PHASE_TASK_GROUPS = [
+    # (status substring, subtask summary prefix, gate patterns)
+    ("ratification-ready", "[ratification-ready]", (PUBLIC_REVIEW_PATTERN, TSC_APPROVAL_PATTERN)),
+    ("publication", "[publication]", (BOD_APPROVAL_PATTERN,)),
+    ("freeze", "[freeze]", (FREEZE_ARC_REVIEW_PATTERN,)),
+]
+
+SUBTASK_DONE_STATES = {
+    "done",
+    "closed",
+    "approved",
+    "resolved",
+    "ar review not required",
+    "not required",
+}
+
+
+def is_subtask_done(sub_fields):
+    """Return True when a subtask's status is in Jira's done category."""
+    status = sub_fields.get('status') or {}
+    category = (status.get('statusCategory') or {}).get('key')
+    if category:
+        return category == 'done'
+    return (status.get('name') or "").strip().lower() in SUBTASK_DONE_STATES
+
+
+def extract_phase_tasks_status(status, subtasks):
+    """Return "Done" or "Open" for the non-gate subtasks of the current phase.
+
+    Only Freeze, Ratification-Ready and Publication have a separate Tasks
+    column; for other phases, or a phase with no matching subtasks, return "".
+    """
+    lowered = (status or "").lower()
+    for status_key, prefix, gates in PHASE_TASK_GROUPS:
+        if status_key in lowered:
+            break
+    else:
+        return ""
+
+    found = False
+    for sub in subtasks or []:
+        if not isinstance(sub, dict):
+            continue
+        sub_fields = sub.get('fields', {}) or {}
+        summary = (sub_fields.get('summary') or "").strip()
+        if not summary.lower().startswith(prefix):
+            continue
+        if any(gate.match(summary) for gate in gates):
+            continue
+        found = True
+        if not is_subtask_done(sub_fields):
+            return "Open"
+    return "Done" if found else ""
+
+
 def normalize_bod_report_value(value):
     text = extract_field_value(value).strip()
     if not text:
@@ -512,6 +569,7 @@ def parse_issues(issues, github_session=None):
         public_review_status = extract_public_review_status(fields.get('subtasks'))
         tsc_approval_status = extract_tsc_approval_status(fields.get('subtasks'))
         bod_approval_status = extract_bod_approval_status(fields.get('subtasks'))
+        phase_tasks_status = extract_phase_tasks_status(status, fields.get('subtasks'))
         fast_track = "Yes" if is_fast_track(fields.get('subtasks')) else "No"
 
         # Resolve the last real code contribution from the spec's GitHub link.
@@ -538,6 +596,7 @@ def parse_issues(issues, github_session=None):
             'Public Review Status': public_review_status,
             'TSC Approval Status': tsc_approval_status,
             'BoD Approval Status': bod_approval_status,
+            'Phase Tasks Status': phase_tasks_status,
             'Fast Track': fast_track,
             'Updated': updated,
             'GitHub': github,
@@ -594,6 +653,7 @@ def get_data_from_jira(jira_token, jira_email):
             'Public Review Status',
             'TSC Approval Status',
             'BoD Approval Status',
+            'Phase Tasks Status',
             'Fast Track',
             'Updated',
             'ISA or NON-ISA?',
@@ -617,6 +677,7 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Public Review Status'],
                 issue['TSC Approval Status'],
                 issue['BoD Approval Status'],
+                issue['Phase Tasks Status'],
                 issue['Fast Track'],
                 issue['Updated'],
                 issue['ISA or NON-ISA'],
