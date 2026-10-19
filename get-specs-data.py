@@ -526,8 +526,28 @@ def fetch_all_issues(jira, jql, page_size=100):
     return issues
 
 
+def get_last_target_change(jira, issue_key):
+    """Return (previous quarter, change date) for the last Target Ratification Quarter change."""
+    last = None
+    start = 0
+    try:
+        while True:
+            page = jira.get(f"rest/api/3/issue/{issue_key}/changelog",
+                            params={"startAt": start, "maxResults": 100}) or {}
+            for entry in page.get('values', []):
+                for item in entry.get('items', []):
+                    if item.get('fieldId') == 'customfield_10040':
+                        last = (item.get('fromString') or "", (entry.get('created') or "")[:10])
+            start += len(page.get('values', []))
+            if page.get('isLast', True) or not page.get('values'):
+                break
+    except Exception as exc:
+        print(f"Could not read changelog for {issue_key}: {exc}")
+    return last or ("", "")
+
+
 # Function to parse and extract issue details
-def parse_issues(issues, github_session=None):
+def parse_issues(issues, github_session=None, jira=None):
     if github_session is None:
         github_session = make_github_session()
 
@@ -575,6 +595,9 @@ def parse_issues(issues, github_session=None):
         bod_approval_status = extract_bod_approval_status(fields.get('subtasks'))
         phase_tasks_status = extract_phase_tasks_status(status, fields.get('subtasks'))
         fast_track = "Yes" if is_fast_track(fields.get('subtasks')) else "No"
+        previous_target_quarter, target_changed = (
+            get_last_target_change(jira, issue_key) if jira else ("", "")
+        )
 
         # Resolve the last real code contribution from the spec's GitHub link.
         github_url = str(github).strip() if github and github != "Not Set Yet" else ""
@@ -608,6 +631,8 @@ def parse_issues(issues, github_session=None):
             'Baseline Ratification Quarter': baseline_ratification_quarter,
             'Plan Ratification Quarter': plan_ratification_quarter,
             'Target Ratification Quarter': target_ratification_quarter,
+            'Previous Target Ratification Quarter': previous_target_quarter,
+            'Target Changed': target_changed,
             'Ratification Progress': ratification_progress,
             'Previous Ratification Progress': previous_ratification_progress,
             'Last Contribution': last_contribution,
@@ -639,7 +664,7 @@ def get_data_from_jira(jira_token, jira_email):
 
     # Extract issues from the JSON data
     issues = fetch_all_issues(jira, jql)
-    parsed_issues = parse_issues(issues)
+    parsed_issues = parse_issues(issues, jira=jira)
 
     # Generating the CSV filename with current date and time
     print("Generating csv file...")
@@ -669,7 +694,9 @@ def get_data_from_jira(jira_token, jira_email):
             'Previous Ratification Progress',
             'Last Contribution',
             'Last Contribution Source',
-            'Plan Ratification Quarter'
+            'Plan Ratification Quarter',
+            'Previous Target Ratification Quarter',
+            'Target Changed'
         ])
 
         # Writing each issue to the CSV file
@@ -694,7 +721,9 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Previous Ratification Progress'],
                 issue['Last Contribution'],
                 issue['Last Contribution Source'],
-                issue['Plan Ratification Quarter']
+                issue['Plan Ratification Quarter'],
+                issue['Previous Target Ratification Quarter'],
+                issue['Target Changed']
             ])
 
     print(f"Data successfully written to {csv_filename}")
