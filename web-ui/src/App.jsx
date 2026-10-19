@@ -2,9 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import Papa from "papaparse";
 
-const REPO = "riscv-admin/bod-report";
-const ASSET_PREFIX = "specs_";
-const ASSET_SUFFIX = ".csv";
 const LOCAL_CSV_URL =
   typeof __LOCAL_CSV_URL__ === "string" ? __LOCAL_CSV_URL__ : "";
 
@@ -885,6 +882,113 @@ function getInitialBodOnly() {
   return filter === "bod";
 }
 
+// Days from today to a YYYY-MM-DD date, in local time (negative = past).
+function daysUntil(value) {
+  const match = String(value || "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return null;
+  const target = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Math.round((target - today) / 86400000);
+}
+
+const STALE_DAYS = 90;
+
+// Quick filters; they combine with AND, and with the search and BoD toggle.
+const QUICK_FILTERS = [
+  {
+    id: "late",
+    label: "Late vs baseline",
+    title: "Projected is 2 or more quarters behind Baseline",
+    test: (row) => baselineStatus(row).label.startsWith("Late"),
+  },
+  {
+    id: "approval30",
+    label: "Next approval \u2264 30 days",
+    title: "Next approval projected within 30 days, or already overdue",
+    test: (row) => {
+      const days = daysUntil(row.nextApprovalDate);
+      return days !== null && days <= 30;
+    },
+  },
+  {
+    id: "stale",
+    label: `No activity ${STALE_DAYS}+ days`,
+    title: `No contribution found in the last ${STALE_DAYS} days`,
+    test: (row) => {
+      const days = daysSince(row.lastContribution);
+      return days === null || days > STALE_DAYS;
+    },
+  },
+];
+
+function getInitialQuickFilters() {
+  const ids = (new URLSearchParams(window.location.search).get("f") || "").split(",");
+  return QUICK_FILTERS.map((filter) => filter.id).filter((id) => ids.includes(id));
+}
+
+const APPROVAL_WINDOW_DAYS = 90;
+const APPROVAL_GROUPS = [
+  { id: "overdue", label: "Overdue", test: (days) => days < 0 },
+  { id: "30", label: "0-30 days", test: (days) => days >= 0 && days <= 30 },
+  { id: "60", label: "31-60 days", test: (days) => days > 30 && days <= 60 },
+  { id: "90", label: "61-90 days", test: (days) => days > 60 && days <= APPROVAL_WINDOW_DAYS },
+];
+
+function groupUpcomingApprovals(rows) {
+  const items = rows
+    .map((row) => ({ row, days: daysUntil(row.nextApprovalDate) }))
+    .filter((item) => item.days !== null && item.days <= APPROVAL_WINDOW_DAYS)
+    .sort((a, b) => a.days - b.days || a.row.summary.localeCompare(b.row.summary));
+  return APPROVAL_GROUPS.map((group) => ({
+    ...group,
+    items: items.filter((item) => group.test(item.days)),
+  })).filter((group) => group.items.length);
+}
+
+const EXPORT_COLUMNS = [
+  ["Key", (row) => specKeyOf(row)],
+  ["Specification", (row) => row.summary],
+  ["Jira URL", (row) => row.jiraUrl],
+  ["ISA or NON-ISA", (row) => row.isaOrNonIsa],
+  ["Status", (row) => row.status],
+  ["Phase Tasks Status", (row) => row.phaseTasksStatus],
+  ["ARC Review Status", (row) => row.arcReviewStatus],
+  ["Public Review Status", (row) => row.publicReviewStatus],
+  ["TSC Approval Status", (row) => row.tscApprovalStatus],
+  ["BoD Approval Status", (row) => row.bodApprovalStatus],
+  ["Baseline Quarter", (row) => row.plannedQuarter],
+  ["Phase Start Quarter", (row) => row.planQuarter],
+  ["Projected Quarter", (row) => row.trendingQuarter],
+  ["Status vs Baseline", (row) => baselineStatus(row).label],
+  ["Status vs Phase Start", (row) => row.ratificationProgress],
+  ["Trend", (row) => projectedTrend(row).name],
+  ["Next Approval", (row) => row.nextApproval],
+  ["Next Approval Date", (row) => row.nextApprovalDate],
+  ["Phase Started", (row) => row.phaseStarted],
+  ["Development Started", (row) => row.developmentStarted],
+  ["Latest Replanning", (row) => row.latestReplanning],
+  ["Last Contribution", (row) => formatUpdateDate(row.lastContribution)],
+  ["Fast Track", (row) => (row.fastTrack ? "Yes" : "No")],
+  ["BoD Report", (row) => (row.bodFlag ? "Yes" : "No")],
+  ["GitHub", (row) => row.github],
+];
+
+function downloadCsv(rows) {
+  const csv = Papa.unparse({
+    fields: EXPORT_COLUMNS.map(([name]) => name),
+    data: rows.map((row) => EXPORT_COLUMNS.map(([, value]) => value(row) ?? "")),
+  }, { escapeFormulae: true }); // a Summary starting with = + - @ must not run as a formula
+  // The BOM makes Excel read the file as UTF-8.
+  const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `RISC-V_Specification_Dashboard_${formatFilenameTimestamp(new Date())}.csv`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
 function App() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -896,6 +1000,11 @@ function App() {
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [bodOnly, setBodOnly] = useState(getInitialBodOnly);
+  const [quickFilters, setQuickFilters] = useState(getInitialQuickFilters);
+  const toggleQuickFilter = (id) =>
+    setQuickFilters((current) =>
+      current.includes(id) ? current.filter((value) => value !== id) : [...current, id]
+    );
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [summaries, setSummaries] = useState({});
   // Key of the spec whose summary dialog is open; ?spec=RVS-123 opens it on load.
@@ -939,47 +1048,6 @@ function App() {
         setLoading(true);
         setError("");
 
-        async function fetchCsvFromRelease() {
-          const releaseResponse = await fetch(
-            `https://api.github.com/repos/${REPO}/releases/latest`,
-            {
-              headers: { Accept: "application/vnd.github+json" },
-              cache: "no-store",
-            }
-          );
-
-          if (!releaseResponse.ok) {
-            throw new Error(`Failed to fetch release: ${releaseResponse.status}`);
-          }
-
-          const release = await releaseResponse.json();
-          const assets = Array.isArray(release.assets) ? release.assets : [];
-          const asset = assets.find(
-            (item) =>
-              item.name &&
-              item.name.startsWith(ASSET_PREFIX) &&
-              item.name.endsWith(ASSET_SUFFIX)
-          );
-
-          if (!asset || !asset.id) {
-            throw new Error("No CSV assets found in the latest release.");
-          }
-
-          const csvResponse = await fetch(
-            `https://api.github.com/repos/${REPO}/releases/assets/${asset.id}`,
-            {
-              headers: { Accept: "application/octet-stream" },
-              cache: "no-store",
-            }
-          );
-
-          if (!csvResponse.ok) {
-            throw new Error(`Failed to download CSV: ${csvResponse.status}`);
-          }
-
-          return csvResponse.text();
-        }
-
         async function tryFetchCsv(url, label) {
           if (!url) return "";
           try {
@@ -987,9 +1055,9 @@ function App() {
             if (response.ok) {
               return await response.text();
             }
-            console.warn(`${label} not found (${response.status}); trying next source`);
+            console.warn(`${label} not found (${response.status})`);
           } catch (err) {
-            console.warn(`${label} fetch failed; trying next source`, err);
+            console.warn(`${label} fetch failed`, err);
           }
           return "";
         }
@@ -1002,7 +1070,7 @@ function App() {
           csvText = await tryFetchCsv(latestCsvUrl, "Deployed CSV");
         }
         if (!csvText) {
-          csvText = await fetchCsvFromRelease();
+          throw new Error("Could not load the specification data (latest.csv).");
         }
         const parsed = Papa.parse(csvText, {
           header: true,
@@ -1096,8 +1164,15 @@ function App() {
     } else {
       url.searchParams.delete("filter");
     }
+    if (quickFilters.length) {
+      // Keep the commas readable in a shared link.
+      url.searchParams.set("f", "__F__");
+      url.search = url.search.replace("__F__", quickFilters.join(","));
+    } else {
+      url.searchParams.delete("f");
+    }
     window.history.replaceState({}, "", url);
-  }, [bodOnly]);
+  }, [bodOnly, quickFilters]);
 
   const displayRows = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
@@ -1105,9 +1180,15 @@ function App() {
       const summary = String(row.summary || "").toLowerCase();
       const matchesSearch = !term || summary.includes(term);
       const matchesBod = !bodOnly || row.bodFlag;
-      return matchesSearch && matchesBod;
+      const matchesQuick = QUICK_FILTERS.every(
+        (filter) => !quickFilters.includes(filter.id) || filter.test(row)
+      );
+      return matchesSearch && matchesBod && matchesQuick;
     });
-  }, [rows, searchTerm, bodOnly]);
+  }, [rows, searchTerm, bodOnly, quickFilters]);
+
+  const upcomingApprovals = useMemo(() => groupUpcomingApprovals(rows), [rows]);
+  const upcomingCount = upcomingApprovals.reduce((total, group) => total + group.items.length, 0);
 
   const currentQuarter = getCurrentQuarter();
   const daysLeft = getDaysLeftInQuarter();
@@ -1255,6 +1336,50 @@ function App() {
             placeholder="Search for specifications..."
           />
         </div>
+
+        <div className="filter-bar">
+          <div className="filter-chips" role="group" aria-label="Quick filters">
+            {QUICK_FILTERS.map((filter) => {
+              const active = quickFilters.includes(filter.id);
+              return (
+                <button
+                  key={filter.id}
+                  type="button"
+                  className={`filter-chip${active ? " active" : ""}`}
+                  aria-pressed={active}
+                  title={filter.title}
+                  onClick={() => toggleQuickFilter(filter.id)}
+                >
+                  {filter.label}
+                </button>
+              );
+            })}
+            {quickFilters.length || searchTerm.trim() || bodOnly ? (
+              <span className="filter-count" aria-live="polite">
+                {displayRows.length} of {rows.length}
+              </span>
+            ) : null}
+          </div>
+          <div className="export-actions">
+            <button
+              type="button"
+              className="export-button"
+              onClick={() => downloadCsv(displayRows)}
+              disabled={!displayRows.length}
+              title="Download the rows shown below as CSV"
+            >
+              Export CSV
+            </button>
+            <button
+              type="button"
+              className="export-button"
+              onClick={() => window.print()}
+              title="Print the table, or save it as PDF"
+            >
+              Print / PDF
+            </button>
+          </div>
+        </div>
       </div>
 
       {error ? <div className="error-banner">{error}</div> : null}
@@ -1361,6 +1486,51 @@ function App() {
             <p>Hover any header or cell in these columns for details.</p>
           </div>
         </details>
+
+        {upcomingCount ? (
+          <details className="about-trend upcoming-approvals">
+            <summary>
+              Upcoming approvals ({upcomingCount} in the next {APPROVAL_WINDOW_DAYS} days or overdue)
+            </summary>
+            <div className="about-trend-body">
+              {upcomingApprovals.map((group) => (
+                <div key={group.id} className={`approval-group approval-${group.id}`}>
+                  <h4>
+                    {group.label} <span className="approval-group-count">({group.items.length})</span>
+                  </h4>
+                  <ul>
+                    {group.items.map(({ row, days }) => {
+                      const key = specKeyOf(row);
+                      const when = `${row.nextApprovalDate} · ${row.nextApproval || "Next approval"}`;
+                      const dayText = days < 0 ? `${-days}d overdue` : days === 0 ? "today" : `in ${days}d`;
+                      return (
+                        <li key={key}>
+                          {summaries[key]?.summary ? (
+                            <button
+                              type="button"
+                              className="approval-open"
+                              onClick={() => setSummaryKey(key)}
+                              title={`Open the summary of ${row.summary}`}
+                            >
+                              {when}
+                            </button>
+                          ) : (
+                            <span className="approval-when">{when}</span>
+                          )}
+                          {" "}
+                          <span className="approval-days">({dayText})</span>{" "}
+                          <a href={row.jiraUrl} target="_blank" rel="noreferrer">
+                            {row.summary}
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </details>
+        ) : null}
 
         <div className="table-scroll">
         <table className={`table table-bordered${bodOnly ? " bod-view" : ""}`} ref={tableRef}>

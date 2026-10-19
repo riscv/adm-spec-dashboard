@@ -474,6 +474,7 @@ REQUIRED_FIELDS = [
     "summary",
     "status",
     "updated",
+    "created",
     "subtasks",
     "customfield_10037",
     "customfield_10038",
@@ -659,6 +660,11 @@ def parse_issues(issues, github_session=None, jira=None):
         fast_track = "Yes" if is_fast_track(fields.get('subtasks')) else "No"
         dates = get_changelog_dates(jira, issue_key, status) if jira else {}
         next_approval, next_approval_date = get_next_approval(status, fields)
+        phase_started = dates.get('phase_started', "")
+        # A spec still in Inception has never changed status, so its phase
+        # started when the issue was created.
+        if not phase_started and status == "Specification Inception":
+            phase_started = (fields.get('created') or "")[:10]
 
         # Resolve the last real code contribution from the spec's GitHub link.
         github_url = str(github).strip() if github and github != "Not Set Yet" else ""
@@ -694,7 +700,7 @@ def parse_issues(issues, github_session=None, jira=None):
             'Target Ratification Quarter': target_ratification_quarter,
             'Previous Target Ratification Quarter': dates.get('previous_target', ""),
             'Target Changed': dates.get('target_changed', ""),
-            'Phase Started': dates.get('phase_started', ""),
+            'Phase Started': phase_started,
             'Development Started': dates.get('development_started', ""),
             'Next Approval': next_approval,
             'Next Approval Date': next_approval_date,
