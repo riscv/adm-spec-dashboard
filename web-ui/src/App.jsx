@@ -226,15 +226,6 @@ function normalizeProgressClass(value) {
   return normalized;
 }
 
-function statusClassName(value) {
-  const normalized = String(value || "").trim().toLowerCase();
-  if (normalized === "not set" || normalized === "not set yet") {
-    return "status-cell not-set";
-  }
-  const classValue = normalizeProgressClass(normalized);
-  return classValue ? `status-cell ${classValue}` : "status-cell";
-}
-
 function parseQuarter(value) {
   if (!value) return { year: 9999, qtr: 9 };
   const text = String(value).trim();
@@ -260,17 +251,74 @@ function quarterSlip(plan, target) {
   return (t.year * 4 + t.qtr) - (p.year * 4 + p.qtr);
 }
 
-function statusTitle(row) {
-  const slip = quarterSlip(row.planQuarter, row.trendingQuarter);
-  if (slip === null) return undefined;
-  if (slip <= 0) return "Target is on or ahead of the plan for the current phase";
-  return `Target is ${slip} quarter${slip === 1 ? "" : "s"} behind the plan for the current phase`;
+function statusClassName(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (normalized === "not set" || normalized === "not set yet") {
+    return "status-cell not-set";
+  }
+  const classValue = normalizeProgressClass(normalized);
+  return classValue ? `status-cell ${classValue}` : "status-cell";
 }
 
-const PLAN_QUARTER_TITLE =
-  "Ratification quarter expected when the specification entered its current phase. " +
-  "Current Status compares the Target quarter to this. " +
-  "Baseline is the original commitment made at Plan approval.";
+function phaseStatusTitle(row) {
+  const slip = quarterSlip(row.planQuarter, row.trendingQuarter);
+  if (slip === null) return undefined;
+  return slipText(slip, "the start of the current phase");
+}
+
+function slipText(slip, reference) {
+  if (slip <= 0) return `Projected is on or ahead of ${reference}`;
+  return `Projected is ${slip} quarter${slip === 1 ? "" : "s"} behind ${reference}`;
+}
+
+// Same rule as Ratification Progress, measured from the original commitment.
+function baselineStatus(row) {
+  const slip = quarterSlip(row.plannedQuarter, row.trendingQuarter);
+  if (slip === null) return { label: "Not Set", className: "status-cell not-set", rowClass: "" };
+  const title = slipText(slip, "Baseline");
+  if (slip <= 0) return { label: "On Track", className: "status-cell on-track", rowClass: "on-track", title };
+  const label = `${slip === 1 ? "Exposed" : "Late"} (${slip}Q)`;
+  const rowClass = slip === 1 ? "exposed" : "late";
+  return { label, className: `status-cell ${rowClass}`, rowClass, title };
+}
+
+const TREND_WINDOW_DAYS = 90;
+
+function AboutLink({ onOpen, label, light = false }) {
+  return (
+    <button
+      type="button"
+      className={`about-trend-link${light ? " light" : ""}`}
+      aria-label={label}
+      title={label}
+      onClick={onOpen}
+    >
+      ⓘ
+    </button>
+  );
+}
+
+// Direction of the last Projected change, if it happened in the last 90 days.
+function projectedTrend(row, now = new Date()) {
+  const slip = quarterSlip(row.previousTrendingQuarter, row.trendingQuarter);
+  const changed = row.targetChanged ? new Date(row.targetChanged) : null;
+  const recent = changed && !Number.isNaN(changed.getTime()) &&
+    (now - changed) / 86400000 <= TREND_WINDOW_DAYS;
+  if (slip === null || slip === 0 || !recent) {
+    return { label: "→", name: "Steady", className: "trend-steady", title: "Steady: no change to Projected in the last 90 days" };
+  }
+  const title = `Projected moved from ${row.previousTrendingQuarter} to ${row.trendingQuarter} on ${row.targetChanged}`;
+  if (slip > 0) return { label: "↓", name: "Slipping", className: "trend-slipping", title: `Slipping: ${title}` };
+  return { label: "↑", name: "Improving", className: "trend-improving", title: `Improving: ${title}` };
+}
+
+const BASELINE_QUARTER_TITLE =
+  "Original commitment, set when the Ratification Plan was approved. It never changes.";
+const PHASE_START_QUARTER_TITLE =
+  "Projected quarter from the first plan made in the current phase. " +
+  "It is reset only when the specification moves to a new phase.";
+const PROJECTED_QUARTER_TITLE =
+  "Today's forecast. It moves every time the specification is replanned.";
 
 function getCurrentQuarter(date = new Date()) {
   const month = date.getMonth() + 1;
@@ -398,7 +446,6 @@ function normalizeRow(raw) {
   const status = raw["Status"] || "";
   const planned = raw["Baseline Ratification Quarter"] || raw["Planned Ratification Quarter"] || "";
   const trending = raw["Target Ratification Quarter"] || raw["Trending Ratification Quarter"] || "";
-  const plan = raw["Plan Ratification Quarter"] || "";
   const bodReport = raw["BoD Report"] || "";
   const { currentPhase, nextPhase } = calculateProgress(status);
 
@@ -409,8 +456,10 @@ function normalizeRow(raw) {
     updated: raw["Updated"] || "",
     isaOrNonIsa: raw["ISA or NON-ISA?"] || "",
     plannedQuarter: planned,
-    planQuarter: isSetQuarter(plan) ? plan : "",
+    planQuarter: isSetQuarter(raw["Plan Ratification Quarter"]) ? raw["Plan Ratification Quarter"] : "",
     trendingQuarter: trending,
+    previousTrendingQuarter: raw["Previous Target Ratification Quarter"] || "",
+    targetChanged: raw["Target Changed"] || "",
     ratificationProgress: raw["Ratification Progress"] || "",
     previousRatificationProgress: raw["Previous Ratification Progress"] || "",
     github: raw["GitHub"] || "",
@@ -518,10 +567,12 @@ function buildEmailBody(row, phases) {
     `- Ratification-Ready - Tasks: ${phases["Ratification-Ready"] || "N/A"}`,
     `- Publication - BoD Approval: ${phases["BoD Approval"] || "N/A"}`,
     `- Publication - Tasks: ${phases["Specification in Publication"] || "N/A"}`,
-    `- Plan Ratification Quarter (current phase): ${row.planQuarter || row.plannedQuarter || "N/A"}`,
-    `- Baseline Ratification Quarter: ${row.plannedQuarter || "N/A"}`,
-    `- Target Ratification Quarter: ${row.trendingQuarter || "N/A"}`,
-    `- Current Ratification Status: ${row.ratificationProgress || "N/A"}`,
+    `- Baseline Quarter: ${row.plannedQuarter || "N/A"}`,
+    `- Phase Start Quarter: ${row.planQuarter || "N/A"}`,
+    `- Projected Quarter: ${row.trendingQuarter || "N/A"}`,
+    `- Status vs Baseline: ${baselineStatus(row).label.replace(/ /g, " ")}`,
+    `- Status vs Phase Start: ${row.ratificationProgress || "N/A"}`,
+    `- Trend: ${projectedTrend(row).name}`,
     `- Previous Ratification Status: ${row.previousRatificationProgress || "N/A"}`,
     `- GitHub Link: ${row.github || "N/A"}`,
     "",
@@ -556,6 +607,11 @@ function getInitialBodOnly() {
 function App() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [aboutTrendOpen, setAboutTrendOpen] = useState(false);
+  const openAbout = () => {
+    setAboutTrendOpen(true);
+    document.querySelector(".about-trend")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [bodOnly, setBodOnly] = useState(getInitialBodOnly);
@@ -925,36 +981,77 @@ function App() {
         </div>
 
         <div className="status-legend">
-          <span className="legend-label">Current Status:</span>
+          <span className="legend-label">Status:</span>
           <div className="legend-item">
             <span className="legend-color status-cell on-track">On Track</span>
-            <span className="legend-text">Likely to meet.</span>
+            <span className="legend-text">Likely to meet</span>
           </div>
           <div className="legend-item">
             <span className="legend-color status-cell awaiting-vote">Awaiting Vote</span>
-            <span className="legend-text">Work done, vote pending.</span>
+            <span className="legend-text">Vote pending</span>
           </div>
           <div className="legend-item">
             <span className="legend-color status-cell exposed">Exposed</span>
-            <span className="legend-text">At risk.</span>
+            <span className="legend-text">1 quarter behind</span>
           </div>
           <div className="legend-item">
             <span className="legend-color status-cell watch">Watch</span>
-            <span className="legend-text">Active but concerning.</span>
+            <span className="legend-text">Concerning</span>
           </div>
           <div className="legend-item">
             <span className="legend-color status-cell late">Late</span>
-            <span className="legend-text">Will miss, replan required.</span>
+            <span className="legend-text">2+ quarters behind</span>
           </div>
           <div className="legend-item">
             <span className="legend-color status-cell stalled">Stalled</span>
-            <span className="legend-text">No recent activity.</span>
+            <span className="legend-text">No activity</span>
           </div>
           <div className="legend-item">
-            <span className="legend-color status-cell not-set">Not Yet Defined</span>
-            <span className="legend-text">Undefined.</span>
+            <span className="legend-color status-cell not-set">Not Set</span>
+            <span className="legend-text">No plan yet</span>
           </div>
         </div>
+
+        <details
+          className="about-trend"
+          open={aboutTrendOpen}
+          onToggle={(event) => setAboutTrendOpen(event.currentTarget.open)}
+        >
+          <summary>About Ratification Quarter and Progress</summary>
+          <div className="about-trend-body">
+            <h4>Ratification Quarter</h4>
+            <ul>
+              <li><strong>Baseline</strong>: the original commitment, set when the Ratification Plan
+                was approved. It never changes.</li>
+              <li><strong>Phase Start</strong>: the Projected quarter from the first plan made in the
+                current phase. It is reset only when the specification moves to a new phase.</li>
+              <li><strong>Projected</strong>: today's forecast, from the latest replan. It moves every
+                time the specification is replanned.</li>
+            </ul>
+            <h4>Ratification Progress</h4>
+            <ul>
+              <li><strong>vs Baseline</strong>: Projected compared with Baseline. On Track if it is the
+                same quarter or earlier, Exposed if 1 quarter later, Late if 2 or more quarters
+                later; the number of quarters is shown, e.g. Late (3Q). This is the long-term view:
+                are we late against what we committed?</li>
+              <li><strong>vs Phase Start</strong>: Projected compared with Phase Start, using the same
+                rule. It shows whether the specification has slipped since its current phase began,
+                and it sets the row colour. Awaiting Vote, Watch and Stalled are set by hand and
+                shown here when they apply.</li>
+              <li><strong>Trend</strong>: the direction of the <strong>last change to Projected</strong>,
+                read from the Jira history each time the dashboard data is refreshed.
+                <ul>
+                  <li><span className="trend-slipping">↓</span> <strong>Slipping</strong>: moved to a later quarter.</li>
+                  <li><span className="trend-improving">↑</span> <strong>Improving</strong>: moved to an earlier quarter.</li>
+                  <li><span className="trend-steady">→</span> <strong>Steady</strong>: no change in the last {TREND_WINDOW_DAYS} days, or no history yet.</li>
+                </ul>
+                Only changes from the last {TREND_WINDOW_DAYS} days count, so an old slip fades to
+                Steady. Trend does not show how far a specification moved: hover the arrow to see
+                the old and new quarter and the date of the change.</li>
+            </ul>
+            <p>Hover any header or cell in these columns for details.</p>
+          </div>
+        </details>
 
         <div className="table-scroll">
         <table className={`table table-bordered${bodOnly ? " bod-view" : ""}`} ref={tableRef}>
@@ -978,11 +1075,14 @@ function App() {
               >
                 Publication
               </th>
-              <th className="narrow-column" rowSpan={2} title={PLAN_QUARTER_TITLE}>
-                Plan Ratification Quarter
+              <th className="narrow-column quarter-group-header progress-divider" colSpan={3}>
+                Ratification Quarter{" "}
+                <AboutLink onOpen={openAbout} label="About Ratification Quarter" light />
               </th>
-              <th className="narrow-column" rowSpan={2}>Target Ratification Quarter</th>
-              <th className="narrow-column" rowSpan={2}>Current Status</th>
+              <th className="narrow-column status-group-header status-divider" colSpan={3}>
+                Ratification Progress{" "}
+                <AboutLink onOpen={openAbout} label="About Ratification Progress" light />
+              </th>
               <th className="links-column" rowSpan={2}>Links</th>
             </tr>
             <tr>
@@ -995,6 +1095,25 @@ function App() {
               <th className="narrow-column ratready-subheader">Tasks</th>
               <th className="narrow-column publication-subheader">BoD Approval</th>
               <th className="narrow-column publication-subheader">Tasks</th>
+              <th className="narrow-column quarter-subheader progress-divider" title={BASELINE_QUARTER_TITLE}>
+                Baseline
+              </th>
+              <th className="narrow-column quarter-subheader" title={PHASE_START_QUARTER_TITLE}>
+                Phase Start
+              </th>
+              <th className="narrow-column quarter-subheader" title={PROJECTED_QUARTER_TITLE}>
+                Projected
+              </th>
+              <th className="narrow-column status-subheader status-divider" title="Projected vs Baseline: 1 quarter behind is Exposed, 2 or more is Late">
+                vs Baseline
+              </th>
+              <th className="narrow-column status-subheader" title="Projected vs Phase Start (the current phase): 1 quarter behind is Exposed, 2 or more is Late">
+                vs Phase Start
+              </th>
+              <th className="trend-column status-subheader" title="Direction of the last change to Projected in the last 90 days: ↓ slipping, → steady, ↑ improving">
+                Trend{" "}
+                <AboutLink onOpen={openAbout} label="About Trend" />
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -1221,27 +1340,31 @@ function App() {
 
                     return [cell, arcCell];
                   })}
-                  <td className="narrow-column">
-                    {row.planQuarter ? (
-                      <>
-                        {row.planQuarter}
-                        {isSetQuarter(row.plannedQuarter) ? (
-                          <div className="quarter-baseline" title="Baseline: original commitment at Plan approval">
-                            baseline {row.plannedQuarter}
-                          </div>
-                        ) : null}
-                      </>
-                    ) : (
-                      row.plannedQuarter
-                    )}
-                  </td>
-                  <td className="narrow-column">{row.trendingQuarter}</td>
+                  <td className="narrow-column quarter-cell progress-divider">{row.plannedQuarter}</td>
+                  <td className="narrow-column quarter-cell">{row.planQuarter || "Not Set Yet"}</td>
+                  <td className="narrow-column quarter-cell">{row.trendingQuarter}</td>
+                  {(() => {
+                    const vsBaseline = baselineStatus(row);
+                    return (
+                      <td className={`narrow-column status-divider ${vsBaseline.className}`} title={vsBaseline.title}>
+                        {vsBaseline.label}
+                      </td>
+                    );
+                  })()}
                   <td
                     className={`narrow-column ${statusClassName(row.ratificationProgress)}`}
-                    title={statusTitle(row)}
+                    title={phaseStatusTitle(row)}
                   >
                     {String(row.ratificationProgress || "").replace(/^on track$/i, "On\u00A0Track")}
                   </td>
+                  {(() => {
+                    const trend = projectedTrend(row);
+                    return (
+                      <td className={`trend-column ${trend.className}`} title={trend.title} aria-label={trend.name}>
+                        {trend.label}
+                      </td>
+                    );
+                  })()}
                   <td className="links-column">
                     <div className="icon-group">
                       {hasGithub ? (
