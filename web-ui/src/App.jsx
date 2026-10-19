@@ -978,7 +978,7 @@ function downloadCsv(rows) {
   const csv = Papa.unparse({
     fields: EXPORT_COLUMNS.map(([name]) => name),
     data: rows.map((row) => EXPORT_COLUMNS.map(([, value]) => value(row) ?? "")),
-  });
+  }, { escapeFormulae: true }); // a Summary starting with = + - @ must not run as a formula
   // The BOM makes Excel read the file as UTF-8.
   const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
