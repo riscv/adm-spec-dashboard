@@ -8,7 +8,8 @@ on:
       - ".github/workflows/deploy-pages.yaml"
   # Always redeploy after the data fetch, so the published UI can never lag the
   # data. Relying on the push trigger alone is not safe: "Daily Data Fetch"
-  # commits with --allow-empty, and an empty commit matches no path filter.
+  # merges with the workflow's GITHUB_TOKEN, which does not trigger push
+  # workflows, and makes no commit at all when the data did not change.
   workflow_run:
     workflows: ["Daily Data Fetch"]
     types: [completed]

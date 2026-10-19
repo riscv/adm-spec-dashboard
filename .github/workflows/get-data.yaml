@@ -5,6 +5,12 @@ on:
     # This will run at 00:00, 08:00, and 16:00 UTC
     - cron: "0 0,8,16 * * *"
   workflow_dispatch:
+    inputs:
+      release_notes:
+        description: "Text for the Release Notes line of the data release"
+        required: false
+        default: ""
+        type: string
 
 # Nothing by default; each job asks only for what it needs. Actions are pinned
 # to full commit SHAs (version in the comment) so a moved tag cannot change
@@ -64,7 +70,7 @@ jobs:
             path: ${{ github.workspace }}/*.csv
 
       - name: Create Release
-        if: steps.run_container.outcome == 'success' && (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+        if: steps.run_container.outcome == 'success' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           draft: false
@@ -72,12 +78,10 @@ jobs:
           name: ${{ env.CURRENT_TIME }}
           body: |
             This release was created by: ${{ github.event.sender.login }}
-            Release Notes: ${{ github.event.inputs.release_notes }}
+            Release Notes: ${{ inputs.release_notes }}
           files: |
             ${{ github.workspace }}/*.csv
 
-        env:
-            GITHUB_TOKEN: ${{ secrets.GHTOKEN }}
 
       - name: Update latest CSV for UI
         if: steps.run_container.outcome == 'success' && (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
@@ -112,6 +116,8 @@ jobs:
   summaries:
     name: Write AI summaries
     needs: data-fetch
+    # Branch runs are for testing the fetch only; the AWS roles trust main anyway.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     continue-on-error: true
     permissions:
@@ -150,19 +156,69 @@ jobs:
           path: web-ui/public/summaries.json
           retention-days: 1
 
-  # The org "Enforce DCO Compliance." ruleset requires a DCO check and
-  # verified signatures on the default branch, and a runner's `git commit`
-  # can satisfy neither. Commit through the API (which signs) and land it
-  # via a PR (so the DCO app runs). See the script header for detail.
+  # One snapshot per spec per day in DynamoDB (snapshot-history.py), then the
+  # weekly "what changed" digest built from it (weekly-digest.py). Like the
+  # summaries job, this job holds only an AWS OIDC token, for a role that can
+  # read and write the history table and nothing else. The role trusts main
+  # only, so runs dispatched from other branches fail here, by design; a
+  # failure keeps the old changes.json.
+  history:
+    name: Store history and write the weekly digest
+    needs: data-fetch
+    # Branch runs are for testing the fetch only; the AWS roles trust main anyway.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Get the UI data
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: ui-data
+          path: web-ui/public
+
+      - name: Configure AWS credentials for the history table
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_HISTORY_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Store today's snapshot and write the digest
+        run: |
+          set -euo pipefail
+          pip install --quiet boto3==1.43.115
+          python snapshot-history.py web-ui/public/latest.csv
+          python weekly-digest.py --out web-ui/public/changes.json
+
+      - name: Pass the digest to the landing job
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: changes
+          path: web-ui/public/changes.json
+          retention-days: 1
+
+  # A runner's `git commit` is unsigned, so the files are committed through
+  # the API (which signs) and landed via a PR (so the DCO app runs). This
+  # keeps every commit on the default branch signed and DCO-checked. See the
+  # script header for detail.
   #
   # This no longer makes an empty commit when nothing changed. That is safe:
   # Deploy Web UI also triggers on `workflow_run` for this workflow, so the
   # published UI still refreshes even when no commit is produced.
   land:
     name: Land latest CSV via a signed, DCO-checked PR
-    needs: [data-fetch, summaries]
-    # Runs when the summaries job failed too; the old summaries.json is kept.
-    if: always() && needs.data-fetch.result == 'success'
+    needs: [data-fetch, summaries, history]
+    # Runs when the summaries or history job failed too; the old
+    # summaries.json and changes.json are kept.
+    # Only main lands data; a run dispatched from a branch must never write to main.
+    if: always() && needs.data-fetch.result == 'success' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -187,12 +243,19 @@ jobs:
           name: summaries
           path: web-ui/public
 
+      - name: Get the weekly digest
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: changes
+          path: web-ui/public
+
       - name: Land the files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          if [ -z "$(git status --porcelain -- web-ui/public/latest.csv web-ui/public/latest.csv.meta web-ui/public/summaries.json)" ]; then
+          if [ -z "$(git status --porcelain -- web-ui/public/latest.csv web-ui/public/latest.csv.meta web-ui/public/summaries.json web-ui/public/changes.json)" ]; then
             echo "No changes."
             exit 0
           fi
@@ -200,6 +263,7 @@ jobs:
             --path web-ui/public/latest.csv \
             --path web-ui/public/latest.csv.meta \
             $( [ -f web-ui/public/summaries.json ] && echo --path web-ui/public/summaries.json ) \
+            $( [ -f web-ui/public/changes.json ] && echo --path web-ui/public/changes.json ) \
             --branch-prefix bot/latest-csv \
             --message "Update latest CSV" \
-            --pr-body "Automated refresh of the spec dashboard CSV, opened by the Daily Data Fetch workflow because the default branch requires a DCO check and verified signatures."
+            --pr-body "Automated refresh of the spec dashboard CSV, opened by the Daily Data Fetch workflow so the commit is signed and DCO-checked."

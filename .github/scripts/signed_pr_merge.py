@@ -2,8 +2,9 @@
 """Land bot-generated files on a protected default branch.
 
 The riscv org ruleset "Enforce DCO Compliance." guards the default branch of
-these repos with two rules, and a scheduled job can satisfy neither the obvious
-way:
+many riscv repos with two rules, and a scheduled job can satisfy neither the
+obvious way. (adm-spec-dashboard was not in that ruleset as of 2026-10-19; the
+flow below keeps its data commits signed and DCO-checked either way.)
 
   * required_status_checks -> "DCO". The DCO app only reports its check on
     pull_request events, so a direct push leaves the context unreported and
