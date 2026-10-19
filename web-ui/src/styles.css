@@ -420,6 +420,12 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
   color: #6e1e22;
 }
 
+.quarter-baseline {
+  font-size: 0.75em;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
 .not-set-yet {
   background-color: #e3e2e2;
   color: #e3e2e2;
