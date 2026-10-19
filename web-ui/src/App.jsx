@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import Papa from "papaparse";
 
@@ -473,9 +473,183 @@ function normalizeRow(raw) {
     fastTrack: /^(yes|true|y|1)$/i.test(String(raw["Fast Track"] || "").trim()),
     lastContribution: raw["Last Contribution"] || "",
     lastContributionSource: raw["Last Contribution Source"] || "",
+    phaseStarted: raw["Phase Started"] || "",
+    developmentStarted: raw["Development Started"] || "",
+    nextApproval: raw["Next Approval"] || "",
+    nextApprovalDate: raw["Next Approval Date"] || "",
+    latestReplanning: raw["Latest Replanning"] || "",
     currentPhase,
     nextPhase,
   };
+}
+
+function specKeyOf(row) {
+  return String(row.jiraUrl || "").split("/").pop();
+}
+
+// "2y 01m", "4m", "12d": the age of a date, for the summary's key dates.
+function formatAge(value) {
+  const days = daysSince(value);
+  if (days === null) return "";
+  if (days < 31) return `${days}d`;
+  const years = Math.floor(days / 365);
+  const months = Math.floor((days % 365) / 30.44);
+  return years ? `${years}y ${String(months).padStart(2, "0")}m` : `${months}m`;
+}
+
+function formatAgo(value) {
+  return daysSince(value) === 0 ? "today" : `${formatAge(value)} ago`;
+}
+
+function summaryKeyDates(row) {
+  const items = [];
+  if (row.phaseStarted) {
+    items.push(["Current phase started", `${row.phaseStarted} · ${formatAgo(row.phaseStarted)}`]);
+  }
+  if (row.developmentStarted) {
+    items.push([
+      "Development started",
+      `${row.developmentStarted} · ${daysSince(row.developmentStarted)} days (${formatAge(row.developmentStarted)})`,
+    ]);
+  }
+  if (row.nextApproval) {
+    items.push(["Next approval", `${row.nextApproval}${row.nextApprovalDate ? `, projected ${row.nextApprovalDate}` : ""}`]);
+  }
+  if (row.latestReplanning) {
+    items.push(["Projected dates last set", `${row.latestReplanning} · ${formatAgo(row.latestReplanning)}`]);
+  }
+  return items;
+}
+
+function summaryShareUrl(key) {
+  const url = new URL(window.location.href);
+  url.search = "";
+  url.hash = "";
+  url.searchParams.set("spec", key);
+  return url.toString();
+}
+
+function summaryShareText(row, entry) {
+  const dates = summaryKeyDates(row).map(([label, value]) => `- ${label}: ${value}`);
+  return [
+    `${row.summary} (${specKeyOf(row)})`,
+    "",
+    entry.summary,
+    ...(dates.length ? ["", ...dates] : []),
+    "",
+    `Dashboard: ${summaryShareUrl(specKeyOf(row))}`,
+    `Jira: ${row.jiraUrl}`,
+  ].join("\n");
+}
+
+function SummaryIcon() {
+  return (
+    <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+      <circle cx="10" cy="10" r="10" className="summary-icon-bg" />
+      <path
+        d="M6 6.5h8M6 10h8M6 13.5h5"
+        stroke="#fff"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
+function SummaryDialog({ row, entry, onClose }) {
+  const [copied, setCopied] = useState("");
+  const dialogRef = useRef(null);
+  const key = specKeyOf(row);
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    dialogRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const copy = async (text, label) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(label);
+    } catch {
+      setCopied("Copy failed");
+    }
+    setTimeout(() => setCopied(""), 2000);
+  };
+
+  const text = summaryShareText(row, entry);
+  const share = async () => {
+    try {
+      await navigator.share({ title: row.summary, text, url: summaryShareUrl(key) });
+    } catch {
+      // Dismissed by the viewer; nothing to do.
+    }
+  };
+  const mailto = `mailto:?subject=${encodeURIComponent(`Specification summary: ${row.summary}`)}&body=${encodeURIComponent(text)}`;
+  const keyDates = summaryKeyDates(row);
+
+  return (
+    <div className="summary-overlay" onClick={onClose}>
+      <div
+        className="summary-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="summary-dialog-title"
+        tabIndex={-1}
+        ref={dialogRef}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="summary-close" onClick={onClose} aria-label="Close">
+          ×
+        </button>
+        <h2 id="summary-dialog-title">
+          <a href={row.jiraUrl} target="_blank" rel="noreferrer">
+            {row.summary}
+          </a>{" "}
+          <span className="summary-key">{key}</span>
+        </h2>
+        <p className="summary-text">{entry.summary}</p>
+        {keyDates.length ? (
+          <dl className="summary-dates">
+            {keyDates.map(([label, value]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+        <div className="summary-meta">
+          {entry.source === "ai"
+            ? `AI generated from Jira data on ${entry.generated}. The text only restates Jira facts.`
+            : `Built from Jira data on ${entry.generated}.`}
+        </div>
+        <div className="summary-actions">
+          <button type="button" onClick={() => copy(summaryShareUrl(key), "Link copied")}>
+            Copy link
+          </button>
+          <button type="button" onClick={() => copy(text, "Text copied")}>
+            Copy text
+          </button>
+          <a className="summary-action-link" href={mailto}>
+            Email
+          </a>
+          {typeof navigator.share === "function" ? (
+            <button type="button" onClick={share}>
+              Share…
+            </button>
+          ) : null}
+          <span className="summary-copied" aria-live="polite">
+            {copied}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function daysSince(value) {
@@ -617,14 +791,18 @@ function App() {
   const [bodOnly, setBodOnly] = useState(getInitialBodOnly);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [summaries, setSummaries] = useState({});
-  const [openSummaries, setOpenSummaries] = useState(() => new Set());
-  const toggleSummary = (key) =>
-    setOpenSummaries((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
+  // Key of the spec whose summary dialog is open; ?spec=RVS-123 opens it on load.
+  const [summaryKey, setSummaryKey] = useState(
+    () => new URLSearchParams(window.location.search).get("spec") || ""
+  );
+  const closeSummary = useCallback(() => {
+    setSummaryKey("");
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("spec")) {
+      url.searchParams.delete("spec");
+      window.history.replaceState(null, "", url);
+    }
+  }, []);
 
   const tableRef = useRef(null);
   const tableContainerRef = useRef(null);
@@ -1107,7 +1285,7 @@ function App() {
                 Ratification Progress{" "}
                 <AboutLink onOpen={openAbout} label="About Ratification Progress" light />
               </th>
-              <th className="links-column" rowSpan={2}>Links</th>
+              <th className="links-column" rowSpan={2}>Resources</th>
             </tr>
             <tr>
               <th className="narrow-column freeze-subheader">ARC Approval</th>
@@ -1150,9 +1328,8 @@ function App() {
                 githubValue.toLowerCase() !== "not set yet" &&
                 githubValue.toLowerCase() !== "n/a";
               const latestReleaseUrl = hasGithub ? getLatestReleaseUrl(githubValue) : "";
-              const specKey = String(row.jiraUrl || "").split("/").pop();
+              const specKey = specKeyOf(row);
               const specSummary = summaries[specKey];
-              const summaryOpen = openSummaries.has(specKey);
 
               return (
                 <tr key={`${row.jiraUrl || row.summary}-${index}`} className={progressClass}>
@@ -1182,28 +1359,6 @@ function App() {
                           No recent contribution found
                         </div>
                       )
-                    ) : null}
-                    {specSummary?.summary ? (
-                      <>
-                        <button
-                          type="button"
-                          className="ai-summary-toggle"
-                          aria-expanded={summaryOpen}
-                          onClick={() => toggleSummary(specKey)}
-                        >
-                          {summaryOpen ? "Hide summary" : "✨ Summary"}
-                        </button>
-                        {summaryOpen ? (
-                          <div className="ai-summary">
-                            {specSummary.summary}
-                            <div className="ai-summary-meta">
-                              {specSummary.source === "ai"
-                                ? `AI generated from Jira data, ${specSummary.generated}`
-                                : `Generated from Jira data, ${specSummary.generated}`}
-                            </div>
-                          </div>
-                        ) : null}
-                      </>
                     ) : null}
                     <div className="tooltip-text">
                       {row.summary}
@@ -1416,6 +1571,21 @@ function App() {
                   })()}
                   <td className="links-column">
                     <div className="icon-group">
+                      {specSummary?.summary ? (
+                        <button
+                          type="button"
+                          className="icon-button summary-button"
+                          onClick={() => setSummaryKey(specKey)}
+                          title="Summary"
+                          aria-label={`Summary of ${row.summary}`}
+                        >
+                          <SummaryIcon />
+                        </button>
+                      ) : (
+                        <span className="icon-disabled" title="No summary yet">
+                          <SummaryIcon />
+                        </span>
+                      )}
                       {hasGithub ? (
                         <a
                           href={githubValue}
@@ -1496,6 +1666,13 @@ function App() {
         </table>
         </div>
       </div>
+      {(() => {
+        const summaryRow = summaryKey ? rows.find((row) => specKeyOf(row) === summaryKey) : null;
+        const entry = summaryKey ? summaries[summaryKey] : null;
+        return summaryRow && entry?.summary ? (
+          <SummaryDialog row={summaryRow} entry={entry} onClose={closeSummary} />
+        ) : null;
+      })()}
 
       {showBackToTop ? (
         <button
