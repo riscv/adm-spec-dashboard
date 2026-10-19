@@ -478,9 +478,113 @@ function normalizeRow(raw) {
     nextApproval: raw["Next Approval"] || "",
     nextApprovalDate: raw["Next Approval Date"] || "",
     latestReplanning: raw["Latest Replanning"] || "",
+    phaseHistory: parseDatePairs(raw["Phase History"]),
+    projectedPhaseEnds: parseDatePairs(raw["Projected Phase Ends"]),
     currentPhase,
     nextPhase,
   };
+}
+
+// "Planning=2023-07-07;Development=2024-08-28" -> { Planning: "2023-07-07", ... }
+function parseDatePairs(value) {
+  const out = {};
+  String(value || "")
+    .split(";")
+    .forEach((pair) => {
+      const [name, date] = pair.split("=");
+      if (name && date) out[name.trim()] = date.trim();
+    });
+  return out;
+}
+
+// The six phases of the milestone line; each is one sixth of the way.
+const TIMELINE_PHASES = [
+  { name: "Planning", short: "Plan" },
+  { name: "Development", short: "Dev" },
+  { name: "Stabilization", short: "Stab." },
+  { name: "Freeze", short: "Freeze" },
+  { name: "Ratification-Ready", short: "Rat-Ready" },
+  { name: "Publication", short: "Publication" },
+];
+
+function timelineIndex(row) {
+  const phase = row.currentPhase === "Specification in Publication" ? "Publication" : row.currentPhase;
+  return TIMELINE_PHASES.findIndex((p) => p.name === phase);
+}
+
+// Completion by phase: the phases already passed, out of six.
+function phaseCompletion(row) {
+  const index = timelineIndex(row);
+  if (index < 0) return { percent: 0, label: "Not started (Inception)" };
+  return {
+    percent: Math.round((index / TIMELINE_PHASES.length) * 100),
+    label: `Phase ${index + 1} of ${TIMELINE_PHASES.length}, ${TIMELINE_PHASES[index].name}`,
+  };
+}
+
+function timelineSteps(row) {
+  const current = timelineIndex(row);
+  const steps = TIMELINE_PHASES.map((phase, i) => {
+    const state = current < 0 || i > current ? "upcoming" : i < current ? "done" : "current";
+    if (state !== "upcoming") {
+      // A passed phase with no history was skipped (some fast tracks) or predates Jira.
+      const date = row.phaseHistory[phase.name] || "";
+      return { ...phase, state, date, title: date ? `${phase.name}: started ${date}` : `${phase.name}: no start date in Jira` };
+    }
+    const previous = TIMELINE_PHASES[i - 1];
+    const date = previous ? row.projectedPhaseEnds[previous.name] || "" : "";
+    return { ...phase, state, date, projected: true, title: date ? `${phase.name}: projected to start ${date}` : `${phase.name}: no projected date` };
+  });
+  // A passed phase first entered after a later one was skipped at the time and
+  // only visited afterwards (e.g. Development -> Freeze -> back to Stabilization).
+  let earliestLater = "";
+  for (let i = steps.length - 1; i >= 0; i -= 1) {
+    const step = steps[i];
+    if (step.projected || !step.date) continue;
+    if (earliestLater && step.date > earliestLater) {
+      steps[i] = { ...step, date: "", skipped: true, title: `${step.name}: skipped (first entered ${step.date})` };
+    } else {
+      earliestLater = step.date;
+    }
+  }
+  const ratified = row.projectedPhaseEnds.Publication || "";
+  steps.push({
+    name: "Ratified",
+    short: "Ratified",
+    state: "upcoming",
+    date: ratified,
+    projected: true,
+    title: ratified ? `Board ratification projected ${ratified}` : "Board ratification: no projected date",
+  });
+  return steps;
+}
+
+function PhaseTimeline({ row }) {
+  const steps = timelineSteps(row);
+  const completion = phaseCompletion(row);
+  return (
+    <div className="phase-timeline">
+      <div className="phase-timeline-head">
+        <span className="phase-timeline-percent">{completion.percent}%</span>
+        <span className="phase-timeline-label">complete · {completion.label}</span>
+      </div>
+      <ol className="phase-timeline-steps">
+        {steps.map((step) => (
+          <li key={step.name} className={`phase-step phase-${step.state}`} title={step.title}>
+            <span className="phase-dot" aria-hidden="true">
+              {step.state === "done" ? "✓" : ""}
+            </span>
+            <span className="phase-name">{step.short}</span>
+            <span className={`phase-date${step.projected ? " projected" : ""}`}>
+              {step.date ? `${step.projected ? "~" : ""}${step.date}` : step.skipped ? "skipped" : "–"}
+            </span>
+            <span className="visually-hidden">{step.title}</span>
+          </li>
+        ))}
+      </ol>
+      <div className="phase-timeline-note">Dates are when a phase started; ~ marks a projected date.</div>
+    </div>
+  );
 }
 
 function specKeyOf(row) {
@@ -531,8 +635,10 @@ function summaryShareUrl(key) {
 
 function summaryShareText(row, entry) {
   const dates = summaryKeyDates(row).map(([label, value]) => `- ${label}: ${value}`);
+  const completion = phaseCompletion(row);
   return [
     `${row.summary} (${specKeyOf(row)})`,
+    `Progress: ${completion.percent}% complete (${completion.label})`,
     "",
     entry.summary,
     ...(dates.length ? ["", ...dates] : []),
@@ -612,6 +718,7 @@ function SummaryDialog({ row, entry, onClose }) {
           </a>{" "}
           <span className="summary-key">{key}</span>
         </h2>
+        <PhaseTimeline row={row} />
         <p className="summary-text">{entry.summary}</p>
         {keyDates.length ? (
           <dl className="summary-dates">

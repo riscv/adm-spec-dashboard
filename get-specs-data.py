@@ -498,6 +498,33 @@ NEXT_APPROVAL = [
 REQUIRED_FIELDS += [field for _, _, field in NEXT_APPROVAL]
 
 
+# Phase short names for the dashboard's milestone line, by Jira status.
+PHASE_STATUSES = [
+    ("Planning", "Specification in Planning"),
+    ("Development", "Specification Under Development"),
+    ("Stabilization", "Specification Under Stabilization"),
+    ("Freeze", "Specification in Freeze"),
+    ("Ratification-Ready", "Specification in Ratification-Ready"),
+    ("Publication", "Specification in Publication"),
+]
+
+
+def encode_dates(pairs):
+    """'Planning=2023-07-07;Development=2024-08-28', skipping empty dates."""
+    return ";".join(f"{name}={date}" for name, date in pairs if date)
+
+
+def get_phase_history(first_entered):
+    return encode_dates((name, first_entered.get(status, "")) for name, status in PHASE_STATUSES)
+
+
+def get_projected_phase_ends(fields):
+    """Projected date of the approval that ends each phase, from Development on."""
+    names = ["Development", "Stabilization", "Freeze", "Ratification-Ready", "Publication"]
+    return encode_dates((name, (fields.get(field) or "")[:10])
+                        for name, (_, _, field) in zip(names, NEXT_APPROVAL))
+
+
 def get_next_approval(status, fields):
     """Return (approval name, projected date) for the approval ending the current phase."""
     lowered = (status or "").lower()
@@ -552,9 +579,11 @@ def get_changelog_dates(jira, issue_key, status):
 
     previous_target / target_changed: the last Target Ratification Quarter change.
     phase_started: the last move into the current status.
+    first_entered: status name -> date of the first move into it.
     development_started: the first move into Specification Under Development.
     """
-    out = {"previous_target": "", "target_changed": "", "phase_started": "", "development_started": ""}
+    out = {"previous_target": "", "target_changed": "", "phase_started": "", "development_started": "",
+           "first_entered": {}}
     start = 0
     try:
         while True:
@@ -568,6 +597,7 @@ def get_changelog_dates(jira, issue_key, status):
                     elif item.get('fieldId') == 'status':
                         if item.get('toString') == status:
                             out["phase_started"] = created
+                        out["first_entered"].setdefault(item.get('toString') or "", created)
                         if item.get('toString') == "Specification Under Development" and not out["development_started"]:
                             out["development_started"] = created
             start += len(page.get('values', []))
@@ -669,6 +699,8 @@ def parse_issues(issues, github_session=None, jira=None):
             'Next Approval': next_approval,
             'Next Approval Date': next_approval_date,
             'Latest Replanning': (fields.get('customfield_10048') or "")[:10],
+            'Phase History': get_phase_history(dates.get('first_entered', {})),
+            'Projected Phase Ends': get_projected_phase_ends(fields),
             'Ratification Progress': ratification_progress,
             'Previous Ratification Progress': previous_ratification_progress,
             'Last Contribution': last_contribution,
@@ -737,7 +769,9 @@ def get_data_from_jira(jira_token, jira_email):
             'Development Started',
             'Next Approval',
             'Next Approval Date',
-            'Latest Replanning'
+            'Latest Replanning',
+            'Phase History',
+            'Projected Phase Ends'
         ])
 
         # Writing each issue to the CSV file
@@ -769,7 +803,9 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Development Started'],
                 issue['Next Approval'],
                 issue['Next Approval Date'],
-                issue['Latest Replanning']
+                issue['Latest Replanning'],
+                issue['Phase History'],
+                issue['Projected Phase Ends']
             ])
 
     print(f"Data successfully written to {csv_filename}")
