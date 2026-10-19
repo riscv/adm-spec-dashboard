@@ -483,7 +483,55 @@ REQUIRED_FIELDS = [
     "customfield_10043",
     "customfield_10136",
     "customfield_11060",
+    "customfield_10048",  # Latest Replanning: when the projected dates were last set
 ]
+
+# The approval that ends each phase, with its Projection date field. Achieved
+# dates are not kept reliably, so the next approval follows the current phase.
+NEXT_APPROVAL = [
+    ("under development", "Development complete", "customfield_10982"),
+    ("under stabilization", "Stabilization approval", "customfield_10984"),
+    ("in freeze", "Freeze approval", "customfield_10986"),
+    ("in ratification-ready", "TSC ratification", "customfield_10988"),
+    ("in publication", "Board ratification", "customfield_10989"),
+]
+REQUIRED_FIELDS += [field for _, _, field in NEXT_APPROVAL]
+
+
+# Phase short names for the dashboard's milestone line, by Jira status.
+PHASE_STATUSES = [
+    ("Planning", "Specification in Planning"),
+    ("Development", "Specification Under Development"),
+    ("Stabilization", "Specification Under Stabilization"),
+    ("Freeze", "Specification in Freeze"),
+    ("Ratification-Ready", "Specification in Ratification-Ready"),
+    ("Publication", "Specification in Publication"),
+]
+
+
+def encode_dates(pairs):
+    """'Planning=2023-07-07;Development=2024-08-28', skipping empty dates."""
+    return ";".join(f"{name}={date}" for name, date in pairs if date)
+
+
+def get_phase_history(first_entered):
+    return encode_dates((name, first_entered.get(status, "")) for name, status in PHASE_STATUSES)
+
+
+def get_projected_phase_ends(fields):
+    """Projected date of the approval that ends each phase, from Development on."""
+    names = ["Development", "Stabilization", "Freeze", "Ratification-Ready", "Publication"]
+    return encode_dates((name, (fields.get(field) or "")[:10])
+                        for name, (_, _, field) in zip(names, NEXT_APPROVAL))
+
+
+def get_next_approval(status, fields):
+    """Return (approval name, projected date) for the approval ending the current phase."""
+    lowered = (status or "").lower()
+    for status_key, name, field in NEXT_APPROVAL:
+        if lowered.endswith(status_key):
+            return name, (fields.get(field) or "")[:10]
+    return "", ""
 
 
 def fetch_all_issues(jira, jql, page_size=100):
@@ -526,24 +574,38 @@ def fetch_all_issues(jira, jql, page_size=100):
     return issues
 
 
-def get_last_target_change(jira, issue_key):
-    """Return (previous quarter, change date) for the last Target Ratification Quarter change."""
-    last = None
+def get_changelog_dates(jira, issue_key, status):
+    """Read the issue changelog once and return the dates the dashboard needs.
+
+    previous_target / target_changed: the last Target Ratification Quarter change.
+    phase_started: the last move into the current status.
+    first_entered: status name -> date of the first move into it.
+    development_started: the first move into Specification Under Development.
+    """
+    out = {"previous_target": "", "target_changed": "", "phase_started": "", "development_started": "",
+           "first_entered": {}}
     start = 0
     try:
         while True:
             page = jira.get(f"rest/api/3/issue/{issue_key}/changelog",
                             params={"startAt": start, "maxResults": 100}) or {}
             for entry in page.get('values', []):
+                created = (entry.get('created') or "")[:10]
                 for item in entry.get('items', []):
                     if item.get('fieldId') == 'customfield_10040':
-                        last = (item.get('fromString') or "", (entry.get('created') or "")[:10])
+                        out["previous_target"], out["target_changed"] = item.get('fromString') or "", created
+                    elif item.get('fieldId') == 'status':
+                        if item.get('toString') == status:
+                            out["phase_started"] = created
+                        out["first_entered"].setdefault(item.get('toString') or "", created)
+                        if item.get('toString') == "Specification Under Development" and not out["development_started"]:
+                            out["development_started"] = created
             start += len(page.get('values', []))
             if page.get('isLast', True) or not page.get('values'):
                 break
     except Exception as exc:
         print(f"Could not read changelog for {issue_key}: {exc}")
-    return last or ("", "")
+    return out
 
 
 # Function to parse and extract issue details
@@ -595,9 +657,8 @@ def parse_issues(issues, github_session=None, jira=None):
         bod_approval_status = extract_bod_approval_status(fields.get('subtasks'))
         phase_tasks_status = extract_phase_tasks_status(status, fields.get('subtasks'))
         fast_track = "Yes" if is_fast_track(fields.get('subtasks')) else "No"
-        previous_target_quarter, target_changed = (
-            get_last_target_change(jira, issue_key) if jira else ("", "")
-        )
+        dates = get_changelog_dates(jira, issue_key, status) if jira else {}
+        next_approval, next_approval_date = get_next_approval(status, fields)
 
         # Resolve the last real code contribution from the spec's GitHub link.
         github_url = str(github).strip() if github and github != "Not Set Yet" else ""
@@ -631,8 +692,15 @@ def parse_issues(issues, github_session=None, jira=None):
             'Baseline Ratification Quarter': baseline_ratification_quarter,
             'Plan Ratification Quarter': plan_ratification_quarter,
             'Target Ratification Quarter': target_ratification_quarter,
-            'Previous Target Ratification Quarter': previous_target_quarter,
-            'Target Changed': target_changed,
+            'Previous Target Ratification Quarter': dates.get('previous_target', ""),
+            'Target Changed': dates.get('target_changed', ""),
+            'Phase Started': dates.get('phase_started', ""),
+            'Development Started': dates.get('development_started', ""),
+            'Next Approval': next_approval,
+            'Next Approval Date': next_approval_date,
+            'Latest Replanning': (fields.get('customfield_10048') or "")[:10],
+            'Phase History': get_phase_history(dates.get('first_entered', {})),
+            'Projected Phase Ends': get_projected_phase_ends(fields),
             'Ratification Progress': ratification_progress,
             'Previous Ratification Progress': previous_ratification_progress,
             'Last Contribution': last_contribution,
@@ -696,7 +764,14 @@ def get_data_from_jira(jira_token, jira_email):
             'Last Contribution Source',
             'Plan Ratification Quarter',
             'Previous Target Ratification Quarter',
-            'Target Changed'
+            'Target Changed',
+            'Phase Started',
+            'Development Started',
+            'Next Approval',
+            'Next Approval Date',
+            'Latest Replanning',
+            'Phase History',
+            'Projected Phase Ends'
         ])
 
         # Writing each issue to the CSV file
@@ -723,7 +798,14 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Last Contribution Source'],
                 issue['Plan Ratification Quarter'],
                 issue['Previous Target Ratification Quarter'],
-                issue['Target Changed']
+                issue['Target Changed'],
+                issue['Phase Started'],
+                issue['Development Started'],
+                issue['Next Approval'],
+                issue['Next Approval Date'],
+                issue['Latest Replanning'],
+                issue['Phase History'],
+                issue['Projected Phase Ends']
             ])
 
     print(f"Data successfully written to {csv_filename}")

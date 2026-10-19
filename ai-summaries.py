@@ -27,7 +27,7 @@ TREND_WINDOW_DAYS = 90  # same as the dashboard
 NOT_SET = ("", "Not Set", "Not Set Yet")
 
 SYSTEM = (
-    "Rewrite the facts as 2 to 4 short, plain sentences for a dashboard. "
+    "Rewrite the facts as 3 to 6 short, plain sentences for a dashboard. "
     "Keep every fact, in the given order. Only combine and smooth the wording: do not add, "
     "drop, interpret, judge or explain anything, and do not draw conclusions. "
     "Keep quarters (like 27Q2), dates and status names exactly as written, and numbers as digits. "
@@ -74,6 +74,12 @@ def build_facts(row, today):
         return ["The specification was cancelled"]
     facts = [f"The specification is in {phase}" +
              (", following the fast-track process" if row.get("Fast Track") == "Yes" else "")]
+    started = dated(row.get("Phase Started", ""), today)
+    if started:
+        facts.append(f"This phase started on {started}")
+    dev = dated(row.get("Development Started", ""), today)
+    if dev and phase != "Development":
+        facts.append(f"Development started on {dev}")
 
     baseline = row.get("Baseline Ratification Quarter", "")
     phase_start = row.get("Plan Ratification Quarter", "")
@@ -106,19 +112,34 @@ def build_facts(row, today):
         else:
             facts.append(f"The projection has not changed in the last {TREND_WINDOW_DAYS} days")
 
+    approval, approval_date = row.get("Next Approval", ""), row.get("Next Approval Date", "")
+    if approval and approval_date:
+        facts.append(f"The next approval is {approval}, projected for {approval_date}")
+    replanned = dated(row.get("Latest Replanning", ""), today)
+    if replanned:
+        facts.append(f"The projected dates were last set on {replanned}")
+
     for col, label in (("ARC Review Status", "ARC review"), ("Public Review Status", "Public review"),
                        ("TSC Approval Status", "TSC approval"), ("BoD Approval Status", "Board approval")):
         if row.get(col, "") not in NOT_SET:
             facts.append(f"{label}: {row[col]}")
 
-    last = row.get("Last Contribution", "")
+    last = dated(row.get("Last Contribution", ""), today)
     if last:
-        try:
-            days = (today - dt.date.fromisoformat(last[:10])).days
-            facts.append(f"The last repository activity was on {last[:10]} ({days} days ago)")
-        except ValueError:
-            pass
+        facts.append(f"The last repository activity was on {last}")
     return [f for f in facts if f]
+
+
+def dated(value, today):
+    """The ISO date of a date or timestamp; '' when unset or bad.
+
+    No "N days ago": summaries are cached, so relative ages would go stale.
+    The dashboard computes live ages next to the summary instead.
+    """
+    try:
+        return dt.date.fromisoformat((value or "")[:10]).isoformat()
+    except ValueError:
+        return ""
 
 
 def template(facts):
@@ -141,7 +162,10 @@ def digits(text):
 
 
 def valid(summary, facts):
-    if not summary or "\u2014" in summary or len(summary.split()) > 80:
+    if not summary or "\u2014" in summary or len(summary.split()) > 140:
+        return False
+    # A cut-off reply (token limit) does not end a sentence.
+    if not summary.rstrip().endswith("."):
         return False
     if "RISC-V" in summary or OPINION.search(summary):
         return False
@@ -161,7 +185,7 @@ def ask_model(client, facts):
         modelId=MODEL_ID,
         system=[{"text": SYSTEM}],
         messages=[{"role": "user", "content": [{"text": "Facts:\n- " + "\n- ".join(facts)}]}],
-        inferenceConfig={"maxTokens": 200, "temperature": 0},
+        inferenceConfig={"maxTokens": 500, "temperature": 0},
     )
     text = "".join(c.get("text", "") for c in resp["output"]["message"]["content"])
     # Qwen3 models may wrap their reasoning in <think> tags.
@@ -198,9 +222,7 @@ def main():
             continue
         facts = build_facts(row, today)
         tmpl = template(facts)
-        # The day count in "N days ago" changes daily; hash without it so the
-        # model is not called again just because a day passed.
-        stable = [re.sub(r" \(\d+ days ago\)", "", f) for f in facts]
+        stable = facts
         # The prompt and model are part of the hash, so changing either regenerates all.
         digest = hashlib.sha256(json.dumps([MODEL_ID, SYSTEM, stable]).encode()).hexdigest()[:16]
         old = cache.get(key)
