@@ -616,11 +616,35 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [bodOnly, setBodOnly] = useState(getInitialBodOnly);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [summaries, setSummaries] = useState({});
+  const [openSummaries, setOpenSummaries] = useState(() => new Set());
+  const toggleSummary = (key) =>
+    setOpenSummaries((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
 
   const tableRef = useRef(null);
   const tableContainerRef = useRef(null);
   const assetBase = import.meta.env.BASE_URL || "/";
   const latestCsvUrl = `${assetBase}latest.csv`;
+
+  // Optional: written by ai-summaries.py in the Daily Data Fetch. The table
+  // works without it, so a missing or bad file is ignored.
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${assetBase}summaries.json`, { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : {}))
+      .then((data) => {
+        if (isMounted && data && typeof data === "object") setSummaries(data);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, [assetBase]);
 
   useEffect(() => {
     let isMounted = true;
@@ -1126,6 +1150,9 @@ function App() {
                 githubValue.toLowerCase() !== "not set yet" &&
                 githubValue.toLowerCase() !== "n/a";
               const latestReleaseUrl = hasGithub ? getLatestReleaseUrl(githubValue) : "";
+              const specKey = String(row.jiraUrl || "").split("/").pop();
+              const specSummary = summaries[specKey];
+              const summaryOpen = openSummaries.has(specKey);
 
               return (
                 <tr key={`${row.jiraUrl || row.summary}-${index}`} className={progressClass}>
@@ -1155,6 +1182,28 @@ function App() {
                           No recent contribution found
                         </div>
                       )
+                    ) : null}
+                    {specSummary?.summary ? (
+                      <>
+                        <button
+                          type="button"
+                          className="ai-summary-toggle"
+                          aria-expanded={summaryOpen}
+                          onClick={() => toggleSummary(specKey)}
+                        >
+                          {summaryOpen ? "Hide summary" : "✨ Summary"}
+                        </button>
+                        {summaryOpen ? (
+                          <div className="ai-summary">
+                            {specSummary.summary}
+                            <div className="ai-summary-meta">
+                              {specSummary.source === "ai"
+                                ? `AI generated from Jira data, ${specSummary.generated}`
+                                : `Generated from Jira data, ${specSummary.generated}`}
+                            </div>
+                          </div>
+                        ) : null}
+                      </>
                     ) : null}
                     <div className="tooltip-text">
                       {row.summary}

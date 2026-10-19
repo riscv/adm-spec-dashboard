@@ -381,6 +381,46 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
   opacity: 0.75;
 }
 
+/* Per-spec summary from summaries.json, opened from the spec cell. */
+.ai-summary-toggle {
+  margin-top: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ai-summary-toggle:hover,
+.ai-summary-toggle[aria-expanded="true"] {
+  color: inherit;
+}
+
+.ai-summary {
+  margin-top: 6px;
+  max-width: 340px;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 400;
+  white-space: normal;
+}
+
+.ai-summary-meta {
+  margin-top: 3px;
+  font-size: 10px;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* The hover tooltip would cover an open summary. */
+.specification-column:has(.ai-summary):hover .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+}
+
 /* Recent-activity indicator: last real code contribution to the spec's repo. */
 .activity-dot {
   display: inline-block;
