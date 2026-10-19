@@ -482,6 +482,7 @@ REQUIRED_FIELDS = [
     "customfield_10042",
     "customfield_10043",
     "customfield_10136",
+    "customfield_11060",
 ]
 
 
@@ -550,6 +551,9 @@ def parse_issues(issues, github_session=None):
         baseline_ratification_quarter = (
             fields.get('customfield_10039', {}).get('value') if fields.get('customfield_10039') else "Not Set Yet"
         )
+        plan_ratification_quarter = (
+            fields.get('customfield_11060', {}).get('value') if fields.get('customfield_11060') else "Not Set Yet"
+        )
         target_ratification_quarter = (
             fields.get('customfield_10040', {}).get('value') if fields.get('customfield_10040') else "Not Set Yet"
         )
@@ -602,6 +606,7 @@ def parse_issues(issues, github_session=None):
             'GitHub': github,
             'ISA or NON-ISA': isa_or_non_isa,
             'Baseline Ratification Quarter': baseline_ratification_quarter,
+            'Plan Ratification Quarter': plan_ratification_quarter,
             'Target Ratification Quarter': target_ratification_quarter,
             'Ratification Progress': ratification_progress,
             'Previous Ratification Progress': previous_ratification_progress,
@@ -663,7 +668,8 @@ def get_data_from_jira(jira_token, jira_email):
             'Ratification Progress',
             'Previous Ratification Progress',
             'Last Contribution',
-            'Last Contribution Source'
+            'Last Contribution Source',
+            'Plan Ratification Quarter'
         ])
 
         # Writing each issue to the CSV file
@@ -687,7 +693,8 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Ratification Progress'],
                 issue['Previous Ratification Progress'],
                 issue['Last Contribution'],
-                issue['Last Contribution Source']
+                issue['Last Contribution Source'],
+                issue['Plan Ratification Quarter']
             ])
 
     print(f"Data successfully written to {csv_filename}")

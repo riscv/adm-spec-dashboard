@@ -246,6 +246,32 @@ function parseQuarter(value) {
   return { year, qtr };
 }
 
+function isSetQuarter(value) {
+  const text = String(value || "").trim().toLowerCase();
+  return text !== "" && !text.startsWith("not set");
+}
+
+// Quarters between the phase plan and the target (positive = behind plan).
+function quarterSlip(plan, target) {
+  if (!isSetQuarter(plan) || !isSetQuarter(target)) return null;
+  const p = parseQuarter(plan);
+  const t = parseQuarter(target);
+  if (p.year === 9999 || t.year === 9999) return null;
+  return (t.year * 4 + t.qtr) - (p.year * 4 + p.qtr);
+}
+
+function statusTitle(row) {
+  const slip = quarterSlip(row.planQuarter, row.trendingQuarter);
+  if (slip === null) return undefined;
+  if (slip <= 0) return "Target is on or ahead of the plan for the current phase";
+  return `Target is ${slip} quarter${slip === 1 ? "" : "s"} behind the plan for the current phase`;
+}
+
+const PLAN_QUARTER_TITLE =
+  "Ratification quarter expected when the specification entered its current phase. " +
+  "Current Status compares the Target quarter to this. " +
+  "Baseline is the original commitment made at Plan approval.";
+
 function getCurrentQuarter(date = new Date()) {
   const month = date.getMonth() + 1;
   return Math.ceil(month / 3);
@@ -372,6 +398,7 @@ function normalizeRow(raw) {
   const status = raw["Status"] || "";
   const planned = raw["Baseline Ratification Quarter"] || raw["Planned Ratification Quarter"] || "";
   const trending = raw["Target Ratification Quarter"] || raw["Trending Ratification Quarter"] || "";
+  const plan = raw["Plan Ratification Quarter"] || "";
   const bodReport = raw["BoD Report"] || "";
   const { currentPhase, nextPhase } = calculateProgress(status);
 
@@ -382,6 +409,7 @@ function normalizeRow(raw) {
     updated: raw["Updated"] || "",
     isaOrNonIsa: raw["ISA or NON-ISA?"] || "",
     plannedQuarter: planned,
+    planQuarter: isSetQuarter(plan) ? plan : "",
     trendingQuarter: trending,
     ratificationProgress: raw["Ratification Progress"] || "",
     previousRatificationProgress: raw["Previous Ratification Progress"] || "",
@@ -490,7 +518,8 @@ function buildEmailBody(row, phases) {
     `- Ratification-Ready - Tasks: ${phases["Ratification-Ready"] || "N/A"}`,
     `- Publication - BoD Approval: ${phases["BoD Approval"] || "N/A"}`,
     `- Publication - Tasks: ${phases["Specification in Publication"] || "N/A"}`,
-    `- Planned Ratification Quarter: ${row.plannedQuarter || "N/A"}`,
+    `- Plan Ratification Quarter (current phase): ${row.planQuarter || row.plannedQuarter || "N/A"}`,
+    `- Baseline Ratification Quarter: ${row.plannedQuarter || "N/A"}`,
     `- Target Ratification Quarter: ${row.trendingQuarter || "N/A"}`,
     `- Current Ratification Status: ${row.ratificationProgress || "N/A"}`,
     `- Previous Ratification Status: ${row.previousRatificationProgress || "N/A"}`,
@@ -949,7 +978,9 @@ function App() {
               >
                 Publication
               </th>
-              <th className="narrow-column" rowSpan={2}>Planned Ratification Quarter</th>
+              <th className="narrow-column" rowSpan={2} title={PLAN_QUARTER_TITLE}>
+                Plan Ratification Quarter
+              </th>
               <th className="narrow-column" rowSpan={2}>Target Ratification Quarter</th>
               <th className="narrow-column" rowSpan={2}>Current Status</th>
               <th className="links-column" rowSpan={2}>Links</th>
@@ -1190,9 +1221,25 @@ function App() {
 
                     return [cell, arcCell];
                   })}
-                  <td className="narrow-column">{row.plannedQuarter}</td>
+                  <td className="narrow-column">
+                    {row.planQuarter ? (
+                      <>
+                        {row.planQuarter}
+                        {isSetQuarter(row.plannedQuarter) ? (
+                          <div className="quarter-baseline" title="Baseline: original commitment at Plan approval">
+                            baseline {row.plannedQuarter}
+                          </div>
+                        ) : null}
+                      </>
+                    ) : (
+                      row.plannedQuarter
+                    )}
+                  </td>
                   <td className="narrow-column">{row.trendingQuarter}</td>
-                  <td className={`narrow-column ${statusClassName(row.ratificationProgress)}`}>
+                  <td
+                    className={`narrow-column ${statusClassName(row.ratificationProgress)}`}
+                    title={statusTitle(row)}
+                  >
                     {String(row.ratificationProgress || "").replace(/^on track$/i, "On\u00A0Track")}
                   </td>
                   <td className="links-column">
