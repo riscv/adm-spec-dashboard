@@ -175,9 +175,10 @@ def valid(summary, facts):
     keep = {t for t in given if "Q" in t or "-" in t}
     if not said <= given or not keep <= said:
         return False
-    # The schedule status (On Track, Exposed, ...) must be kept word for word.
+    # The schedule status (On Track, Exposed, ...) must be kept word for word,
+    # as whole words: "Late" must not be found inside "moved later".
     status = [f[len("The schedule status is "):] for f in facts if f.startswith("The schedule status is ")]
-    return all(st.lower() in summary.lower() for st in status)
+    return all(re.search(r"\b%s\b" % re.escape(st), summary, re.I) for st in status)
 
 
 def ask_model(client, facts):
