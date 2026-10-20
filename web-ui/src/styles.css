@@ -1733,44 +1733,9 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
   }
 }
 
-/* Search sits right above the table, inside the table card. */
-.table-search {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-}
 
-.table-search {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 12px 24px;
-}
 
-.table-search .field-search {
-  flex: 1 1 280px;
-  max-width: 480px;
-}
 
-/* Quick filters right of the search; a firmer border so they read as controls. */
-.table-search .filter-bar {
-  margin-left: auto;
-}
-
-.table-search .filter-chip {
-  border: 1.5px solid #b6bfcf;
-  font-weight: 600;
-}
-
-.table-search .filter-chip:hover {
-  border-color: var(--brand);
-}
-
-@media print {
-  .table-search {
-    display: none;
-  }
-}
 
 /* "N ratified in YYYY" pill opens the list of specs ratified this year. */
 .count-chip-button {
@@ -1818,4 +1783,138 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
 
 .ratified-date {
   color: var(--text);
+}
+
+
+/* Table card header: title, search, phase key, links and menus on one row. */
+.table-card > .card-header {
+  justify-content: flex-start;
+  gap: 10px 16px;
+}
+
+.table-card > .card-header .card-actions {
+  margin-left: auto;
+}
+
+.table-search-inline {
+  flex: 1 1 220px;
+  max-width: 360px;
+}
+
+.table-search-inline #searchInput {
+  height: 32px;
+}
+
+.table-card .bod-toggle {
+  height: 32px;
+  border: 1.5px solid #b6bfcf;
+  font-weight: 600;
+}
+
+.menu-wrap {
+  position: relative;
+}
+
+.menu-toggle {
+  border: 1.5px solid #b6bfcf;
+  font-weight: 600;
+}
+
+.menu-toggle:hover,
+.menu-wrap.open .menu-toggle {
+  border-color: var(--brand);
+}
+
+.menu-toggle.has-badge {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.menu-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.menu-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  z-index: 50;
+  min-width: 220px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.menu-panel.align-right {
+  right: 0;
+}
+
+.menu-panel.align-left {
+  left: 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.menu-item:hover:not(:disabled) {
+  background: var(--surface-muted);
+  color: var(--brand);
+}
+
+.menu-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.menu-check {
+  margin: 0; /* Bootstrap gives labels a bottom margin */
+}
+
+.menu-check input {
+  margin: 0;
+  accent-color: var(--brand);
+}
+
+@media (max-width: 720px) {
+  .table-search-inline {
+    flex-basis: 100%;
+    max-width: none;
+  }
+
+  .table-card > .card-header .card-actions {
+    margin-left: 0;
+  }
+}
+
+@media print {
+  .table-search-inline,
+  .menu-wrap,
+  .table-card .bod-toggle {
+    display: none !important;
+  }
 }

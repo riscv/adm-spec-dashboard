@@ -57,3 +57,27 @@ export function IconExternal() {
     </Icon>
   );
 }
+
+export function IconChevronDown() {
+  return (
+    <Icon size={14}>
+      <path d="m6 9 6 6 6-6" />
+    </Icon>
+  );
+}
+
+export function IconFilter() {
+  return (
+    <Icon>
+      <path d="M3 5h18l-7 8v6l-4 2v-8z" />
+    </Icon>
+  );
+}
+
+export function IconMenu() {
+  return (
+    <Icon>
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </Icon>
+  );
+}

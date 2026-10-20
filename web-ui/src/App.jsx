@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import Papa from "papaparse";
-import { IconCamera, IconDownload, IconExternal, IconPrinter } from "./Icons.jsx";
+import {
+  IconCamera,
+  IconChevronDown,
+  IconDownload,
+  IconExternal,
+  IconFilter,
+  IconMenu,
+  IconPrinter,
+} from "./Icons.jsx";
 
 const LOCAL_CSV_URL =
   typeof __LOCAL_CSV_URL__ === "string" ? __LOCAL_CSV_URL__ : "";
@@ -665,6 +673,50 @@ function SummaryIcon() {
         fill="none"
       />
     </svg>
+  );
+}
+
+// A small menu button: click to open, closes on a choice, an outside click or Esc.
+function Dropdown({ label, icon, badge, children, align = "right" }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onDown = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) setOpen(false);
+    };
+    const onKey = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div className={`menu-wrap${open ? " open" : ""}`} ref={ref}>
+      <button
+        type="button"
+        className={`btn sm menu-toggle${badge ? " has-badge" : ""}`}
+        aria-haspopup="true"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        {icon}
+        {label}
+        {badge ? <span className="menu-badge">{badge}</span> : null}
+        <IconChevronDown />
+      </button>
+      {open ? (
+        <div className={`menu-panel align-${align}`} role="menu">
+          {children(() => setOpen(false))}
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -1431,9 +1483,19 @@ function App() {
                   : `${rows.length}`}
               </span>
             </h2>
+            <div className="field-search table-search-inline" id="searchContainer">
+              <input
+                type="text"
+                id="searchInput"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search for specifications..."
+                aria-label="Search for specifications"
+              />
+            </div>
             <div className="card-actions">
               <span className="card-hint phase-key ph-key" aria-hidden="true">
-                <span className="bg-completed">{"✓"}</span> Done
+                <span className="bg-completed">{"\u2713"}</span> Done
                 <span className="in-progress" /> In progress
                 <span className="bg-upcoming" /> Upcoming
               </span>
@@ -1442,78 +1504,75 @@ function App() {
                 target="_blank"
                 rel="noreferrer"
                 className="btn sm toolbar-link"
+                title="Specification Development Explorer"
               >
                 <IconExternal />
-                <span className="toolbar-text">Specification Development Explorer</span>
+                <span className="toolbar-text">Development Explorer</span>
               </a>
-              <button
-                type="button"
-                className="btn sm export-button"
-                onClick={() => downloadCsv(displayRows)}
-                disabled={!displayRows.length}
-                title="Download the rows shown below as CSV"
+              <Dropdown label="Actions" icon={<IconMenu />}>
+                {(close) => (
+                  <>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="menu-item"
+                      disabled={!displayRows.length}
+                      onClick={() => {
+                        close();
+                        downloadCsv(displayRows);
+                      }}
+                      title="Download the rows shown below as CSV"
+                    >
+                      <IconDownload />
+                      Export CSV
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="menu-item"
+                      onClick={() => {
+                        close();
+                        // Let the menu close before the print dialog takes the page.
+                        setTimeout(() => window.print(), 0);
+                      }}
+                      title="Print the table, or save it as PDF"
+                    >
+                      <IconPrinter />
+                      Print / PDF
+                    </button>
+                  </>
+                )}
+              </Dropdown>
+              <Dropdown
+                label="Quick filters"
+                icon={<IconFilter />}
+                badge={quickFilters.length || null}
               >
-                <IconDownload />
-                Export CSV
-              </button>
-              <button
-                type="button"
-                className="btn sm export-button"
-                onClick={() => window.print()}
-                title="Print the table, or save it as PDF"
-              >
-                <IconPrinter />
-                Print / PDF
-              </button>
-            </div>
-          </div>
-
-          <div className="table-search">
-            <div className="field field-search" id="searchContainer">
-              <label className="field-label" htmlFor="searchInput">
-                Search
-              </label>
-              <input
-                type="text"
-                id="searchInput"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-                placeholder="Search for specifications..."
-              />
-            </div>
-              <div className="field filter-bar">
-                <span className="field-label" id="quick-filters-label">
-                  Quick filters
-                </span>
-                <div className="filter-chips" role="group" aria-labelledby="quick-filters-label">
-                  {QUICK_FILTERS.map((filter) => {
+                {() =>
+                  QUICK_FILTERS.map((filter) => {
                     const active = quickFilters.includes(filter.id);
                     return (
-                      <button
-                        key={filter.id}
-                        type="button"
-                        className={`filter-chip${active ? " active" : ""}`}
-                        aria-pressed={active}
-                        title={filter.title}
-                        onClick={() => toggleQuickFilter(filter.id)}
-                      >
+                      <label key={filter.id} className="menu-item menu-check" title={filter.title}>
+                        <input
+                          type="checkbox"
+                          checked={active}
+                          onChange={() => toggleQuickFilter(filter.id)}
+                        />
                         {filter.label}
-                      </button>
+                      </label>
                     );
-                  })}
-                </div>
-              </div>
-              <div className="field">
-                <span className="field-label">View</span>
-                <label className="bod-toggle">
-                  <input
-                    type="checkbox"
-                    checked={bodOnly}
-                    onChange={(event) => setBodOnly(event.target.checked)}
-                  />
-                  <span className="bod-text">Show BoD Report</span>
-                </label>
-              </div>
+                  })
+                }
+              </Dropdown>
+              <label className="bod-toggle">
+                <input
+                  type="checkbox"
+                  checked={bodOnly}
+                  onChange={(event) => setBodOnly(event.target.checked)}
+                />
+                <span className="bod-text">BoD Report only</span>
+              </label>
+            </div>
           </div>
 
         <div className="table-scroll">
