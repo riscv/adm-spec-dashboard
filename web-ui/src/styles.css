@@ -1918,3 +1918,16 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
     display: none !important;
   }
 }
+
+/* Development Explorer: same weight as the other header controls, in brand blue. */
+.table-card .toolbar-link {
+  border: 1.5px solid var(--brand);
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.table-card .toolbar-link:hover {
+  background: var(--brand);
+  color: #fff;
+  text-decoration: none;
+}
