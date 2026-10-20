@@ -7,6 +7,7 @@ Author: Rafael Sene, rafael@riscv.org - Initial implementation
 """
 
 import csv
+import json
 import os
 import re
 from datetime import datetime
@@ -714,6 +715,34 @@ def parse_issues(issues, github_session=None, jira=None):
         })
     return parsed_issues
 
+def write_ratified_this_year(jira, path="ratified.json"):
+    """Write the specs ratified this calendar year to ratified.json.
+
+    The CSV leaves ratified specs out, so the dashboard reads this count from a
+    separate file. A spec counts when its status moved to Specification Ratified
+    this year (status history), not by the Actual BoD Ratification field, which
+    is also filled on some Cancelled specs.
+    """
+    year = datetime.now().year
+    jql = ('project = RVS AND issuetype = Specification AND '
+           'status changed to "Specification Ratified" during (startOfYear(), now()) ORDER BY key')
+    specs = []
+    for issue in fetch_all_issues(jira, jql):
+        key = issue.get('key')
+        fields = issue.get('fields', {})
+        status = (fields.get('status') or {}).get('name') or ""
+        dates = get_changelog_dates(jira, key, status)
+        specs.append({
+            'key': key,
+            'summary': fields.get('summary') or "",
+            'date': dates.get('first_entered', {}).get("Specification Ratified", ""),
+        })
+    specs.sort(key=lambda spec: spec['date'])
+    with open(path, 'w') as fh:
+        json.dump({'year': year, 'count': len(specs), 'specs': specs}, fh, indent=1)
+    print(f"{len(specs)} specs ratified in {year} -> {path}")
+
+
 def get_data_from_jira(jira_token, jira_email):
     """
     Fetch data from JIRA with the given JIRA_TOKEN and JQL (JIRA Query Language)
@@ -739,6 +768,7 @@ def get_data_from_jira(jira_token, jira_email):
     # Extract issues from the JSON data
     issues = fetch_all_issues(jira, jql)
     parsed_issues = parse_issues(issues, jira=jira)
+    write_ratified_this_year(jira)
 
     # Generating the CSV filename with current date and time
     print("Generating csv file...")

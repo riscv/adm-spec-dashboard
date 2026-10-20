@@ -94,6 +94,8 @@ jobs:
           fi
           mkdir -p web-ui/public
           cp "$latest_csv" web-ui/public/latest.csv
+          # Specs ratified this year (the CSV leaves them out); optional.
+          if [ -f ratified.json ]; then cp ratified.json web-ui/public/ratified.json; fi
           printf "updated_at=%s\nrun_id=%s\n" \
             "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
             "${GITHUB_RUN_ID}" \
@@ -107,6 +109,7 @@ jobs:
           path: |
             web-ui/public/latest.csv
             web-ui/public/latest.csv.meta
+            web-ui/public/ratified.json
           retention-days: 1
 
   # A short summary per spec, written by a model on Amazon Bedrock from the
@@ -255,13 +258,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          if [ -z "$(git status --porcelain -- web-ui/public/latest.csv web-ui/public/latest.csv.meta web-ui/public/summaries.json web-ui/public/changes.json)" ]; then
+          if [ -z "$(git status --porcelain -- web-ui/public/latest.csv web-ui/public/latest.csv.meta web-ui/public/summaries.json web-ui/public/changes.json web-ui/public/ratified.json)" ]; then
             echo "No changes."
             exit 0
           fi
           python .github/scripts/signed_pr_merge.py \
             --path web-ui/public/latest.csv \
             --path web-ui/public/latest.csv.meta \
+            $( [ -f web-ui/public/ratified.json ] && echo --path web-ui/public/ratified.json ) \
             $( [ -f web-ui/public/summaries.json ] && echo --path web-ui/public/summaries.json ) \
             $( [ -f web-ui/public/changes.json ] && echo --path web-ui/public/changes.json ) \
             --branch-prefix bot/latest-csv \

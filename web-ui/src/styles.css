@@ -957,19 +957,20 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
   line-height: 1;
 }
 
+/* In progress: an hourglass in the phase colour (asked for by the VP). The
+   markup keeps the hourglass character for screen readers and copy/paste. */
 .phase-cell .in-progress,
 .phase-key .in-progress {
   display: inline-block;
-  width: 14px;
-  height: 14px;
-  box-sizing: border-box;
-  border-radius: 50%;
-  border: 2px solid var(--ph, var(--brand));
-  background: radial-gradient(circle, var(--ph, var(--brand)) 0 2.5px, #ffffff 3px);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ph, var(--brand)) 18%, transparent);
+  width: 15px;
+  height: 15px;
+  vertical-align: -2px;
+  background: var(--ph, var(--brand));
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M9 20l3-3 3 3z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M9 20l3-3 3 3z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
   font-size: 0;
   line-height: 0;
-  vertical-align: middle;
+  color: transparent;
 }
 
 .phase-cell .bg-upcoming,
@@ -1729,5 +1730,22 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
   a {
     color: inherit;
     text-decoration: none;
+  }
+}
+
+/* Search sits right above the table, inside the table card. */
+.table-search {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.table-search .field-search {
+  max-width: 480px;
+}
+
+@media print {
+  .table-search {
+    display: none;
   }
 }

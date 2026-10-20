@@ -1001,9 +1001,15 @@ function App() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [aboutTrendOpen, setAboutTrendOpen] = useState(false);
+  // The About section sits below the table: open it, then scroll to it and
+  // move the keyboard focus there once it has rendered open.
   const openAbout = () => {
     setAboutTrendOpen(true);
-    document.querySelector(".about-trend")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    requestAnimationFrame(() => {
+      const about = document.getElementById("about-ratification");
+      about?.scrollIntoView({ behavior: "smooth", block: "start" });
+      about?.querySelector("summary")?.focus({ preventScroll: true });
+    });
   };
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -1041,6 +1047,24 @@ function App() {
       .then((response) => (response.ok ? response.json() : {}))
       .then((data) => {
         if (isMounted && data && typeof data === "object") setSummaries(data);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, [assetBase]);
+
+  // Optional: specs ratified this year, written by get-specs-data.py (the CSV
+  // only holds specs still in progress). Hidden when missing.
+  const [ratified, setRatified] = useState(null);
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${assetBase}ratified.json`, { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (isMounted && data && Array.isArray(data.specs) && data.year === new Date().getFullYear()) {
+          setRatified(data);
+        }
       })
       .catch(() => {});
     return () => {
@@ -1314,6 +1338,14 @@ function App() {
         <div className="card-header">
           <h2 className="card-title">{now.getFullYear()} progress</h2>
           <div className="card-actions">
+            {ratified ? (
+              <span
+                className="count-chip strong"
+                title={ratified.specs.map((spec) => `${spec.key} ${spec.summary} (${spec.date})`).join("\n")}
+              >
+                {ratified.count} ratified in {ratified.year}
+              </span>
+            ) : null}
             <span className="count-chip">
               Q{currentQuarter} · {daysLeft} days left
             </span>
@@ -1349,18 +1381,6 @@ function App() {
 
       <section className="card controls-card">
         <div className="controls-toolbar">
-          <div className="field field-search" id="searchContainer">
-            <label className="field-label" htmlFor="searchInput">
-              Search
-            </label>
-            <input
-              type="text"
-              id="searchInput"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder="Search for specifications..."
-            />
-          </div>
           <div className="field filter-bar">
             <span className="field-label" id="quick-filters-label">
               Quick filters
@@ -1417,113 +1437,7 @@ function App() {
                 ))}
             </div>
           </div>
-          <div className="status-legend">
-            <span className="legend-label">Status</span>
-            {[
-              ["on-track", "On Track", "Likely to meet"],
-              ["awaiting-vote", "Awaiting Vote", "Vote pending"],
-              ["exposed", "Exposed", "1 quarter behind"],
-              ["watch", "Watch", "Concerning"],
-              ["late", "Late", "2+ quarters behind"],
-              ["stalled", "Stalled", "No activity"],
-              ["not-set", "Not Set", "No plan yet"],
-            ].map(([className, label, text]) => (
-              <div className="legend-item" key={className}>
-                <span className={`status-chip status-cell ${className}`}>{label}</span>
-                <span className="legend-text">{text}</span>
-              </div>
-            ))}
-          </div>
         </section>
-
-        <div className="info-grid">
-          <details
-            className="card about-trend"
-            open={aboutTrendOpen}
-            onToggle={(event) => setAboutTrendOpen(event.currentTarget.open)}
-          >
-            <summary>About Ratification Quarter and Progress</summary>
-            <div className="about-trend-body">
-              <h4>Ratification Quarter</h4>
-              <ul>
-                <li><strong>Baseline</strong>: the original commitment, set when the Ratification Plan
-                  was approved. It never changes.</li>
-                <li><strong>Phase Start</strong>: the Projected quarter from the first plan made in the
-                  current phase. It is reset only when the specification moves to a new phase.</li>
-                <li><strong>Projected</strong>: today's forecast, from the latest replan. It moves every
-                  time the specification is replanned.</li>
-              </ul>
-              <h4>Ratification Progress</h4>
-              <ul>
-                <li><strong>vs Baseline</strong>: Projected compared with Baseline. On Track if it is the
-                  same quarter or earlier, Exposed if 1 quarter later, Late if 2 or more quarters
-                  later; the number of quarters is shown, e.g. Late (3Q). This is the long-term view:
-                  are we late against what we committed?</li>
-                <li><strong>vs Phase Start</strong>: Projected compared with Phase Start, using the same
-                  rule. It shows whether the specification has slipped since its current phase began,
-                  and it sets the row colour. Awaiting Vote, Watch and Stalled are set by hand and
-                  shown here when they apply.</li>
-                <li><strong>Trend</strong>: the direction of the <strong>last change to Projected</strong>,
-                  read from the Jira history each time the dashboard data is refreshed.
-                  <ul>
-                    <li><span className="trend-slipping">↓</span> <strong>Slipping</strong>: moved to a later quarter.</li>
-                    <li><span className="trend-improving">↑</span> <strong>Improving</strong>: moved to an earlier quarter.</li>
-                    <li><span className="trend-steady">→</span> <strong>Steady</strong>: no change in the last {TREND_WINDOW_DAYS} days, or no history yet.</li>
-                  </ul>
-                  Only changes from the last {TREND_WINDOW_DAYS} days count, so an old slip fades to
-                  Steady. Trend does not show how far a specification moved: hover the arrow to see
-                  the old and new quarter and the date of the change.</li>
-              </ul>
-              <p>Hover any header or cell in these columns for details.</p>
-            </div>
-          </details>
-
-          {upcomingCount ? (
-            <details className="card about-trend upcoming-approvals">
-              <summary>
-                Upcoming approvals <span className="count-chip strong">{upcomingCount}</span>
-                <span className="summary-hint">next {APPROVAL_WINDOW_DAYS} days or overdue</span>
-              </summary>
-              <div className="about-trend-body">
-                {upcomingApprovals.map((group) => (
-                  <div key={group.id} className={`approval-group approval-${group.id}`}>
-                    <h4>
-                      {group.label} <span className="approval-group-count">({group.items.length})</span>
-                    </h4>
-                    <ul>
-                      {group.items.map(({ row, days }) => {
-                        const key = specKeyOf(row);
-                        const when = `${row.nextApprovalDate} · ${row.nextApproval || "Next approval"}`;
-                        const dayText = days < 0 ? `${-days}d overdue` : days === 0 ? "today" : `in ${days}d`;
-                        return (
-                          <li key={key}>
-                            {summaries[key]?.summary ? (
-                              <button
-                                type="button"
-                                className="approval-open"
-                                onClick={() => setSummaryKey(key)}
-                                title={`Open the summary of ${row.summary}`}
-                              >
-                                {when}
-                              </button>
-                            ) : (
-                              <span className="approval-when">{when}</span>
-                            )}
-                            {" "}
-                            <span className="approval-days">({dayText})</span>{" "}
-                            <a href={row.jiraUrl} target="_blank" rel="noreferrer">
-                              {row.summary}
-                            </a>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </details>
-          ) : null}
-        </div>
 
         <section className="card table-card">
           <div className="card-header">
@@ -1569,6 +1483,21 @@ function App() {
                 <IconPrinter />
                 Print / PDF
               </button>
+            </div>
+          </div>
+
+          <div className="table-search">
+            <div className="field field-search" id="searchContainer">
+              <label className="field-label" htmlFor="searchInput">
+                Search
+              </label>
+              <input
+                type="text"
+                id="searchInput"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search for specifications..."
+              />
             </div>
           </div>
 
@@ -1986,6 +1915,49 @@ function App() {
         </table>
         </div>
         </section>
+
+        {/* Upcoming approvals is hidden for now (to be reworked); its data is still computed. */}
+        <details
+          id="about-ratification"
+          className="card about-trend"
+          open={aboutTrendOpen}
+          onToggle={(event) => setAboutTrendOpen(event.currentTarget.open)}
+        >
+          <summary>About Ratification Quarter and Progress</summary>
+          <div className="about-trend-body">
+            <h4>Ratification Quarter</h4>
+            <ul>
+              <li><strong>Baseline</strong>: the original commitment, set when the Ratification Plan
+                was approved. It never changes.</li>
+              <li><strong>Phase Start</strong>: the Projected quarter from the first plan made in the
+                current phase. It is reset only when the specification moves to a new phase.</li>
+              <li><strong>Projected</strong>: today's forecast, from the latest replan. It moves every
+                time the specification is replanned.</li>
+            </ul>
+            <h4>Ratification Progress</h4>
+            <ul>
+              <li><strong>vs Baseline</strong>: Projected compared with Baseline. On Track if it is the
+                same quarter or earlier, Exposed if 1 quarter later, Late if 2 or more quarters
+                later; the number of quarters is shown, e.g. Late (3Q). This is the long-term view:
+                are we late against what we committed?</li>
+              <li><strong>vs Phase Start</strong>: Projected compared with Phase Start, using the same
+                rule. It shows whether the specification has slipped since its current phase began,
+                and it sets the row colour. Awaiting Vote, Watch and Stalled are set by hand and
+                shown here when they apply.</li>
+              <li><strong>Trend</strong>: the direction of the <strong>last change to Projected</strong>,
+                read from the Jira history each time the dashboard data is refreshed.
+                <ul>
+                  <li><span className="trend-slipping">↓</span> <strong>Slipping</strong>: moved to a later quarter.</li>
+                  <li><span className="trend-improving">↑</span> <strong>Improving</strong>: moved to an earlier quarter.</li>
+                  <li><span className="trend-steady">→</span> <strong>Steady</strong>: no change in the last {TREND_WINDOW_DAYS} days, or no history yet.</li>
+                </ul>
+                Only changes from the last {TREND_WINDOW_DAYS} days count, so an old slip fades to
+                Steady. Trend does not show how far a specification moved: hover the arrow to see
+                the old and new quarter and the date of the change.</li>
+            </ul>
+            <p>Hover any header or cell in these columns for details.</p>
+          </div>
+        </details>
       </div>
       {(() => {
         const summaryRow = summaryKey ? rows.find((row) => specKeyOf(row) === summaryKey) : null;
