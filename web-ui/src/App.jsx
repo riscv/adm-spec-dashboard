@@ -668,6 +668,66 @@ function SummaryIcon() {
   );
 }
 
+// The specs ratified this year, opened from the year card's "ratified" pill.
+function RatifiedDialog({ ratified, onClose }) {
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    dialogRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div className="summary-overlay" onClick={onClose}>
+      <div
+        className="summary-dialog ratified-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="ratified-dialog-title"
+        tabIndex={-1}
+        ref={dialogRef}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="summary-close" onClick={onClose} aria-label="Close">
+          ×
+        </button>
+        <h2 id="ratified-dialog-title">
+          Ratified in {ratified.year} <span className="summary-key">{ratified.count} specifications</span>
+        </h2>
+        <table className="ratified-table">
+          <thead>
+            <tr>
+              <th>Specification</th>
+              <th>Key</th>
+              <th>Ratified</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ratified.specs.map((spec) => (
+              <tr key={spec.key}>
+                <td>
+                  <a href={`https://riscv.atlassian.net/browse/${spec.key}`} target="_blank" rel="noreferrer">
+                    {spec.summary}
+                  </a>
+                </td>
+                <td className="ratified-key">{spec.key}</td>
+                <td className="ratified-date">{spec.date || "\u2013"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="summary-meta">
+          Ratified = the date the specification moved to Specification Ratified in Jira.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SummaryDialog({ row, entry, onClose }) {
   const [copied, setCopied] = useState("");
   const dialogRef = useRef(null);
@@ -1057,6 +1117,8 @@ function App() {
   // Optional: specs ratified this year, written by get-specs-data.py (the CSV
   // only holds specs still in progress). Hidden when missing.
   const [ratified, setRatified] = useState(null);
+  const [ratifiedOpen, setRatifiedOpen] = useState(false);
+  const closeRatified = useCallback(() => setRatifiedOpen(false), []);
   useEffect(() => {
     let isMounted = true;
     fetch(`${assetBase}ratified.json`, { cache: "no-store" })
@@ -1311,12 +1373,14 @@ function App() {
           <h2 className="card-title">{now.getFullYear()} progress</h2>
           <div className="card-actions">
             {ratified ? (
-              <span
-                className="count-chip strong"
-                title={ratified.specs.map((spec) => `${spec.key} ${spec.summary} (${spec.date})`).join("\n")}
+              <button
+                type="button"
+                className="count-chip strong count-chip-button"
+                onClick={() => setRatifiedOpen(true)}
+                title="Show the specifications ratified this year"
               >
                 {ratified.count} ratified in {ratified.year}
-              </span>
+              </button>
             ) : null}
             <span className="count-chip">
               Q{currentQuarter} · {daysLeft} days left
@@ -1910,6 +1974,7 @@ function App() {
           </div>
         </details>
       </div>
+      {ratifiedOpen && ratified ? <RatifiedDialog ratified={ratified} onClose={closeRatified} /> : null}
       {(() => {
         const summaryRow = summaryKey ? rows.find((row) => specKeyOf(row) === summaryKey) : null;
         const entry = summaryKey ? summaries[summaryKey] : null;

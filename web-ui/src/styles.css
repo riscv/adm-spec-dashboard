@@ -384,7 +384,7 @@ a:hover {
   height: 38px;
   padding: 8px 12px;
   border-radius: 10px;
-  border: 1px solid var(--border);
+  border: 1.5px solid #b6bfcf; /* same firm border as the filter buttons */
   background: var(--surface);
   color: var(--text);
   font: inherit;
@@ -1770,4 +1770,52 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
   .table-search {
     display: none;
   }
+}
+
+/* "N ratified in YYYY" pill opens the list of specs ratified this year. */
+.count-chip-button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.count-chip-button:hover {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+}
+
+.ratified-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 4px 0 12px;
+  font-size: 13px;
+}
+
+.ratified-table th {
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--muted);
+  background: var(--surface-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.ratified-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.ratified-key,
+.ratified-date {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.ratified-date {
+  color: var(--text);
 }
