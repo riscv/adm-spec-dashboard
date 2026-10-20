@@ -1499,16 +1499,14 @@ function App() {
                 <span className="in-progress" /> In progress
                 <span className="bg-upcoming" /> Upcoming
               </span>
-              <a
-                href="https://riscv.github.io/adm-riscv-sde/"
-                target="_blank"
-                rel="noreferrer"
-                className="btn sm toolbar-link"
-                title="Specification Development Explorer"
-              >
-                <IconExternal />
-                <span className="toolbar-text">Development Explorer</span>
-              </a>
+              <label className="bod-toggle">
+                <input
+                  type="checkbox"
+                  checked={bodOnly}
+                  onChange={(event) => setBodOnly(event.target.checked)}
+                />
+                <span className="bod-text">BoD Report</span>
+              </label>
               <Dropdown label="Actions" icon={<IconMenu />}>
                 {(close) => (
                   <>
@@ -1564,14 +1562,16 @@ function App() {
                   })
                 }
               </Dropdown>
-              <label className="bod-toggle">
-                <input
-                  type="checkbox"
-                  checked={bodOnly}
-                  onChange={(event) => setBodOnly(event.target.checked)}
-                />
-                <span className="bod-text">BoD Report only</span>
-              </label>
+              <a
+                href="https://riscv.github.io/adm-riscv-sde/"
+                target="_blank"
+                rel="noreferrer"
+                className="btn sm toolbar-link"
+                title="Specification Development Explorer"
+              >
+                <IconExternal />
+                <span className="toolbar-text">Development Explorer</span>
+              </a>
             </div>
           </div>
 
