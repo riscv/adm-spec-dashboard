@@ -14,7 +14,7 @@
   "summary": "The specification is in Development. This phase started on 2026-03-09. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. It is 1 quarter behind the phase start quarter 27Q1. The schedule status is Exposed. On 2026-10-19, the projection moved later from 27Q1 to 27Q2. The next approval is Development complete, projected for 2026-12-25. The projected dates were last set on 2026-10-19. The last repository activity was on 2026-10-19."
  },
  "RVS-1145": {
-  "generated": "2026-10-19",
+  "generated": "2026-10-20",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -27,7 +27,7 @@
   "summary": "The specification is in Ratification-Ready. This phase started on 2026-10-14. Development started on 2024-08-28. The projected ratification quarter is 26Q4. It is 8 quarters behind the baseline 24Q4. It matches the phase start quarter 26Q4. The schedule status is On Track. The projection has not changed in the last 90 days. The next approval is TSC ratification, projected for 2026-12-06. The projected dates were last set on 2026-10-07. ARC review: Approved. Public review: Not Started. TSC approval: Not Started. The last repository activity was on 2026-10-16."
  },
  "RVS-1185": {
-  "generated": "2026-10-19",
+  "generated": "2026-10-20",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -61,7 +61,7 @@
   "summary": "The specification is in Freeze. This phase started on 2025-06-06. Development started on 2024-06-12. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. It matches the phase start quarter 27Q1. The schedule status is On Track. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-11-18. The projected dates were last set on 2026-10-07. ARC review: Approval In Progress. The last repository activity was on 2026-10-05."
  },
  "RVS-1895": {
-  "generated": "2026-10-19",
+  "generated": "2026-10-20",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -193,13 +193,13 @@
   "summary": "The specification is in Development. This phase started on 2026-08-04. The projected ratification quarter is 27Q2. It matches the baseline 27Q2 and the phase start quarter 27Q2. The schedule status is On Track. The projection has not changed in the last 90 days. The next approval is Development complete, projected for 2026-12-25. The projected dates were last set on 2026-10-19. The last repository activity was on 2026-03-07."
  },
  "RVS-3623": {
-  "generated": "2026-10-19",
+  "generated": "2026-10-20",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
  },
  "RVS-3645": {
-  "generated": "2026-10-19",
+  "generated": "2026-10-20",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -247,7 +247,7 @@
   "summary": "The specification is in Development, following the fast-track process. This phase started on 2025-07-08. The projected ratification quarter is 27Q2. It is 6 quarters behind the baseline 25Q4. It matches the phase start quarter 27Q2. The schedule status is On Track. On 2026-08-24 the projection moved later, from 27Q1 to 27Q2. The next approval is Development complete, projected for 2026-12-25. The projected dates were last set on 2026-10-19."
  },
  "RVS-4114": {
-  "generated": "2026-10-19",
+  "generated": "2026-10-20",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -316,7 +316,7 @@
   "summary": "The specification is in Inception, following the fast-track process. This phase started on 2026-01-30. No projected ratification quarter is set yet."
  },
  "RVS-4549": {
-  "generated": "2026-10-19",
+  "generated": "2026-10-20",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -385,7 +385,7 @@
   "summary": "The specification is in Stabilization, following the fast-track process. This phase started on 2026-10-16. Development started on 2026-08-24. The projected ratification quarter is 27Q2. It matches the baseline 27Q2 and the phase start quarter 27Q2. The schedule status is On Track. The projection has not changed in the last 90 days. The next approval is Stabilization approval, projected for 2026-11-19. The projected dates were last set on 2026-10-16. The last repository activity was on 2026-10-18."
  },
  "RVS-4913": {
-  "generated": "2026-10-19",
+  "generated": "2026-10-20",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -454,7 +454,7 @@
   "summary": "The specification is in Freeze. This phase started on 2025-07-16. Development started on 2023-06-21. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. It matches the phase start quarter 27Q1. The schedule status is On Track. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-11-18. The projected dates were last set on 2026-10-07. ARC review: Approved. The last repository activity was on 2026-10-19."
  },
  "RVS-913": {
-  "generated": "2026-10-19",
+  "generated": "2026-10-20",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
