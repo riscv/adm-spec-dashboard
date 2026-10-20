@@ -1285,34 +1285,6 @@ function App() {
     window.location.href = mailtoLink;
   };
 
-  // The data only holds specs not yet ratified, so this counts what is left to
-  // ratify this year. Past quarters are shown only when a spec still targets
-  // them (it is overdue); otherwise they would always read 0.
-  const ratificationForecast = useMemo(() => {
-    const currentYear = new Date().getFullYear();
-    const forecast = {
-      year: currentYear,
-      total: 0,
-      q1: 0,
-      q2: 0,
-      q3: 0,
-      q4: 0,
-    };
-
-    rows.forEach((row) => {
-      const { year, qtr } = parseQuarter(row.trendingQuarter);
-      if (year === currentYear) {
-        forecast.total++;
-        if (qtr === 1) forecast.q1++;
-        else if (qtr === 2) forecast.q2++;
-        else if (qtr === 3) forecast.q3++;
-        else if (qtr === 4) forecast.q4++;
-      }
-    });
-
-    return forecast;
-  }, [rows]);
-
   return (
     <div className="container">
       <header className="app-header">
