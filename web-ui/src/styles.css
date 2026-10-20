@@ -1268,10 +1268,20 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
   border-color: var(--ph, var(--brand));
 }
 
+/* Current phase: the ring holds an hourglass in the phase colour, like the table. */
 .phase-current .phase-dot {
   border-color: var(--ph, var(--brand));
-  background: radial-gradient(circle, var(--ph, var(--brand)) 0 3px, #ffffff 3.5px);
+  background: #ffffff;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--ph, var(--brand)) 22%, transparent);
+}
+
+.phase-current .phase-dot::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: var(--ph, var(--brand));
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M9 20l3-3 3 3z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M9 20l3-3 3 3z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .phase-name {
