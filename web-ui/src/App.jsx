@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import Papa from "papaparse";
+import {
+  IconCamera,
+  IconChevronDown,
+  IconDownload,
+  IconExternal,
+  IconFilter,
+  IconMenu,
+  IconPrinter,
+} from "./Icons.jsx";
 
 const LOCAL_CSV_URL =
   typeof __LOCAL_CSV_URL__ === "string" ? __LOCAL_CSV_URL__ : "";
@@ -23,6 +32,13 @@ const DISPLAY_PHASES = [
   "Ratification-Ready",
   "Specification in Publication",
 ];
+
+// CSS class carrying a phase colour (--ph), shared by the table and the summary
+// dialog: "Specification in Publication" -> "ph-publication".
+function phaseClass(phase) {
+  const name = phase === "Specification in Publication" ? "Publication" : String(phase || "");
+  return name ? `ph-${name.toLowerCase().replace(/[^a-z]+/g, "-")}` : "";
+}
 
 function normalizeStatus(value) {
   if (!value) return "";
@@ -567,7 +583,7 @@ function PhaseTimeline({ row }) {
       </div>
       <ol className="phase-timeline-steps">
         {steps.map((step) => (
-          <li key={step.name} className={`phase-step phase-${step.state}`} title={step.title}>
+          <li key={step.name} className={`phase-step phase-${step.state} ${phaseClass(step.name)}`} title={step.title}>
             <span className="phase-dot" aria-hidden="true">
               {step.state === "done" ? "✓" : ""}
             </span>
@@ -657,6 +673,110 @@ function SummaryIcon() {
         fill="none"
       />
     </svg>
+  );
+}
+
+// A small menu button: click to open, closes on a choice, an outside click or Esc.
+function Dropdown({ label, icon, badge, children, align = "right" }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onDown = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) setOpen(false);
+    };
+    const onKey = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div className={`menu-wrap${open ? " open" : ""}`} ref={ref}>
+      <button
+        type="button"
+        className={`btn sm menu-toggle${badge ? " has-badge" : ""}`}
+        aria-haspopup="true"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+      >
+        {icon}
+        {label}
+        {badge ? <span className="menu-badge">{badge}</span> : null}
+        <IconChevronDown />
+      </button>
+      {open ? (
+        <div className={`menu-panel align-${align}`} role="menu">
+          {children(() => setOpen(false))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+// The specs ratified this year, opened from the year card's "ratified" pill.
+function RatifiedDialog({ ratified, onClose }) {
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    dialogRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div className="summary-overlay" onClick={onClose}>
+      <div
+        className="summary-dialog ratified-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="ratified-dialog-title"
+        tabIndex={-1}
+        ref={dialogRef}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="summary-close" onClick={onClose} aria-label="Close">
+          ×
+        </button>
+        <h2 id="ratified-dialog-title">
+          Ratified in {ratified.year} <span className="summary-key">{ratified.count} specifications</span>
+        </h2>
+        <table className="ratified-table">
+          <thead>
+            <tr>
+              <th>Specification</th>
+              <th>Key</th>
+              <th>Ratified</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ratified.specs.map((spec) => (
+              <tr key={spec.key}>
+                <td>
+                  <a href={`https://riscv.atlassian.net/browse/${spec.key}`} target="_blank" rel="noreferrer">
+                    {spec.summary}
+                  </a>
+                </td>
+                <td className="ratified-key">{spec.key}</td>
+                <td className="ratified-date">{spec.date || "\u2013"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="summary-meta">
+          Ratified = the date the specification moved to Specification Ratified in Jira.
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -993,9 +1113,15 @@ function App() {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [aboutTrendOpen, setAboutTrendOpen] = useState(false);
+  // The About section sits below the table: open it, then scroll to it and
+  // move the keyboard focus there once it has rendered open.
   const openAbout = () => {
     setAboutTrendOpen(true);
-    document.querySelector(".about-trend")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    requestAnimationFrame(() => {
+      const about = document.getElementById("about-ratification");
+      about?.scrollIntoView({ behavior: "smooth", block: "start" });
+      about?.querySelector("summary")?.focus({ preventScroll: true });
+    });
   };
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -1033,6 +1159,26 @@ function App() {
       .then((response) => (response.ok ? response.json() : {}))
       .then((data) => {
         if (isMounted && data && typeof data === "object") setSummaries(data);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, [assetBase]);
+
+  // Optional: specs ratified this year, written by get-specs-data.py (the CSV
+  // only holds specs still in progress). Hidden when missing.
+  const [ratified, setRatified] = useState(null);
+  const [ratifiedOpen, setRatifiedOpen] = useState(false);
+  const closeRatified = useCallback(() => setRatifiedOpen(false), []);
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${assetBase}ratified.json`, { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (isMounted && data && Array.isArray(data.specs) && data.year === new Date().getFullYear()) {
+          setRatified(data);
+        }
       })
       .catch(() => {});
     return () => {
@@ -1208,7 +1354,7 @@ function App() {
     toPng(tableContainerRef.current, {
       quality: 1,
       pixelRatio: 4,
-      backgroundColor: "#fff",
+      backgroundColor: "#f3f5fa",
     })
       .then((dataUrl) => {
         const link = document.createElement("a");
@@ -1253,314 +1399,211 @@ function App() {
     window.location.href = mailtoLink;
   };
 
-  // The data only holds specs not yet ratified, so this counts what is left to
-  // ratify this year. Past quarters are shown only when a spec still targets
-  // them (it is overdue); otherwise they would always read 0.
-  const ratificationForecast = useMemo(() => {
-    const currentYear = new Date().getFullYear();
-    const forecast = {
-      year: currentYear,
-      total: 0,
-      q1: 0,
-      q2: 0,
-      q3: 0,
-      q4: 0,
-    };
-
-    rows.forEach((row) => {
-      const { year, qtr } = parseQuarter(row.trendingQuarter);
-      if (year === currentYear) {
-        forecast.total++;
-        if (qtr === 1) forecast.q1++;
-        else if (qtr === 2) forecast.q2++;
-        else if (qtr === 3) forecast.q3++;
-        else if (qtr === 4) forecast.q4++;
-      }
-    });
-
-    return forecast;
-  }, [rows]);
-
   return (
     <div className="container">
-      <div className="sticky-shell">
-        <div id="header">
-          <button id="save-button" className="btn btn-primary" onClick={handleSaveImage}>
+      <header className="app-header">
+        <div className="brand">
+          <img src={`${assetBase}riscv.png`} alt="RISC-V logo" className="title-logo" />
+          <span className="brand-divider" aria-hidden="true" />
+          <div className="brand-text">
+            <h1 className="page-title">RISC-V Specification Dashboard</h1>
+            <p className="app-subtitle">
+              Status of every RISC-V specification, from planning to ratification.
+            </p>
+          </div>
+        </div>
+        <div id="header" className="header-actions">
+          <button id="save-button" type="button" className="btn" onClick={handleSaveImage}>
+            <IconCamera />
             Save as Image
           </button>
         </div>
-        <h2 className="page-title">
-          <img src={`${assetBase}riscv.png`} alt="RISC-V logo" className="title-logo" />
-          <span>Specification Development Dashboard</span>
-        </h2>
+      </header>
 
-        <div className="timeline">
-          <div className="timeline-fill">
-            <div className="timeline-fill-past" style={{ width: `${yearProgress}%` }}></div>
+      <section className="card year-card">
+        <div className="card-header">
+          <h2 className="card-title">{now.getFullYear()} progress</h2>
+          <div className="card-actions">
+            {ratified ? (
+              <button
+                type="button"
+                className="count-chip strong count-chip-button"
+                onClick={() => setRatifiedOpen(true)}
+                title="Show the specifications ratified this year"
+              >
+                {ratified.count} ratified in {ratified.year}
+              </button>
+            ) : null}
+            <span className="count-chip">
+              Q{currentQuarter} · {daysLeft} days left
+            </span>
+            <span className="count-chip">
+              {monthLabel} · {daysLeftInMonth} days left
+            </span>
+            <span className="count-chip">{daysLeftInYear} days left in year</span>
           </div>
-          {[1, 2, 3, 4].map((quarter) => {
-            let pointState = "";
-            if (quarter < currentQuarter) pointState = " completed";
-            else if (quarter === currentQuarter) pointState = " current";
-            return (
-            <div
-              key={quarter}
-              className={`timeline-point${pointState}`}
-              style={{ left: `${getQuarterEndFractionOfYear(quarter) * 100}%` }}
-            >
-              <div className="timeline-label">
-                <div>
-                  Q{quarter}
-                  {quarter === currentQuarter ? ` (${daysLeft} days left)` : ""}
-                </div>
-                {quarter === currentQuarter ? (
-                  <div className="timeline-subtext">
-                    {monthLabel} · {daysLeftInMonth} days left
-                    <div className="timeline-subtext-secondary">
-                      {daysLeftInYear} days left in year
-                    </div>
-                  </div>
-                ) : null}
-              </div>
+        </div>
+        <div className="card-body">
+          <div className="timeline">
+            <div className="timeline-fill">
+              <div className="timeline-fill-past" style={{ width: `${yearProgress}%` }}></div>
             </div>
-            );
-          })}
-        </div>
-
-        <div id="searchContainer">
-          <input
-            type="text"
-            id="searchInput"
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-            placeholder="Search for specifications..."
-          />
-        </div>
-
-        <div className="filter-bar">
-          <div className="filter-chips" role="group" aria-label="Quick filters">
-            {QUICK_FILTERS.map((filter) => {
-              const active = quickFilters.includes(filter.id);
+            {[1, 2, 3, 4].map((quarter) => {
+              let pointState = "";
+              if (quarter < currentQuarter) pointState = " completed";
+              else if (quarter === currentQuarter) pointState = " current";
               return (
-                <button
-                  key={filter.id}
-                  type="button"
-                  className={`filter-chip${active ? " active" : ""}`}
-                  aria-pressed={active}
-                  title={filter.title}
-                  onClick={() => toggleQuickFilter(filter.id)}
+                <div
+                  key={quarter}
+                  className={`timeline-point${pointState}`}
+                  style={{ left: `${getQuarterEndFractionOfYear(quarter) * 100}%` }}
+                  title={quarter === currentQuarter ? `Q${quarter}: ${daysLeft} days left` : `Q${quarter}`}
                 >
-                  {filter.label}
-                </button>
+                  <div className="timeline-label">Q{quarter}</div>
+                </div>
               );
             })}
-            {quickFilters.length || searchTerm.trim() || bodOnly ? (
-              <span className="filter-count" aria-live="polite">
-                {displayRows.length} of {rows.length}
-              </span>
-            ) : null}
-          </div>
-          <div className="export-actions">
-            <button
-              type="button"
-              className="export-button"
-              onClick={() => downloadCsv(displayRows)}
-              disabled={!displayRows.length}
-              title="Download the rows shown below as CSV"
-            >
-              Export CSV
-            </button>
-            <button
-              type="button"
-              className="export-button"
-              onClick={() => window.print()}
-              title="Print the table, or save it as PDF"
-            >
-              Print / PDF
-            </button>
           </div>
         </div>
-      </div>
+      </section>
+
 
       {error ? <div className="error-banner">{error}</div> : null}
       {loading ? <div className="loading">Loading data...</div> : null}
 
       <div className="table-container" ref={tableContainerRef}>
-        <div className="table-toolbar">
-          <div className="ratification-forecast">
-            Remaining {ratificationForecast.year} Ratification Forecast: {ratificationForecast.total} (
-            {[1, 2, 3, 4]
-              .filter((quarter) => quarter >= currentQuarter || ratificationForecast[`q${quarter}`] > 0)
-              .map((quarter) => `Q${quarter}: ${ratificationForecast[`q${quarter}`]}`)
-              .join(" | ")}
-            )
-          </div>
-          <label className="bod-toggle">
-            <input
-              type="checkbox"
-              checked={bodOnly}
-              onChange={(event) => setBodOnly(event.target.checked)}
-            />
-            <span className="bod-text">Show BoD Report</span>
-          </label>
-          <span className="toolbar-divider" aria-hidden="true">|</span>
-          <a
-            href="https://riscv.github.io/adm-riscv-sde/"
-            target="_blank"
-            rel="noreferrer"
-            className="toolbar-link"
-          >
-            <span className="toolbar-text">Specification Development Explorer</span>
-          </a>
-        </div>
 
-        <div className="status-legend">
-          <span className="legend-label">Status:</span>
-          <div className="legend-item">
-            <span className="legend-color status-cell on-track">On Track</span>
-            <span className="legend-text">Likely to meet</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell awaiting-vote">Awaiting Vote</span>
-            <span className="legend-text">Vote pending</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell exposed">Exposed</span>
-            <span className="legend-text">1 quarter behind</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell watch">Watch</span>
-            <span className="legend-text">Concerning</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell late">Late</span>
-            <span className="legend-text">2+ quarters behind</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell stalled">Stalled</span>
-            <span className="legend-text">No activity</span>
-          </div>
-          <div className="legend-item">
-            <span className="legend-color status-cell not-set">Not Set</span>
-            <span className="legend-text">No plan yet</span>
-          </div>
-        </div>
-
-        <details
-          className="about-trend"
-          open={aboutTrendOpen}
-          onToggle={(event) => setAboutTrendOpen(event.currentTarget.open)}
-        >
-          <summary>About Ratification Quarter and Progress</summary>
-          <div className="about-trend-body">
-            <h4>Ratification Quarter</h4>
-            <ul>
-              <li><strong>Baseline</strong>: the original commitment, set when the Ratification Plan
-                was approved. It never changes.</li>
-              <li><strong>Phase Start</strong>: the Projected quarter from the first plan made in the
-                current phase. It is reset only when the specification moves to a new phase.</li>
-              <li><strong>Projected</strong>: today's forecast, from the latest replan. It moves every
-                time the specification is replanned.</li>
-            </ul>
-            <h4>Ratification Progress</h4>
-            <ul>
-              <li><strong>vs Baseline</strong>: Projected compared with Baseline. On Track if it is the
-                same quarter or earlier, Exposed if 1 quarter later, Late if 2 or more quarters
-                later; the number of quarters is shown, e.g. Late (3Q). This is the long-term view:
-                are we late against what we committed?</li>
-              <li><strong>vs Phase Start</strong>: Projected compared with Phase Start, using the same
-                rule. It shows whether the specification has slipped since its current phase began,
-                and it sets the row colour. Awaiting Vote, Watch and Stalled are set by hand and
-                shown here when they apply.</li>
-              <li><strong>Trend</strong>: the direction of the <strong>last change to Projected</strong>,
-                read from the Jira history each time the dashboard data is refreshed.
-                <ul>
-                  <li><span className="trend-slipping">↓</span> <strong>Slipping</strong>: moved to a later quarter.</li>
-                  <li><span className="trend-improving">↑</span> <strong>Improving</strong>: moved to an earlier quarter.</li>
-                  <li><span className="trend-steady">→</span> <strong>Steady</strong>: no change in the last {TREND_WINDOW_DAYS} days, or no history yet.</li>
-                </ul>
-                Only changes from the last {TREND_WINDOW_DAYS} days count, so an old slip fades to
-                Steady. Trend does not show how far a specification moved: hover the arrow to see
-                the old and new quarter and the date of the change.</li>
-            </ul>
-            <p>Hover any header or cell in these columns for details.</p>
-          </div>
-        </details>
-
-        {upcomingCount ? (
-          <details className="about-trend upcoming-approvals">
-            <summary>
-              Upcoming approvals ({upcomingCount} in the next {APPROVAL_WINDOW_DAYS} days or overdue)
-            </summary>
-            <div className="about-trend-body">
-              {upcomingApprovals.map((group) => (
-                <div key={group.id} className={`approval-group approval-${group.id}`}>
-                  <h4>
-                    {group.label} <span className="approval-group-count">({group.items.length})</span>
-                  </h4>
-                  <ul>
-                    {group.items.map(({ row, days }) => {
-                      const key = specKeyOf(row);
-                      const when = `${row.nextApprovalDate} · ${row.nextApproval || "Next approval"}`;
-                      const dayText = days < 0 ? `${-days}d overdue` : days === 0 ? "today" : `in ${days}d`;
-                      return (
-                        <li key={key}>
-                          {summaries[key]?.summary ? (
-                            <button
-                              type="button"
-                              className="approval-open"
-                              onClick={() => setSummaryKey(key)}
-                              title={`Open the summary of ${row.summary}`}
-                            >
-                              {when}
-                            </button>
-                          ) : (
-                            <span className="approval-when">{when}</span>
-                          )}
-                          {" "}
-                          <span className="approval-days">({dayText})</span>{" "}
-                          <a href={row.jiraUrl} target="_blank" rel="noreferrer">
-                            {row.summary}
-                          </a>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              ))}
+        <section className="card table-card">
+          <div className="card-header">
+            <h2 className="card-title">
+              Specifications{" "}
+              <span className="card-hint filter-count" aria-live="polite">
+                {quickFilters.length || searchTerm.trim() || bodOnly
+                  ? `${displayRows.length} of ${rows.length}`
+                  : `${rows.length}`}
+              </span>
+            </h2>
+            <div className="field-search table-search-inline" id="searchContainer">
+              <input
+                type="text"
+                id="searchInput"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search for specifications..."
+                aria-label="Search for specifications"
+              />
             </div>
-          </details>
-        ) : null}
+            <div className="card-actions">
+              <span className="card-hint phase-key ph-key" aria-hidden="true">
+                <span className="bg-completed">{"\u2713"}</span> Done
+                <span className="in-progress" /> In progress
+                <span className="bg-upcoming" /> Upcoming
+              </span>
+              <label className="bod-toggle">
+                <input
+                  type="checkbox"
+                  checked={bodOnly}
+                  onChange={(event) => setBodOnly(event.target.checked)}
+                />
+                <span className="bod-text">BoD Report</span>
+              </label>
+              <Dropdown label="Actions" icon={<IconMenu />}>
+                {(close) => (
+                  <>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="menu-item"
+                      disabled={!displayRows.length}
+                      onClick={() => {
+                        close();
+                        downloadCsv(displayRows);
+                      }}
+                      title="Download the rows shown below as CSV"
+                    >
+                      <IconDownload />
+                      Export CSV
+                    </button>
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="menu-item"
+                      onClick={() => {
+                        close();
+                        // Let the menu close before the print dialog takes the page.
+                        setTimeout(() => window.print(), 0);
+                      }}
+                      title="Print the table, or save it as PDF"
+                    >
+                      <IconPrinter />
+                      Print / PDF
+                    </button>
+                  </>
+                )}
+              </Dropdown>
+              <Dropdown
+                label="Quick filters"
+                icon={<IconFilter />}
+                badge={quickFilters.length || null}
+              >
+                {() =>
+                  QUICK_FILTERS.map((filter) => {
+                    const active = quickFilters.includes(filter.id);
+                    return (
+                      <label key={filter.id} className="menu-item menu-check" title={filter.title}>
+                        <input
+                          type="checkbox"
+                          checked={active}
+                          onChange={() => toggleQuickFilter(filter.id)}
+                        />
+                        {filter.label}
+                      </label>
+                    );
+                  })
+                }
+              </Dropdown>
+              <a
+                href="https://riscv.github.io/adm-riscv-sde/"
+                target="_blank"
+                rel="noreferrer"
+                className="btn sm toolbar-link"
+                title="Specification Development Explorer"
+              >
+                <IconExternal />
+                <span className="toolbar-text">Development Explorer</span>
+              </a>
+            </div>
+          </div>
 
         <div className="table-scroll">
-        <table className={`table table-bordered${bodOnly ? " bod-view" : ""}`} ref={tableRef}>
+        <table className={`spec-table${bodOnly ? " bod-view" : ""}`} ref={tableRef}>
           <thead>
             <tr>
               <th className="specification-column" rowSpan={2}>Specification</th>
               <th className="narrow-column" rowSpan={2}>ISA?</th>
-              <th className="narrow-column" rowSpan={2}>Planning</th>
-              <th className="narrow-column" rowSpan={2}>Dev</th>
-              <th className="narrow-column" rowSpan={2}>Stabilization</th>
-              <th className="narrow-column freeze-group-header" colSpan={2}>Freeze</th>
+              <th className="narrow-column phase-header ph-planning" rowSpan={2}>Planning</th>
+              <th className="narrow-column phase-header ph-development" rowSpan={2}>Dev</th>
+              <th className="narrow-column phase-header ph-stabilization" rowSpan={2}>Stabilization</th>
+              <th className="narrow-column freeze-group-header ph-freeze" colSpan={2}>Freeze</th>
               <th
-                className="narrow-column ratready-group-header ratification-divider"
+                className="narrow-column ratready-group-header ratification-divider ph-ratification-ready"
                 colSpan={3}
               >
                 Ratification-Ready
               </th>
               <th
-                className="narrow-column publication-group-header publication-header"
+                className="narrow-column publication-group-header publication-header ph-publication"
                 colSpan={2}
               >
                 Publication
               </th>
               <th className="narrow-column quarter-group-header progress-divider" colSpan={3}>
                 Ratification Quarter{" "}
-                <AboutLink onOpen={openAbout} label="About Ratification Quarter" light />
+                <AboutLink onOpen={openAbout} label="About Ratification Quarter" />
               </th>
               <th className="narrow-column status-group-header status-divider" colSpan={3}>
                 Ratification Progress{" "}
-                <AboutLink onOpen={openAbout} label="About Ratification Progress" light />
+                <AboutLink onOpen={openAbout} label="About Ratification Progress" />
               </th>
               <th className="links-column" rowSpan={2}>Resources</th>
             </tr>
@@ -1609,7 +1652,10 @@ function App() {
               const specSummary = summaries[specKey];
 
               return (
-                <tr key={`${row.jiraUrl || row.summary}-${index}`} className={progressClass}>
+                <tr
+                  key={`${row.jiraUrl || row.summary}-${index}`}
+                  className={`${progressClass} ${phaseClass(row.currentPhase)}`.trim()}
+                >
                   <td className="specification-column">
                     <a href={row.jiraUrl} target="_blank" rel="noreferrer">
                       {row.summary}
@@ -1679,7 +1725,7 @@ function App() {
                     // The Ratification-Ready divider now sits on the Public
                     // Review cell, which is the first column of that group.
                     const cell = (
-                      <td className="text-center" key={`${row.summary}-${phase}`}>
+                      <td className={`text-center phase-cell ${phaseClass(phase)}`} key={`${row.summary}-${phase}`}>
                         <span className={className} title={title} style={{ whiteSpace: "nowrap" }}>
                           {content}
                         </span>
@@ -1708,7 +1754,7 @@ function App() {
                       }
 
                       const bodCell = (
-                        <td className="text-center" key={`${row.summary}-bod-approval`}>
+                        <td className="text-center phase-cell ph-publication" key={`${row.summary}-bod-approval`}>
                           <span
                             className={bodClass}
                             title={bodTitle}
@@ -1745,7 +1791,7 @@ function App() {
 
                       const publicReviewCell = (
                         <td
-                          className="text-center ratification-divider"
+                          className="text-center phase-cell ph-ratification-ready ratification-divider"
                           key={`${row.summary}-public-review`}
                         >
                           <span
@@ -1779,7 +1825,7 @@ function App() {
                       }
 
                       const tscApprovalCell = (
-                        <td className="text-center" key={`${row.summary}-tsc-approval`}>
+                        <td className="text-center phase-cell ph-ratification-ready" key={`${row.summary}-tsc-approval`}>
                           <span
                             className={tscClass}
                             title={tscTitle}
@@ -1812,7 +1858,7 @@ function App() {
                     }
 
                     const arcCell = (
-                      <td className="text-center" key={`${row.summary}-arc-review`}>
+                      <td className="text-center phase-cell ph-freeze" key={`${row.summary}-arc-review`}>
                         <span className={arcClass} title={arcTitle} style={{ whiteSpace: "nowrap" }}>
                           {arcContent}
                         </span>
@@ -1827,16 +1873,17 @@ function App() {
                   {(() => {
                     const vsBaseline = baselineStatus(row);
                     return (
-                      <td className={`narrow-column status-divider ${vsBaseline.className}`} title={vsBaseline.title}>
-                        {vsBaseline.label}
+                      <td className="narrow-column status-col status-divider" title={vsBaseline.title}>
+                        <span className={`status-chip ${vsBaseline.className}`}>{vsBaseline.label}</span>
                       </td>
                     );
                   })()}
-                  <td
-                    className={`narrow-column ${statusClassName(row.ratificationProgress)}`}
-                    title={phaseStatusTitle(row)}
-                  >
-                    {String(row.ratificationProgress || "").replace(/^on track$/i, "On\u00A0Track")}
+                  <td className="narrow-column status-col" title={phaseStatusTitle(row)}>
+                    {row.ratificationProgress ? (
+                      <span className={`status-chip ${statusClassName(row.ratificationProgress)}`}>
+                        {String(row.ratificationProgress).replace(/^on track$/i, "On\u00A0Track")}
+                      </span>
+                    ) : null}
                   </td>
                   {(() => {
                     const trend = projectedTrend(row);
@@ -1923,7 +1970,6 @@ function App() {
                           className="icon-button"
                           onClick={() => handleShare(row)}
                           title="Share"
-                          style={{ background: "none", border: "none", padding: 0 }}
                         >
                           <img
                             src={`${assetBase}paper-plane-2563.svg`}
@@ -1942,7 +1988,52 @@ function App() {
           </tbody>
         </table>
         </div>
+        </section>
+
+        {/* Upcoming approvals is hidden for now (to be reworked); its data is still computed. */}
+        <details
+          id="about-ratification"
+          className="card about-trend"
+          open={aboutTrendOpen}
+          onToggle={(event) => setAboutTrendOpen(event.currentTarget.open)}
+        >
+          <summary>About Ratification Quarter and Progress</summary>
+          <div className="about-trend-body">
+            <h4>Ratification Quarter</h4>
+            <ul>
+              <li><strong>Baseline</strong>: the original commitment, set when the Ratification Plan
+                was approved. It never changes.</li>
+              <li><strong>Phase Start</strong>: the Projected quarter from the first plan made in the
+                current phase. It is reset only when the specification moves to a new phase.</li>
+              <li><strong>Projected</strong>: today's forecast, from the latest replan. It moves every
+                time the specification is replanned.</li>
+            </ul>
+            <h4>Ratification Progress</h4>
+            <ul>
+              <li><strong>vs Baseline</strong>: Projected compared with Baseline. On Track if it is the
+                same quarter or earlier, Exposed if 1 quarter later, Late if 2 or more quarters
+                later; the number of quarters is shown, e.g. Late (3Q). This is the long-term view:
+                are we late against what we committed?</li>
+              <li><strong>vs Phase Start</strong>: Projected compared with Phase Start, using the same
+                rule. It shows whether the specification has slipped since its current phase began,
+                and it sets the row colour. Awaiting Vote, Watch and Stalled are set by hand and
+                shown here when they apply.</li>
+              <li><strong>Trend</strong>: the direction of the <strong>last change to Projected</strong>,
+                read from the Jira history each time the dashboard data is refreshed.
+                <ul>
+                  <li><span className="trend-slipping">↓</span> <strong>Slipping</strong>: moved to a later quarter.</li>
+                  <li><span className="trend-improving">↑</span> <strong>Improving</strong>: moved to an earlier quarter.</li>
+                  <li><span className="trend-steady">→</span> <strong>Steady</strong>: no change in the last {TREND_WINDOW_DAYS} days, or no history yet.</li>
+                </ul>
+                Only changes from the last {TREND_WINDOW_DAYS} days count, so an old slip fades to
+                Steady. Trend does not show how far a specification moved: hover the arrow to see
+                the old and new quarter and the date of the change.</li>
+            </ul>
+            <p>Hover any header or cell in these columns for details.</p>
+          </div>
+        </details>
       </div>
+      {ratifiedOpen && ratified ? <RatifiedDialog ratified={ratified} onClose={closeRatified} /> : null}
       {(() => {
         const summaryRow = summaryKey ? rows.find((row) => specKeyOf(row) === summaryKey) : null;
         const entry = summaryKey ? summaries[summaryKey] : null;
