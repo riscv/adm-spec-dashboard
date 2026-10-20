@@ -1740,8 +1740,30 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
   background: var(--surface);
 }
 
+.table-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 24px;
+}
+
 .table-search .field-search {
+  flex: 1 1 280px;
   max-width: 480px;
+}
+
+/* Quick filters right of the search; a firmer border so they read as controls. */
+.table-search .filter-bar {
+  margin-left: auto;
+}
+
+.table-search .filter-chip {
+  border: 1.5px solid #b6bfcf;
+  font-weight: 600;
+}
+
+.table-search .filter-chip:hover {
+  border-color: var(--brand);
 }
 
 @media print {

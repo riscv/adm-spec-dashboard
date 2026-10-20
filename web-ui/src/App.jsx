@@ -1379,65 +1379,11 @@ function App() {
         </div>
       </section>
 
-      <section className="card controls-card">
-        <div className="controls-toolbar">
-          <div className="field filter-bar">
-            <span className="field-label" id="quick-filters-label">
-              Quick filters
-            </span>
-            <div className="filter-chips" role="group" aria-labelledby="quick-filters-label">
-              {QUICK_FILTERS.map((filter) => {
-                const active = quickFilters.includes(filter.id);
-                return (
-                  <button
-                    key={filter.id}
-                    type="button"
-                    className={`filter-chip${active ? " active" : ""}`}
-                    aria-pressed={active}
-                    title={filter.title}
-                    onClick={() => toggleQuickFilter(filter.id)}
-                  >
-                    {filter.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          <div className="field">
-            <span className="field-label">View</span>
-            <label className="bod-toggle">
-              <input
-                type="checkbox"
-                checked={bodOnly}
-                onChange={(event) => setBodOnly(event.target.checked)}
-              />
-              <span className="bod-text">Show BoD Report</span>
-            </label>
-          </div>
-        </div>
-      </section>
 
       {error ? <div className="error-banner">{error}</div> : null}
       {loading ? <div className="loading">Loading data...</div> : null}
 
       <div className="table-container" ref={tableContainerRef}>
-        <section className="card forecast-card">
-          <div className="card-header">
-            <h2 className="card-title ratification-forecast">
-              Remaining {ratificationForecast.year} Ratification Forecast
-            </h2>
-            <div className="card-actions">
-              <span className="count-chip strong">Total {ratificationForecast.total}</span>
-              {[1, 2, 3, 4]
-                .filter((quarter) => quarter >= currentQuarter || ratificationForecast[`q${quarter}`] > 0)
-                .map((quarter) => (
-                  <span key={quarter} className="count-chip">
-                    Q{quarter} · {ratificationForecast[`q${quarter}`]}
-                  </span>
-                ))}
-            </div>
-          </div>
-        </section>
 
         <section className="card table-card">
           <div className="card-header">
@@ -1499,6 +1445,39 @@ function App() {
                 placeholder="Search for specifications..."
               />
             </div>
+              <div className="field filter-bar">
+                <span className="field-label" id="quick-filters-label">
+                  Quick filters
+                </span>
+                <div className="filter-chips" role="group" aria-labelledby="quick-filters-label">
+                  {QUICK_FILTERS.map((filter) => {
+                    const active = quickFilters.includes(filter.id);
+                    return (
+                      <button
+                        key={filter.id}
+                        type="button"
+                        className={`filter-chip${active ? " active" : ""}`}
+                        aria-pressed={active}
+                        title={filter.title}
+                        onClick={() => toggleQuickFilter(filter.id)}
+                      >
+                        {filter.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="field">
+                <span className="field-label">View</span>
+                <label className="bod-toggle">
+                  <input
+                    type="checkbox"
+                    checked={bodOnly}
+                    onChange={(event) => setBodOnly(event.target.checked)}
+                  />
+                  <span className="bod-text">Show BoD Report</span>
+                </label>
+              </div>
           </div>
 
         <div className="table-scroll">
