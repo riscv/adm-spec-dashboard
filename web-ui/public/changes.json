@@ -1,7 +1,6 @@
 {
-  "generated": "2026-10-19",
-  "from": null,
-  "to": null,
-  "changes": [],
-  "note": "Fewer than 2 snapshots between 2026-10-11 and 2026-10-19 (1 found); no comparison yet."
+  "generated": "2026-10-20",
+  "from": "2026-10-19",
+  "to": "2026-10-20",
+  "changes": []
 }
