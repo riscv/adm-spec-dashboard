@@ -1,0 +1,36 @@
+{
+ "year": 2026,
+ "count": 6,
+ "specs": [
+  {
+   "key": "RVS-1781",
+   "summary": "Server Platform",
+   "date": "2026-05-07"
+  },
+  {
+   "key": "RVS-3826",
+   "summary": "RISC-V Quality of Service Controllers Table (RQSC)",
+   "date": "2026-06-12"
+  },
+  {
+   "key": "RVS-3933",
+   "summary": "Instruction/Data Coherence & Consistency (Ziccid)",
+   "date": "2026-06-12"
+  },
+  {
+   "key": "RVS-921",
+   "summary": "S-mode Physical Memory Protection (SPMP)",
+   "date": "2026-09-02"
+  },
+  {
+   "key": "RVS-3561",
+   "summary": "RISC-V Hart Trace Interface (RHTI)",
+   "date": "2026-09-25"
+  },
+  {
+   "key": "RVS-4171",
+   "summary": "RHTI trcstate Extension",
+   "date": "2026-09-25"
+  }
+ ]
+}
