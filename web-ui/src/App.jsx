@@ -1572,6 +1572,16 @@ function App() {
                 <IconExternal />
                 <span className="toolbar-text">Development Explorer</span>
               </a>
+              <a
+                href="https://tech.riscv.org/isa-explorer/"
+                target="_blank"
+                rel="noreferrer"
+                className="btn sm toolbar-link"
+                title="RISC-V ISA Explorer"
+              >
+                <IconExternal />
+                <span className="toolbar-text">ISA Explorer</span>
+              </a>
             </div>
           </div>
 
