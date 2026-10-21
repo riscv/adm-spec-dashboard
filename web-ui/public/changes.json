@@ -16,6 +16,20 @@
       "field": "next_approval_date",
       "from": "2026-10-29",
       "to": "2026-10-20"
+    },
+    {
+      "spec": "RVS-4752",
+      "summary": "Instrumentation Trace",
+      "field": "projected_q",
+      "from": "27Q2",
+      "to": "Not Set Yet"
+    },
+    {
+      "spec": "RVS-4752",
+      "summary": "Instrumentation Trace",
+      "field": "progress",
+      "from": "On Track",
+      "to": "Not Set Yet"
     }
   ]
 }
