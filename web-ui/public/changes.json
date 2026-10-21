@@ -1,6 +1,21 @@
 {
-  "generated": "2026-10-20",
+  "generated": "2026-10-21",
   "from": "2026-10-19",
-  "to": "2026-10-20",
-  "changes": []
+  "to": "2026-10-21",
+  "changes": [
+    {
+      "spec": "RVS-4184",
+      "summary": "RVB23.1",
+      "field": "progress",
+      "from": "On Track",
+      "to": "Completed"
+    },
+    {
+      "spec": "RVS-4184",
+      "summary": "RVB23.1",
+      "field": "next_approval_date",
+      "from": "2026-10-29",
+      "to": "2026-10-20"
+    }
+  ]
 }
