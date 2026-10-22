@@ -19,8 +19,9 @@ approval subtask is progress whoever closes it. LFX meetings are a sixth
 source to come; a source a spec does not have is left out of its score, so
 adding one changes nothing else.
 
-Each source scores 0, 1 or 2 (see score_*). The level is the share of the
-points the spec could get: 80% Very Active, 50% Active, above 0 Low, else
+Each source scores 0, 1 or 2 (see score_*); GitHub and Discussion count
+double (WEIGHTS). The level is the share of the weighted points the spec could
+get: 80% Very Active, 50% Active, above 0 Low, else
 Stalled.
 
 Usage: python spec-activity.py CSV [--out web-ui/public/activity.json] [--only RVS-1,RVS-2]
@@ -55,8 +56,13 @@ DONE = {"Done", "Closed", "Approved", "Resolved"}
 # A word in the Extensions field counts as an extension name only in this shape,
 # so prose ("will be defined as...") and one-letter names ("P") are not searched.
 EXT_NAME = re.compile(r"^(?:Z[a-z][a-z0-9]+|S[mshvdu][a-z][a-z0-9]+|RV[ABM]\d\d(?:\.\d|P\d)?)$")
+# A spec's short name, as people write it in mail: two or more capitals, no spaces ("IOPMP", "CoVE").
+ACRONYM = re.compile(r"^(?=(?:[^A-Z]*[A-Z]){2})[A-Za-z][A-Za-z0-9]{2,}$")
 
 LEVELS = [(0.8, "Very Active"), (0.5, "Active")]
+# GitHub and the lists are where the spec work happens; Jira, Confluence and
+# tests move only at phase steps, so they count half as much.
+WEIGHTS = {"github": 2, "discussion": 2}
 
 
 # ----- scoring (pure) -----
@@ -98,10 +104,10 @@ def score_tests(prs, people, status):
 
 
 def level(points):
-    scored = [p for p in points if p is not None]
+    scored = [(p, WEIGHTS.get(source, 1)) for source, p in points.items() if p is not None]
     if not scored:
         return "Unknown", None
-    share = sum(scored) / (2 * len(scored))
+    share = sum(p * w for p, w in scored) / sum(2 * w for _, w in scored)
     for floor, name in LEVELS:
         if share >= floor:
             return name, round(share * 100)
@@ -110,7 +116,8 @@ def level(points):
 
 def extension_names(field_text, summary):
     """Search terms: extension names from the Extensions field, else from the
-    summary, else the summary itself as a phrase.
+    summary, else the summary itself as a phrase, with the spec's short name
+    ("IOPMP") when the summary gives one.
 
     In a summary, names are only taken from the parentheses ("Name (Zext)") or
     when the whole summary is one name, since a title word like "Supervisor"
@@ -125,7 +132,12 @@ def extension_names(field_text, summary):
         if names:
             return names[:8]
     phrase = re.sub(r"\s*\(.*?\)", "", summary).strip()
-    return [f'"{phrase}"'] if phrase else []
+    # "Name (IOPMP)" or "Name - RPMI": search the short name as well as the title.
+    short = re.findall(r"\(([^)]*)\)|\s-\s(\S+)", summary)
+    acronyms = [a for a in dict.fromkeys(x or y for x, y in short) if ACRONYM.match(a) and a != phrase]
+    if phrase.endswith(tuple(f" - {a}" for a in acronyms)):
+        phrase = phrase.rsplit(" - ", 1)[0]
+    return acronyms + ([f'"{phrase}"'] if phrase else [])
 
 
 def adf_text(node):
@@ -528,7 +540,7 @@ def measure(sources, row):
         "tests": score_tests(t["prs"], t["people"], status),
         "meetings": None,  # LFX, to come
     }
-    name, share = level(points.values())
+    name, share = level(points)
     return key, {
         "level": name, "share": share, "points": points, "text": explain(src),
         "governing": gov_name or "", "terms": terms,

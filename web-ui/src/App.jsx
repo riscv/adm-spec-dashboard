@@ -970,8 +970,8 @@ function ActivityDialog({ row, entry, meta, onClose }) {
         </table>
         <div className="summary-meta">
           {`Last ${meta.window_days || 90} days (since ${meta.since}), measured on ${meta.generated}. `}
-          RVI staff and bots are left out. Each source scores 0, 1 or 2; a source the spec does not have is
-          left out. The level is the share of the possible points: 80% Very Active, 50% Active, above 0 Low,
+          RVI staff and bots are left out. Each source scores 0, 1 or 2, and GitHub and Discussion count double;
+          a source the spec does not have is left out. The level is the share of the possible points: 80% Very Active, 50% Active, above 0 Low,
           0 Stalled.
         </div>
       </div>

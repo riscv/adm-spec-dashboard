@@ -51,20 +51,30 @@ def test_tests_count_against_a_spec_only_from_freeze_on():
     assert sa.score_tests(3, 2, "Specification in Planning") == 2
 
 
+def pts(jira=None, github=None, discussion=None, confluence=None, tests=None):
+    return {"jira": jira, "github": github, "discussion": discussion,
+            "confluence": confluence, "tests": tests, "meetings": None}
+
+
 @pytest.mark.parametrize("points, name, share", [
-    ([2, 2, 2, 1, 2], "Very Active", 90),
-    ([2, 1, 2, 0, 2], "Active", 70),
-    ([2, 0, 1, 0, 1], "Low", 40),
-    ([0, 0, 0, None], "Stalled", 0),
-    ([None, None], "Unknown", None),
+    (pts(2, 2, 2, 1, 2), "Very Active", 93),
+    (pts(2, 1, 2, 0, 2), "Active", 71),
+    (pts(2, 0, 1, 0, 1), "Low", 36),
+    (pts(0, 0, 0), "Stalled", 0),
+    (pts(), "Unknown", None),
 ])
 def test_level(points, name, share):
     assert sa.level(points) == (name, share)
 
 
+def test_github_and_discussion_count_double():
+    # A spec in Freeze busy on GitHub and the lists, quiet in Jira, Confluence and tests
+    assert sa.level(pts(0, 2, 2, 0, 0)) == ("Active", 57)
+
+
 def test_a_missing_source_does_not_count_against_the_spec():
-    # LFX meetings (None) and a spec with no GitHub link
-    assert sa.level([2, None, 2, None]) == ("Very Active", 100)
+    # LFX meetings and a spec with no GitHub link
+    assert sa.level(pts(jira=2, discussion=2)) == ("Very Active", 100)
 
 
 @pytest.mark.parametrize("field, summary, names", [
@@ -75,6 +85,11 @@ def test_a_missing_source_does_not_count_against_the_spec():
     ("P", "Packed SIMD (P)", ['"Packed SIMD"']),
     ("Instrumentation Trace will be defined as an extension", "Instrumentation Trace", ['"Instrumentation Trace"']),
     ("", "Supervisor Domains Access Protection (Smmtt)", ["Smmtt"]),
+    ("", "Input/Output Physical Memory Protection (IOPMP)", ["IOPMP", '"Input/Output Physical Memory Protection"']),
+    ("", "Confidential VM Extension (CoVE) with I/O", ["CoVE", '"Confidential VM Extension with I/O"']),
+    ("", "Platform Management Interface - RPMI (2.0)", ["RPMI", '"Platform Management Interface"']),
+    ("", "Implicit Return (E-Trace 2.0)", ['"Implicit Return"']),
+    ("", "psABI", ['"psABI"']),
 ])
 def test_extension_names(field, summary, names):
     assert sa.extension_names(field, summary) == names
