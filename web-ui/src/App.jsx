@@ -1734,12 +1734,9 @@ function App() {
                 Ratification Quarter{" "}
                 <AboutLink onOpen={openAbout} label="About Ratification Quarter" />
               </th>
-              <th className="narrow-column status-group-header status-divider" colSpan={3}>
+              <th className="narrow-column status-group-header status-divider" colSpan={4}>
                 Ratification Progress{" "}
                 <AboutLink onOpen={openAbout} label="About Ratification Progress" />
-              </th>
-              <th className="activity-column" rowSpan={2} title={ACTIVITY_TITLE}>
-                Activity
               </th>
               <th className="links-column" rowSpan={2}>Resources</th>
             </tr>
@@ -1771,6 +1768,9 @@ function App() {
               <th className="trend-column status-subheader" title="Direction of the last change to Projected in the last 90 days: ↓ slipping, → steady, ↑ improving">
                 Trend{" "}
                 <AboutLink onOpen={openAbout} label="About Trend" />
+              </th>
+              <th className="activity-column status-subheader" title={ACTIVITY_TITLE}>
+                Activity
               </th>
             </tr>
           </thead>
