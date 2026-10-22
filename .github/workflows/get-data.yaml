@@ -162,8 +162,9 @@ jobs:
   # How active each spec was over the last 90 days, from Jira, GitHub,
   # Groups.io and Confluence (spec-activity.py). It needs the Jira and GitHub
   # tokens plus the Groups.io login, so it runs apart from the AWS jobs. It
-  # takes about 10 minutes, mostly the GitHub search limit. A failure keeps
-  # the old activity.json.
+  # takes about 7 minutes (Groups.io answers slowly, so 6 specs run at once).
+  # After 25 minutes it stops and keeps the last result for the specs left;
+  # a failure keeps the old activity.json.
   activity:
     name: Measure spec activity
     needs: data-fetch
@@ -195,7 +196,7 @@ jobs:
         run: |
           set -euo pipefail
           pip install --quiet requests==2.32.3
-          python spec-activity.py web-ui/public/latest.csv --out web-ui/public/activity.json
+          python spec-activity.py web-ui/public/latest.csv --out web-ui/public/activity.json --budget-minutes 25
 
       - name: Pass the activity to the landing job
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

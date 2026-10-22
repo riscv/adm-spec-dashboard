@@ -34,6 +34,7 @@ import os
 import re
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
@@ -180,9 +181,15 @@ class Sources:
                           data={"email": os.environ["GROUPSIO_USER"], "password": os.environ["GROUPSIO_PASSWORD"]})
         self._issues = {}
         self._users = {}
+        self._cache = {}
+        self._parent_shas = {}
 
     # --- helpers ---
-    def _get(self, session, url, params=None, tries=5):
+    def _get(self, session, url, params=None, tries=4):
+        cache_key = (url, json.dumps(params, sort_keys=True))
+        if cache_key in self._cache:
+            return self._cache[cache_key]
+        result = None
         for attempt in range(tries):
             try:
                 resp = session.get(url, params=params, timeout=30)
@@ -190,13 +197,25 @@ class Sources:
                 resp = None
             if resp is not None and resp.status_code == 200:
                 try:
-                    return resp.json()
+                    result = resp.json()
+                    break
                 except ValueError:
-                    pass
+                    pass  # Groups.io answers a rate limit with a non-JSON page
             if resp is not None and resp.status_code in (401, 404, 410, 422):
-                return None
-            time.sleep(3 * (attempt + 1))  # rate limited or a transient error
-        return None
+                break
+            time.sleep(self._backoff(resp, attempt))
+        self._cache[cache_key] = result
+        return result
+
+    @staticmethod
+    def _backoff(resp, attempt):
+        """Seconds to wait before a retry: what the server asks for, else a short step."""
+        if resp is not None:
+            if resp.headers.get("Retry-After", "").isdigit():
+                return min(int(resp.headers["Retry-After"]), 60)
+            if resp.headers.get("X-RateLimit-Remaining") == "0" and resp.headers.get("X-RateLimit-Reset", "").isdigit():
+                return min(max(int(resp.headers["X-RateLimit-Reset"]) - time.time(), 1) + 1, 60)
+        return 2 * (attempt + 1)
 
     def jira_issue(self, key, fields):
         if (key, fields) not in self._issues:
@@ -278,13 +297,13 @@ class Sources:
             commits = self.gh_pages(f"repos/{full}/commits", {"since": self.since + "T00:00:00Z"}) or []
             if info.get("fork") and info.get("parent"):
                 # A spec fork of riscv-isa-manual also gets upstream syncs; keep only its own commits.
-                parent, branch = info["parent"]["full_name"], info["parent"]["default_branch"]
-                own = []
-                for c in commits[:300]:
-                    cmp_ = self._get(self.gh, f"{GITHUB_API}/repos/{parent}/compare/{branch}...{c['sha']}")
-                    if not (cmp_ and cmp_.get("status") in ("behind", "identical")):
-                        own.append(c)
-                commits = own
+                # A synced commit has the same SHA in the parent, so one listing of
+                # the parent's commits in the window finds all of them.
+                parent = info["parent"]["full_name"]
+                if parent not in self._parent_shas:
+                    listed = self.gh_pages(f"repos/{parent}/commits", {"since": self.since + "T00:00:00Z"}, limit=3000)
+                    self._parent_shas[parent] = {c["sha"] for c in listed or []}
+                commits = [c for c in commits if c["sha"] not in self._parent_shas[parent]]
             pulls = self.gh_pages(f"repos/{full}/pulls", {"state": "all", "sort": "updated", "direction": "desc"},
                                   limit=300) or []
             pulls = [p for p in pulls if p["updated_at"][:10] >= self.since and not is_bot(p["user"]["login"])
@@ -339,8 +358,9 @@ class Sources:
 
     def discussion_signal(self, terms, lists):
         seen, people, where = set(), set(), {}
+        query = " OR ".join(terms)  # Groups.io search takes OR, so one call per list
         for group in dict.fromkeys(lists):
-            for term in terms:
+            for term in [query]:
                 for msg in self.groupsio_search(group, term):
                     if msg.get("created", "")[:10] < self.since or msg["id"] in seen or self._staff_msg(msg):
                         continue
@@ -391,17 +411,19 @@ class Sources:
     # --- T ---
     def tests_signal(self, terms):
         found, people = {}, set()
-        for repo in TEST_REPOS:
-            for term in terms:
-                data = self._get(self.gh, f"{GITHUB_API}/search/issues", {
-                    "q": f"repo:{repo} is:pr {term} updated:>={self.since}", "per_page": 50}) or {}
-                time.sleep(2.2)  # the search API allows 30 requests a minute
-                for item in data.get("items", []):
-                    login = item["user"]["login"]
-                    if is_bot(login) or login.lower() in self.staff["github"]:
-                        continue
-                    found[item["html_url"]] = repo.split("/")[1]
-                    people.add(login.lower())
+        repos = " ".join(f"repo:{r}" for r in TEST_REPOS)
+        # GitHub search allows 5 operators, so at most 6 names per query.
+        for i in range(0, len(terms), 6):
+            names = " OR ".join(terms[i:i + 6])
+            data = self._get(self.gh, f"{GITHUB_API}/search/issues", {
+                "q": f"{repos} is:pr ({names}) updated:>={self.since}", "per_page": 100}) or {}
+            time.sleep(2.2)  # the search API allows 30 requests a minute
+            for item in data.get("items", []):
+                login = item["user"]["login"]
+                if is_bot(login) or login.lower() in self.staff["github"]:
+                    continue
+                found[item["html_url"]] = item["repository_url"].rsplit("/", 1)[-1]
+                people.add(login.lower())
         repos = {}
         for repo in found.values():
             repos[repo] = repos.get(repo, 0) + 1
@@ -519,7 +541,12 @@ def main(argv=None):
     ap.add_argument("--out", default="web-ui/public/activity.json")
     ap.add_argument("--staff", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "staff.json"))
     ap.add_argument("--only", default="")
+    ap.add_argument("--workers", type=int, default=6,
+                    help="specs measured at once; Groups.io takes seconds per call, so this is most of the speed")
+    ap.add_argument("--budget-minutes", type=float, default=0,
+                    help="stop measuring after this long and keep the previous result for the rest (0: no limit)")
     args = ap.parse_args(argv)
+    started = time.monotonic()
 
     today = dt.date.today()
     since = today - dt.timedelta(days=WINDOW_DAYS)
@@ -530,24 +557,49 @@ def main(argv=None):
     with open(args.csv, newline="", encoding="utf-8") as f:
         rows = [r for r in csv.DictReader(f, quotechar="'") if r.get("Status") != "Cancelled"]
 
-    specs, failed = {}, []
-    for row in rows:
-        key = row["Jira URL"].rstrip("/").rsplit("/", 1)[-1]
-        if only and key not in only:
-            continue
+    # The last run's results: kept for a spec this run does not reach, and used
+    # to measure the longest-unmeasured specs first.
+    previous = {}
+    if os.path.exists(args.out):
+        try:
+            with open(args.out, encoding="utf-8") as f:
+                previous = json.load(f).get("specs", {})
+        except (OSError, ValueError):
+            previous = {}
+    key_of = lambda r: r["Jira URL"].rstrip("/").rsplit("/", 1)[-1]
+    rows.sort(key=lambda r: (previous.get(key_of(r)) or {}).get("measured", ""))
+
+    specs, failed, carried = {}, [], []
+
+    def run(row):
+        key = key_of(row)
+        if args.budget_minutes and time.monotonic() - started > args.budget_minutes * 60:
+            if key in previous:
+                specs[key] = previous[key]
+                carried.append(key)
+            return
+        t0 = time.monotonic()
         try:
             key, entry = measure(sources, row)
+            entry["measured"] = today.isoformat()
             specs[key] = entry
-            print(f"{key} {entry['level']} {entry['points']}", file=sys.stderr, flush=True)
+            print(f"{key} {entry['level']} {entry['points']} {time.monotonic() - t0:.0f}s", file=sys.stderr, flush=True)
         except Exception as exc:  # one spec failing must not lose the others
             failed.append(key)
+            if key in previous:
+                specs[key] = previous[key]
             print(f"{key} failed: {exc!r}", file=sys.stderr, flush=True)
+
+    todo = [row for row in rows if not only or key_of(row) in only]
+    with ThreadPoolExecutor(max_workers=max(1, args.workers)) as pool:
+        list(pool.map(run, todo))
 
     out = {"generated": today.isoformat(), "since": since.isoformat(), "window_days": WINDOW_DAYS, "specs": specs}
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=1, sort_keys=True)
-    print(f"{len(specs)} specs measured, {len(failed)} failed{': ' + ', '.join(failed) if failed else ''}",
-          file=sys.stderr)
+    print(f"{len(specs) - len(carried)} specs measured, {len(carried)} kept from the last run, "
+          f"{len(failed)} failed{': ' + ', '.join(failed) if failed else ''}, "
+          f"{(time.monotonic() - started) / 60:.1f} min", file=sys.stderr)
     return 1 if rows and not specs else 0
 
 
