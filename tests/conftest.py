@@ -25,6 +25,7 @@ COLUMNS = [
     "Last Contribution Source", "Plan Ratification Quarter", "Previous Target Ratification Quarter",
     "Target Changed", "Phase Started", "Development Started", "Next Approval", "Next Approval Date",
     "Latest Replanning", "Phase History", "Projected Phase Ends",
+    "Group Key", "Group", "Group Type", "Group Activity Level", "Group Activity Signals",
 ]
 
 

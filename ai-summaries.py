@@ -9,6 +9,10 @@ the schedule status, or uses a word that judges or interprets.
 Summaries are cached in summaries.json by a hash of each spec's facts, the
 prompt and the model, so the model is only called when one of them changed.
 
+A spec developed by a group (the Jira Develops link) also gets a "group"
+entry: the group's Activity Level and the dates it is computed from, with the
+rule that level stands for, so the dashboard can explain it.
+
 Usage: python ai-summaries.py CSV [--out web-ui/public/summaries.json]
        [--only RVS-1,RVS-2] [--no-model]
 Env:   BEDROCK_MODEL_ID (default below), AWS_REGION, plus normal AWS credentials.
@@ -130,6 +134,60 @@ def build_facts(row, today):
     return [f for f in facts if f]
 
 
+# The three dates the Activity Level is computed from, as get-specs-data.py
+# names them in the "Group Activity Signals" column.
+GROUP_SIGNALS = (
+    ("Confluence", "Its Confluence space was last updated on {}", "No Confluence update is recorded"),
+    ("Mailing list", "Its mailing list last had a message on {}", "No mailing list message is recorded"),
+    ("Repository", "Its repository was last updated on {}", "No repository update is recorded"),
+)
+
+
+def level_rule(level, group_type):
+    """What the level means, as riscv-tech-committee-report computes it."""
+    signals = "its Confluence space, mailing list and repository"
+    if level == "Very Active":
+        return f"Very Active means {signals} were all updated within 15 days"
+    if level == "Active":
+        gt = (group_type or "").lower()
+        if "task group" in gt:
+            main = "the repository"
+        elif any(k in gt for k in ("special interest", "isa committee", "steering")):
+            main = "the mailing list"
+        else:
+            main = ""
+        rule = f"Active means at least 2 of {signals} were updated within 45 days"
+        return rule + (f", or {main}, the main signal for this type of group, was" if main else "")
+    if level == "Low":
+        return f"Low means at least 1 of {signals} was updated within 60 days"
+    if level == "Stalled":
+        return f"Stalled means none of {signals} was updated within 60 days"
+    return None
+
+
+def build_group_facts(row, today):
+    """The facts behind the developing group's Activity Level; None without a group."""
+    group = (row.get("Group") or "").strip()
+    if not (row.get("Group Key") or "").strip() or not group:
+        return None
+    facts = [f"The specification is developed by the {group}"]
+    level = (row.get("Group Activity Level") or "").strip()
+    rule = level_rule(level, row.get("Group Type", ""))
+    if not rule:
+        # Not an Active group (e.g. Archived): get-specs-data.py writes its status.
+        return facts + ([f"The group is {level}"] if level else ["No activity level is set for the group"])
+    facts.append(f"Its activity level is {level}")
+    signals = dict(p.split("=", 1) for p in (row.get("Group Activity Signals") or "").split(";") if "=" in p)
+    # No dates at all means the activity report could not be read: say
+    # nothing about them rather than "none recorded".
+    if signals:
+        for name, said, missing in GROUP_SIGNALS:
+            when = dated(signals.get(name, ""), today)
+            facts.append(said.format(when) if when else missing)
+    facts.append(rule)
+    return facts
+
+
 def dated(value, today):
     """The ISO date of a date or timestamp; '' when unset or bad.
 
@@ -175,10 +233,14 @@ def valid(summary, facts):
     keep = {t for t in given if "Q" in t or "-" in t}
     if not said <= given or not keep <= said:
         return False
-    # The schedule status (On Track, Exposed, ...) must be kept word for word,
-    # as whole words: "Late" must not be found inside "moved later".
-    status = [f[len("The schedule status is "):] for f in facts if f.startswith("The schedule status is ")]
+    # The schedule status (On Track, Exposed, ...) and the group's activity
+    # level must be kept word for word, as whole words: "Late" must not be
+    # found inside "moved later".
+    status = [f[len(p):] for f in facts for p in KEEP_AS_WRITTEN if f.startswith(p)]
     return all(re.search(r"\b%s\b" % re.escape(st), summary, re.I) for st in status)
+
+
+KEEP_AS_WRITTEN = ("The schedule status is ", "Its activity level is ")
 
 
 def ask_model(client, facts):
@@ -215,37 +277,45 @@ def main():
         region = os.environ.get("AWS_REGION") or "us-east-1"
         client = boto3.Session(region_name=region).client("bedrock-runtime")
 
-    out, calls, rejected = {}, 0, 0
+    out, counts = {}, {"calls": 0, "rejected": 0}
+
+    def summarize(label, facts, old, use_model):
+        # The prompt and model are part of the hash, so changing either regenerates all.
+        digest = hashlib.sha256(json.dumps([MODEL_ID, SYSTEM, facts]).encode()).hexdigest()[:16]
+        if old and old.get("hash") == digest and (old.get("source") == "ai" or client is None):
+            return old
+        entry = {"hash": digest, "summary": template(facts), "source": "template", "generated": today.isoformat()}
+        if client is not None and use_model:
+            counts["calls"] += 1
+            try:
+                text = digits(ask_model(client, facts))
+            except Exception as e:  # keep the template; the dashboard must still refresh
+                print(f"{label}: Bedrock call failed: {e}", file=sys.stderr)
+                text = ""
+            if valid(text, facts):
+                entry.update(summary=text, source="ai", model=MODEL_ID)
+            else:
+                counts["rejected"] += 1
+                print(f"{label}: rejected model output: {text!r}", file=sys.stderr)
+        if only:
+            print(f"\n{label}\n  facts: " + "\n         ".join(facts) + f"\n  [{entry['source']}] {entry['summary']}")
+        return entry
+
     # get-specs-data.py writes the CSV with ' as the quote character.
     for row in csv.DictReader(open(args.csv, newline=""), quotechar="'"):
         key = row["Jira URL"].rsplit("/", 1)[-1]
         if only and key not in only:
             continue
-        facts = build_facts(row, today)
-        tmpl = template(facts)
-        stable = facts
-        # The prompt and model are part of the hash, so changing either regenerates all.
-        digest = hashlib.sha256(json.dumps([MODEL_ID, SYSTEM, stable]).encode()).hexdigest()[:16]
-        old = cache.get(key)
-        if old and old.get("hash") == digest and (old.get("source") == "ai" or client is None):
-            out[key] = old
-            continue
-        entry = {"hash": digest, "summary": tmpl, "source": "template", "generated": today.isoformat()}
-        if client is not None and row["Status"] != "Cancelled":
-            calls += 1
-            try:
-                text = digits(ask_model(client, facts))
-            except Exception as e:  # keep the template; the dashboard must still refresh
-                print(f"{key}: Bedrock call failed: {e}", file=sys.stderr)
-                text = ""
-            if valid(text, facts):
-                entry.update(summary=text, source="ai", model=MODEL_ID)
-            else:
-                rejected += 1
-                print(f"{key}: rejected model output: {text!r}", file=sys.stderr)
+        old = cache.get(key) or {}
+        spec_old = {k: v for k, v in old.items() if k != "group"}
+        entry = dict(summarize(key, build_facts(row, today), spec_old, row["Status"] != "Cancelled"))
+        group_facts = build_group_facts(row, today)
+        if group_facts:
+            # Without a level there is nothing to explain; the template says so.
+            has_level = any(f.startswith("Its activity level is ") for f in group_facts)
+            entry["group"] = summarize(f"{key} group", group_facts, old.get("group"), has_level)
         out[key] = entry
-        if only:
-            print(f"\n{key}\n  facts: " + "\n         ".join(facts) + f"\n  [{entry['source']}] {entry['summary']}")
+    calls, rejected = counts["calls"], counts["rejected"]
 
     if not only:
         os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
