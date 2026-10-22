@@ -7,6 +7,7 @@ Author: Rafael Sene, rafael@riscv.org - Initial implementation
 """
 
 import csv
+import io
 import json
 import os
 import re
@@ -486,6 +487,7 @@ REQUIRED_FIELDS = [
     "customfield_10136",
     "customfield_11060",
     "customfield_10048",  # Latest Replanning: when the projected dates were last set
+    "issuelinks",  # the Develops link to the group that develops the spec
 ]
 
 # The approval that ends each phase, with its Projection date field. Achieved
@@ -525,6 +527,87 @@ def get_projected_phase_ends(fields):
     names = ["Development", "Stabilization", "Freeze", "Ratification-Ready", "Publication"]
     return encode_dates((name, (fields.get(field) or "")[:10])
                         for name, (_, _, field) in zip(names, NEXT_APPROVAL))
+
+
+# The group that develops a spec, and its Activity Level. The level is set on
+# the RVG issue twice a day by riscv-admin/riscv-tech-committee-report, from
+# the dates of the group's last Confluence update, mailing list message and
+# repository change; those dates are read from the same report's output.csv.
+GROUP_ACTIVITY_FIELD = "customfield_10145"  # Activity Level, e.g. "🔵 Active"
+GROUP_TYPE_FIELD = "customfield_10085"  # Group Type, e.g. "Task Group (TG)"
+ACTIVITY_REPORT_REPO = "riscv-admin/riscv-tech-committee-report"
+
+
+def get_developing_group_key(fields):
+    """The RVG key on the spec's Develops link, or ''."""
+    for link in fields.get("issuelinks") or []:
+        if (link.get("type") or {}).get("name") != "Develops":
+            continue
+        other = link.get("inwardIssue") or link.get("outwardIssue") or {}
+        if str(other.get("key", "")).startswith("RVG-"):
+            return other["key"]
+    return ""
+
+
+def get_groups(jira, keys):
+    """{RVG key: {"name", "type", "level"}} for the groups that develop specs."""
+    if not keys:
+        return {}
+    groups = {}
+    jql = f"key in ({','.join(sorted(keys))})"
+    fields = ",".join(["summary", "status", GROUP_ACTIVITY_FIELD, GROUP_TYPE_FIELD])
+    next_page_token = None
+    while True:
+        response = jira.enhanced_jql(jql=jql, limit=100, nextPageToken=next_page_token, fields=fields)
+        for issue in (response or {}).get("issues", []):
+            f = issue.get("fields", {})
+            status = (f.get("status") or {}).get("name") or ""
+            # Drop the emoji: "🔵 Active" -> "Active".
+            level = re.sub(r"^\W+", "", (f.get(GROUP_ACTIVITY_FIELD) or {}).get("value") or "")
+            groups[issue["key"]] = {
+                "name": (f.get("summary") or "").strip(),
+                "type": (f.get(GROUP_TYPE_FIELD) or {}).get("value") or "",
+                # The report only rates Active groups; an archived group keeps
+                # its last level, so show its status instead.
+                "level": level if status == "Active" else status,
+            }
+        next_page_token = (response or {}).get("nextPageToken")
+        if not next_page_token:
+            return groups
+
+
+def get_activity_signals(session):
+    """{(RVG key, RVS key): "Confluence=...;Mailing list=...;Repository=..."}.
+
+    Read from the latest output.csv release of the activity report. The key
+    with an empty RVS is the group's first row, for specs the report does not
+    list. A failure returns {} and the dashboard shows the level alone.
+    """
+    release = _gh_get(session, f"/repos/{ACTIVITY_REPORT_REPO}/releases/latest") or {}
+    asset = next((a for a in release.get("assets", []) if a.get("name") == "output.csv"), None)
+    if not asset:
+        print(f"Warning: no output.csv release in {ACTIVITY_REPORT_REPO}; group activity dates skipped")
+        return {}
+    try:
+        resp = session.get(asset["url"], headers={"Accept": "application/octet-stream"}, timeout=30)
+    except requests.RequestException as e:
+        print(f"Warning: could not download the activity report: {e}")
+        return {}
+    if resp.status_code != 200:
+        print(f"Warning: activity report download returned HTTP {resp.status_code}")
+        return {}
+    signals = {}
+    for row in csv.DictReader(io.StringIO(resp.text)):
+        dates = encode_dates([
+            ("Confluence", (row.get("confluence_last_updated") or "")[:10]),
+            ("Mailing list", (row.get("groupsio_last_message") or "")[:10]),
+            ("Repository", (row.get("develops_github_last_updated") or "")[:10]),
+        ])
+        group = row.get("issue_key", "")
+        spec = (row.get("develops_url") or "").rsplit("/", 1)[-1]
+        signals.setdefault((group, spec), dates)
+        signals.setdefault((group, ""), dates)
+    return signals
 
 
 def get_next_approval(status, fields):
@@ -611,9 +694,11 @@ def get_changelog_dates(jira, issue_key, status):
 
 
 # Function to parse and extract issue details
-def parse_issues(issues, github_session=None, jira=None):
+def parse_issues(issues, github_session=None, jira=None, groups=None, signals=None):
     if github_session is None:
         github_session = make_github_session()
+    groups = groups or {}
+    signals = signals or {}
 
     parsed_issues = []
     contribution_cache = {}
@@ -679,6 +764,10 @@ def parse_issues(issues, github_session=None, jira=None):
         else:
             last_contribution, last_contribution_source = "", ""
 
+        group_key = get_developing_group_key(fields)
+        group = groups.get(group_key, {})
+        group_signals = signals.get((group_key, issue_key)) or signals.get((group_key, ""), "")
+
         # Collect issue information
         parsed_issues.append({
             'URL': url,
@@ -711,7 +800,12 @@ def parse_issues(issues, github_session=None, jira=None):
             'Ratification Progress': ratification_progress,
             'Previous Ratification Progress': previous_ratification_progress,
             'Last Contribution': last_contribution,
-            'Last Contribution Source': last_contribution_source
+            'Last Contribution Source': last_contribution_source,
+            'Group Key': group_key,
+            'Group': group.get('name', ''),
+            'Group Type': group.get('type', ''),
+            'Group Activity Level': group.get('level', ''),
+            'Group Activity Signals': group_signals if group_key else '',
         })
     return parsed_issues
 
@@ -767,7 +861,12 @@ def get_data_from_jira(jira_token, jira_email):
 
     # Extract issues from the JSON data
     issues = fetch_all_issues(jira, jql)
-    parsed_issues = parse_issues(issues, jira=jira)
+    github_session = make_github_session()
+    group_keys = {get_developing_group_key(issue.get('fields', {})) for issue in issues} - {""}
+    groups = get_groups(jira, group_keys)
+    signals = get_activity_signals(github_session)
+    parsed_issues = parse_issues(issues, github_session=github_session, jira=jira,
+                                 groups=groups, signals=signals)
     write_ratified_this_year(jira)
 
     # Generating the CSV filename with current date and time
@@ -807,7 +906,12 @@ def get_data_from_jira(jira_token, jira_email):
             'Next Approval Date',
             'Latest Replanning',
             'Phase History',
-            'Projected Phase Ends'
+            'Projected Phase Ends',
+            'Group Key',
+            'Group',
+            'Group Type',
+            'Group Activity Level',
+            'Group Activity Signals'
         ])
 
         # Writing each issue to the CSV file
@@ -841,7 +945,12 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Next Approval Date'],
                 issue['Latest Replanning'],
                 issue['Phase History'],
-                issue['Projected Phase Ends']
+                issue['Projected Phase Ends'],
+                issue['Group Key'],
+                issue['Group'],
+                issue['Group Type'],
+                issue['Group Activity Level'],
+                issue['Group Activity Signals']
             ])
 
     print(f"Data successfully written to {csv_filename}")

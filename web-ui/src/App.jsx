@@ -493,6 +493,10 @@ function normalizeRow(raw) {
     latestReplanning: raw["Latest Replanning"] || "",
     phaseHistory: parseDatePairs(raw["Phase History"]),
     projectedPhaseEnds: parseDatePairs(raw["Projected Phase Ends"]),
+    groupKey: raw["Group Key"] || "",
+    group: raw["Group"] || "",
+    groupActivity: raw["Group Activity Level"] || "",
+    groupSignals: parseDatePairs(raw["Group Activity Signals"]),
     currentPhase,
     nextPhase,
   };
@@ -876,6 +880,85 @@ function SummaryDialog({ row, entry, onClose }) {
   );
 }
 
+// Activity Level of the group that develops the spec (Jira Develops link).
+const GROUP_ACTIVITY_TITLE =
+  "Activity Level of the group that develops the specification, from its Confluence space, " +
+  "mailing list and repository. Click a level for the explanation.";
+
+function groupActivityClass(level) {
+  const known = { "very active": "ga-very-active", active: "ga-active", low: "ga-low", stalled: "ga-stalled" };
+  return known[String(level || "").toLowerCase()] || "ga-other";
+}
+
+const GROUP_SIGNAL_LABELS = [
+  ["Confluence", "Confluence space updated"],
+  ["Mailing list", "Last mailing list message"],
+  ["Repository", "Repository updated"],
+];
+
+function GroupActivityDialog({ row, entry, onClose }) {
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    dialogRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const signals = GROUP_SIGNAL_LABELS.filter(([name]) => row.groupSignals[name]);
+
+  return (
+    <div className="summary-overlay" onClick={onClose}>
+      <div
+        className="summary-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="group-dialog-title"
+        tabIndex={-1}
+        ref={dialogRef}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="summary-close" onClick={onClose} aria-label="Close">
+          ×
+        </button>
+        <h2 id="group-dialog-title">
+          <a href={`https://riscv.atlassian.net/browse/${row.groupKey}`} target="_blank" rel="noreferrer">
+            {row.group || row.groupKey}
+          </a>{" "}
+          <span className="summary-key">{row.groupKey}</span>
+        </h2>
+        <p className="group-activity-spec">
+          Develops <strong>{row.summary}</strong>{" "}
+          <span className={`group-activity-chip ${groupActivityClass(row.groupActivity)}`}>{row.groupActivity}</span>
+        </p>
+        {entry?.summary ? <p className="summary-text">{entry.summary}</p> : null}
+        {signals.length ? (
+          <dl className="summary-dates">
+            {signals.map(([name, label]) => (
+              <div key={name}>
+                <dt>{label}</dt>
+                <dd>
+                  {row.groupSignals[name]} · {formatAgo(row.groupSignals[name])}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+        <div className="summary-meta">
+          {entry?.source === "ai"
+            ? `AI generated on ${entry.generated} from Jira and the group activity report. The text only restates those facts.`
+            : entry
+              ? `Built on ${entry.generated} from Jira and the group activity report.`
+              : "The level is set twice a day from the group activity report."}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function daysSince(value) {
   if (!value) return null;
   const date = new Date(value);
@@ -1089,6 +1172,8 @@ const EXPORT_COLUMNS = [
   ["Development Started", (row) => row.developmentStarted],
   ["Latest Replanning", (row) => row.latestReplanning],
   ["Last Contribution", (row) => formatUpdateDate(row.lastContribution)],
+  ["Group", (row) => row.group],
+  ["Group Activity Level", (row) => row.groupActivity],
   ["Fast Track", (row) => (row.fastTrack ? "Yes" : "No")],
   ["BoD Report", (row) => (row.bodFlag ? "Yes" : "No")],
   ["GitHub", (row) => row.github],
@@ -1137,6 +1222,9 @@ function App() {
   const [summaryKey, setSummaryKey] = useState(
     () => new URLSearchParams(window.location.search).get("spec") || ""
   );
+  // Key of the spec whose group activity dialog is open.
+  const [groupSpecKey, setGroupSpecKey] = useState("");
+  const closeGroup = useCallback(() => setGroupSpecKey(""), []);
   const closeSummary = useCallback(() => {
     setSummaryKey("");
     const url = new URL(window.location.href);
@@ -1615,6 +1703,9 @@ function App() {
                 Ratification Progress{" "}
                 <AboutLink onOpen={openAbout} label="About Ratification Progress" />
               </th>
+              <th className="narrow-column group-activity-column" rowSpan={2} title={GROUP_ACTIVITY_TITLE}>
+                Group Activity
+              </th>
               <th className="links-column" rowSpan={2}>Resources</th>
             </tr>
             <tr>
@@ -1903,6 +1994,22 @@ function App() {
                       </td>
                     );
                   })()}
+                  <td className="narrow-column group-activity-column">
+                    {row.groupKey && row.groupActivity ? (
+                      <button
+                        type="button"
+                        className={`group-activity-chip ${groupActivityClass(row.groupActivity)}`}
+                        onClick={() => setGroupSpecKey(specKey)}
+                        title={`${row.group}: ${row.groupActivity}. Click for the explanation.`}
+                      >
+                        {row.groupActivity}
+                      </button>
+                    ) : (
+                      <span className="group-activity-none" title="No developing group linked in Jira (Develops link)">
+                        —
+                      </span>
+                    )}
+                  </td>
                   <td className="links-column">
                     <div className="icon-group">
                       {specSummary?.summary ? (
@@ -2049,6 +2156,12 @@ function App() {
         const entry = summaryKey ? summaries[summaryKey] : null;
         return summaryRow && entry?.summary ? (
           <SummaryDialog row={summaryRow} entry={entry} onClose={closeSummary} />
+        ) : null;
+      })()}
+      {(() => {
+        const groupRow = groupSpecKey ? rows.find((row) => specKeyOf(row) === groupSpecKey) : null;
+        return groupRow ? (
+          <GroupActivityDialog row={groupRow} entry={summaries[groupSpecKey]?.group} onClose={closeGroup} />
         ) : null;
       })()}
 
