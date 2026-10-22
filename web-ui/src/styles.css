@@ -1010,7 +1010,25 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
 
 /* Group Activity: the developing group's Activity Level, a button that opens
    the explanation. Same pill shape as the status chips. */
-.group-activity-column { text-align: center; }
+.group-activity-column { width: 1%; text-align: center; white-space: nowrap; }
+.spec-table th.group-activity-column { font-size: 10px; padding-left: 4px; padding-right: 4px; }
+/* One dot per spec in the table; the level is in the tooltip and the dialog. */
+.group-activity-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--neutral);
+  background: var(--surface);
+  cursor: pointer;
+  vertical-align: middle;
+}
+.group-activity-dot:hover, .group-activity-dot:focus-visible { box-shadow: 0 0 0 3px var(--brand-soft); outline: none; }
+.group-activity-dot.ga-very-active { border-color: var(--ok); background: var(--ok); }
+.group-activity-dot.ga-active { border-color: var(--info); background: var(--info); }
+.group-activity-dot.ga-low { border-color: var(--warn); background: var(--warn); }
+.group-activity-dot.ga-stalled { border-color: var(--bad); background: var(--bad); }
 .group-activity-chip {
   display: inline-block;
   padding: 2px 9px;
@@ -1030,7 +1048,7 @@ button.group-activity-chip:hover { background: var(--surface-muted); }
 .group-activity-chip.ga-active { border-color: var(--info); color: var(--info); }
 .group-activity-chip.ga-low { border-color: var(--warn); color: var(--warn); }
 .group-activity-chip.ga-stalled { border-color: var(--bad); color: var(--bad); background: var(--bad-bg); }
-.group-activity-none { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.group-activity-none { color: var(--muted); font-size: 10px; white-space: nowrap; }
 .group-activity-spec { margin: 4px 0 8px; color: var(--muted); }
 
 .trend-column {

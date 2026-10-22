@@ -1703,8 +1703,10 @@ function App() {
                 Ratification Progress{" "}
                 <AboutLink onOpen={openAbout} label="About Ratification Progress" />
               </th>
-              <th className="narrow-column group-activity-column" rowSpan={2} title={GROUP_ACTIVITY_TITLE}>
-                Group Activity
+              <th className="group-activity-column" rowSpan={2} title={GROUP_ACTIVITY_TITLE}>
+                Group
+                <br />
+                Activity
               </th>
               <th className="links-column" rowSpan={2}>Resources</th>
             </tr>
@@ -1998,20 +2000,19 @@ function App() {
                     {row.groupKey && row.groupActivity ? (
                       <button
                         type="button"
-                        className={`group-activity-chip ${groupActivityClass(row.groupActivity)}`}
+                        className={`group-activity-dot ${groupActivityClass(row.groupActivity)}`}
                         onClick={() => setGroupSpecKey(specKey)}
                         title={`${row.group}: ${row.groupActivity}. Click for the explanation.`}
-                      >
-                        {row.groupActivity}
-                      </button>
+                        aria-label={`${row.group}: ${row.groupActivity}`}
+                      />
                     ) : row.fastTrack ? (
                       // A fast track has no developing TG; its governing committee's
                       // activity does not reflect the work, so nothing is shown for it.
                       <span
                         className="group-activity-none"
-                        title="Fast-track specifications have no developing group"
+                        title="Fast track: no developing group"
                       >
-                        Fast track
+                        FT
                       </span>
                     ) : (
                       <span className="group-activity-none" title="No developing group linked in Jira (Develops link)">
