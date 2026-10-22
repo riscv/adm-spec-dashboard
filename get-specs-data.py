@@ -607,6 +607,8 @@ def get_activity_signals(session):
         spec = (row.get("develops_url") or "").rsplit("/", 1)[-1]
         signals.setdefault((group, spec), dates)
         signals.setdefault((group, ""), dates)
+    print(f"Activity report {release.get('tag_name', '')}: dates for "
+          f"{len({g for g, _ in signals})} groups")
     return signals
 
 
