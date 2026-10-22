@@ -845,11 +845,64 @@ a:hover {
   color: var(--brand);
 }
 
-.spec-table td.quarter-cell {
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
-  color: var(--text);
+/* Ratification quarters as a timeline: Baseline -- Phase Start - - Projected. */
+.quarter-timeline-column { width: 1%; white-space: nowrap; }
+.quarter-timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 52px);
+  justify-items: center;
 }
+.qt-point {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+.qt-quarter {
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  line-height: 16px;
+}
+.qt-unset .qt-quarter { color: var(--muted); font-weight: 400; }
+.qt-dot {
+  position: relative;
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--qt, var(--muted));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--qt, var(--muted)) 18%, transparent);
+}
+.qt-unset .qt-dot { background: var(--surface); border: 1.5px solid var(--border-strong); box-shadow: none; }
+.qt-baseline { --qt: #1e4fa3; }
+.qt-phase-start { --qt: #3fa45b; }
+.qt-projected { --qt: #6d3fd9; }
+/* The line into each point from the one before it, centred on the dots. */
+.qt-point + .qt-point::before {
+  content: "";
+  position: absolute;
+  bottom: 4.5px;
+  right: 50%;
+  width: 100%;
+  border-top: 2px solid var(--border-strong);
+}
+.qt-projected::before { border-top: 2px dashed #8b5cf6 !important; }
+/* A line with an unset end is drawn faint: there is nothing to connect. */
+.qt-point.qt-unset::before,
+.qt-unset + .qt-point::before { border-top-color: var(--border) !important; }
+/* Header legend: the names in each point's colour, aligned over the dots. */
+.qt-legend .qt-point {
+  font-size: 9.5px;
+  line-height: 12px;
+  white-space: normal;
+  text-align: center;
+  color: var(--qt);
+}
+.qt-legend .qt-point::before { display: none; }
 
 .specification-column .tooltip-text {
   visibility: hidden;

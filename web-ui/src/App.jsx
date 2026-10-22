@@ -333,6 +333,36 @@ const PHASE_START_QUARTER_TITLE =
 const PROJECTED_QUARTER_TITLE =
   "Today's forecast. It moves every time the specification is replanned.";
 
+// The three ratification quarters as a small timeline: Baseline, then Phase
+// Start (solid line: the plan as revised), then Projected (dashed: the forecast).
+const QUARTER_POINTS = [
+  ["baseline", "Baseline", "planned", BASELINE_QUARTER_TITLE],
+  ["phase-start", "Phase Start", "revised plan", PHASE_START_QUARTER_TITLE],
+  ["projected", "Projected", "current forecast", PROJECTED_QUARTER_TITLE],
+];
+
+function QuarterTimeline({ row }) {
+  const values = [row.plannedQuarter, row.planQuarter, row.trendingQuarter];
+  return (
+    <div className="quarter-timeline">
+      {QUARTER_POINTS.map(([id, name, note, title], i) => {
+        const quarter = String(values[i] || "").trim();
+        const set = /^\d\dQ[1-4]$/.test(quarter);
+        return (
+          <span
+            key={id}
+            className={`qt-point qt-${id}${set ? "" : " qt-unset"}`}
+            title={`${name} (${note}): ${set ? quarter : "not set"}. ${title}`}
+          >
+            <span className="qt-quarter">{set ? quarter : "—"}</span>
+            <span className="qt-dot" />
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 function getCurrentQuarter(date = new Date()) {
   const month = date.getMonth() + 1;
   return Math.ceil(month / 3);
@@ -1749,11 +1779,7 @@ function App() {
               >
                 Publication
               </th>
-              <th className="narrow-column quarter-group-header progress-divider" colSpan={3}>
-                Ratification Quarter{" "}
-                <AboutLink onOpen={openAbout} label="About Ratification Quarter" />
-              </th>
-              <th className="narrow-column status-group-header status-divider" colSpan={4}>
+              <th className="narrow-column status-group-header progress-divider" colSpan={5}>
                 Ratification Progress{" "}
                 <AboutLink onOpen={openAbout} label="About Ratification Progress" />
               </th>
@@ -1769,14 +1795,14 @@ function App() {
               <th className="narrow-column ratready-subheader">Tasks</th>
               <th className="narrow-column publication-subheader">BoD Approval</th>
               <th className="narrow-column publication-subheader">Tasks</th>
-              <th className="narrow-column quarter-subheader progress-divider" title={BASELINE_QUARTER_TITLE}>
-                Baseline
-              </th>
-              <th className="narrow-column quarter-subheader" title={PHASE_START_QUARTER_TITLE}>
-                Phase Start
-              </th>
-              <th className="narrow-column quarter-subheader" title={PROJECTED_QUARTER_TITLE}>
-                Projected
+              <th className="quarter-timeline-column status-subheader progress-divider">
+                <div className="quarter-timeline qt-legend">
+                  {QUARTER_POINTS.map(([id, name, note, title]) => (
+                    <span key={id} className={`qt-point qt-${id}`} title={title}>
+                      {name}
+                    </span>
+                  ))}
+                </div>
               </th>
               <th className="narrow-column status-subheader status-divider" title="Projected vs Baseline: 1 quarter behind is Exposed, 2 or more is Late">
                 vs Baseline
@@ -2018,9 +2044,9 @@ function App() {
 
                     return [cell, arcCell];
                   })}
-                  <td className="narrow-column quarter-cell progress-divider">{row.plannedQuarter}</td>
-                  <td className="narrow-column quarter-cell">{row.planQuarter || "Not Set Yet"}</td>
-                  <td className="narrow-column quarter-cell">{row.trendingQuarter}</td>
+                  <td className="quarter-timeline-column progress-divider">
+                    <QuarterTimeline row={row} />
+                  </td>
                   {(() => {
                     const vsBaseline = baselineStatus(row);
                     return (
