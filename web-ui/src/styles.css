@@ -899,9 +899,22 @@ a:hover {
   font-variant-numeric: tabular-nums;
 }
 
-/* Keep the contribution line clear of the Fast-Track badge in the cell corner. */
-td.specification-column:has(.fast-track-badge) .spec-updated {
-  padding-right: 34px;
+/* The contribution line carries the ISA and Fast-Track tags at its right end. */
+/* When the cell is narrow the tags wrap below, never the date. */
+.spec-updated {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 4px;
+}
+.spec-updated .activity-dot,
+.spec-updated-text { flex-shrink: 0; white-space: nowrap; }
+.spec-tags {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: auto;
+  padding-left: 8px;
+  font-style: normal;
 }
 
 .spec-updated.no-activity {
@@ -926,25 +939,26 @@ td.specification-column:has(.fast-track-badge) .spec-updated {
 .activity-dot.activity-neutral { background: #64748b; } /* post-Freeze */
 .activity-dot.activity-none { background: #cbd5e1; } /* no GitHub data */
 
-.fast-track-badge {
-  position: absolute;
-  right: 10px;
-  bottom: 8px;
+.spec-tag {
   display: inline-flex;
   align-items: center;
   padding: 1px 7px;
   border-radius: 999px;
-  border: 1px solid var(--gold);
+  border: 1px solid var(--border-strong);
   background: var(--surface);
-  color: #a16207;
+  color: var(--muted);
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 15px;
+  white-space: nowrap;
 }
 
-.fast-track-badge .ft-label {
-  font-style: normal;
+/* Berkeley Blue */
+.fast-track-badge {
+  border-color: #003262;
+  color: #003262;
+  font-style: italic;
 }
 
 /* Phase columns: tick in the phase colour when passed, a ring when current,

@@ -1093,10 +1093,30 @@ function formatUpdateDate(value) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
-// "NON-ISA" wraps at its hyphen in the narrow ISA? column. Title case with a
-// non-breaking hyphen keeps it on one line; "ISA + Non-ISA" still wraps at spaces.
+// Title case with a non-breaking hyphen keeps "Non-ISA" on one line.
 function formatIsaLabel(value) {
   return String(value || "").replace(/non-isa/gi, "Non\u2011ISA");
+}
+
+// ISA / Non-ISA and Fast-Track tags, at the end of the contribution line.
+function SpecTags({ row }) {
+  const isa = String(row.isaOrNonIsa || "").trim();
+  const showIsa = isa && !/^(n\/a|not set( yet)?)$/i.test(isa);
+  if (!showIsa && !row.fastTrack) return null;
+  return (
+    <span className="spec-tags">
+      {showIsa ? (
+        <span className="spec-tag isa-tag" title={`ISA or Non-ISA: ${formatIsaLabel(isa)}`}>
+          {formatIsaLabel(isa).replace(/\s*\+\s*/, "+")}
+        </span>
+      ) : null}
+      {row.fastTrack ? (
+        <span className="spec-tag fast-track-badge" title="Fast-Track Specification" aria-label="Fast-Track">
+          FT
+        </span>
+      ) : null}
+    </span>
+  );
 }
 
 function getInitialBodOnly() {
@@ -1713,7 +1733,6 @@ function App() {
           <thead>
             <tr>
               <th className="specification-column" rowSpan={2}>Specification</th>
-              <th className="narrow-column" rowSpan={2}>ISA?</th>
               <th className="narrow-column phase-header ph-planning" rowSpan={2}>Planning</th>
               <th className="narrow-column phase-header ph-development" rowSpan={2}>Dev</th>
               <th className="narrow-column phase-header ph-stabilization" rowSpan={2}>Stabilization</th>
@@ -1785,6 +1804,7 @@ function App() {
               const latestReleaseUrl = hasGithub ? getLatestReleaseUrl(githubValue) : "";
               const specKey = specKeyOf(row);
               const specSummary = summaries[specKey];
+              const specTags = <SpecTags row={row} />;
 
               return (
                 <tr
@@ -1809,15 +1829,21 @@ function App() {
                             className={`activity-dot ${activityRecencyClass(row)}`}
                             aria-hidden="true"
                           />
-                          {formatUpdateDate(row.lastContribution)} · {formatRelativeAge(row.lastContribution)}
+                          <span className="spec-updated-text">
+                            {formatUpdateDate(row.lastContribution)} · {formatRelativeAge(row.lastContribution)}
+                          </span>
+                          {specTags}
                         </div>
                       ) : (
                         <div className="spec-updated no-activity">
                           <span className="activity-dot activity-none" aria-hidden="true" />
-                          No recent contribution found
+                          <span className="spec-updated-text">No recent contribution found</span>
+                          {specTags}
                         </div>
                       )
-                    ) : null}
+                    ) : (
+                      <div className="spec-updated">{specTags}</div>
+                    )}
                     <div className="tooltip-text">
                       {row.summary}
                       <br />
@@ -1825,17 +1851,7 @@ function App() {
                         View in Jira
                       </a>
                     </div>
-                    {row.fastTrack ? (
-                      <span
-                        className="fast-track-badge"
-                        title="Fast-Track Specification"
-                        aria-label="Fast-Track"
-                      >
-                        <span className="ft-label">FT</span>
-                      </span>
-                    ) : null}
                   </td>
-                  <td className="narrow-column">{formatIsaLabel(row.isaOrNonIsa)}</td>
                   {DISPLAY_PHASES.map((phase) => {
                     const phaseIndex = WORKFLOW_PHASES.indexOf(phase);
                     let content = "...";
