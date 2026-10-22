@@ -1069,9 +1069,10 @@ button.activity-chip:hover { background: var(--surface-muted); }
   font-weight: 600;
 }
 
-.trend-steady { color: var(--muted); }
-.trend-slipping { color: var(--bad); font-weight: 700; }
-.trend-improving { color: var(--ok); font-weight: 700; }
+/* Also scoped to the table cell, or the table's own text colour wins there. */
+.trend-steady, .spec-table td.trend-steady { color: var(--muted); }
+.trend-slipping, .spec-table td.trend-slipping { color: var(--bad); font-weight: 700; }
+.trend-improving, .spec-table td.trend-improving { color: var(--ok); font-weight: 700; }
 
 /* ---------- Resources column ---------- */
 .links-column {
