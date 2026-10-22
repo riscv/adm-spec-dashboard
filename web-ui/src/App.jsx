@@ -495,8 +495,6 @@ function normalizeRow(raw) {
     projectedPhaseEnds: parseDatePairs(raw["Projected Phase Ends"]),
     groupKey: raw["Group Key"] || "",
     group: raw["Group"] || "",
-    groupActivity: raw["Group Activity Level"] || "",
-    groupSignals: parseDatePairs(raw["Group Activity Signals"]),
     currentPhase,
     nextPhase,
   };
@@ -880,23 +878,39 @@ function SummaryDialog({ row, entry, onClose }) {
   );
 }
 
-// Activity Level of the group that develops the spec (Jira Develops link).
-const GROUP_ACTIVITY_TITLE =
-  "Activity Level of the group that develops the specification, from its Confluence space, " +
-  "mailing list and repository. Click a level for the explanation.";
+// Activity of the spec itself over the last 90 days, from activity.json
+// (spec-activity.py). A fast track is measured on its own work, never on its
+// governing committee's.
+const ACTIVITY_TITLE =
+  "How active the specification was over the last 90 days, from Jira, GitHub, the mailing lists, " +
+  "Confluence and the test repos. RVI staff and bots are left out. Click a dot for the breakdown.";
 
-function groupActivityClass(level) {
+function activityClass(level) {
   const known = { "very active": "ga-very-active", active: "ga-active", low: "ga-low", stalled: "ga-stalled" };
   return known[String(level || "").toLowerCase()] || "ga-other";
 }
 
-const GROUP_SIGNAL_LABELS = [
-  ["Confluence", "Confluence space updated"],
-  ["Mailing list", "Last mailing list message"],
-  ["Repository", "Repository updated"],
+const ACTIVITY_SOURCES = [
+  ["jira", "Jira", "Approval steps closed, phase changes and member comments"],
+  ["github", "GitHub", "Commits, PRs and PR comments on the spec's GitHub link (a fork's own commits only)"],
+  ["discussion", "Discussion", "Messages naming the extensions on the ISA lists and the governing committee's list, and the group's own list"],
+  ["confluence", "Confluence", "Edits to the Ratification Plan page and its children, and the group's space"],
+  ["tests", "Tests", "PRs naming the extensions in riscv-arch-test, sail-riscv and riscv-unified-db (expected from Freeze on)"],
+  ["meetings", "Meetings", "LFX meetings; not included yet"],
 ];
 
-function GroupActivityDialog({ row, entry, onClose }) {
+function ActivityPoints({ points }) {
+  if (points === null || points === undefined) return <span className="activity-points none">n/a</span>;
+  return (
+    <span className="activity-points" aria-label={`${points} of 2 points`} title={`${points} of 2 points`}>
+      {[0, 1].map((i) => (
+        <span key={i} className={i < points ? "on" : ""} />
+      ))}
+    </span>
+  );
+}
+
+function ActivityDialog({ row, entry, meta, onClose }) {
   const dialogRef = useRef(null);
 
   useEffect(() => {
@@ -908,7 +922,14 @@ function GroupActivityDialog({ row, entry, onClose }) {
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const signals = GROUP_SIGNAL_LABELS.filter(([name]) => row.groupSignals[name]);
+  const key = specKeyOf(row);
+  const context = row.groupKey
+    ? `Developed by ${row.group || row.groupKey}`
+    : entry.governing
+      ? `Fast track governed by the ${entry.governing}`
+      : row.fastTrack
+        ? "Fast track"
+        : "";
 
   return (
     <div className="summary-overlay" onClick={onClose}>
@@ -916,7 +937,7 @@ function GroupActivityDialog({ row, entry, onClose }) {
         className="summary-dialog"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="group-dialog-title"
+        aria-labelledby="activity-dialog-title"
         tabIndex={-1}
         ref={dialogRef}
         onClick={(event) => event.stopPropagation()}
@@ -924,35 +945,34 @@ function GroupActivityDialog({ row, entry, onClose }) {
         <button type="button" className="summary-close" onClick={onClose} aria-label="Close">
           ×
         </button>
-        <h2 id="group-dialog-title">
-          <a href={`https://riscv.atlassian.net/browse/${row.groupKey}`} target="_blank" rel="noreferrer">
-            {row.group || row.groupKey}
-          </a>{" "}
-          <span className="summary-key">{row.groupKey}</span>
+        <h2 id="activity-dialog-title">
+          {row.summary} <span className="summary-key">{key}</span>
         </h2>
-        <p className="group-activity-spec">
-          Develops <strong>{row.summary}</strong>{" "}
-          <span className={`group-activity-chip ${groupActivityClass(row.groupActivity)}`}>{row.groupActivity}</span>
+        <p className="activity-spec">
+          <span className={`activity-chip ${activityClass(entry.level)}`}>{entry.level}</span>
+          {entry.share !== null && entry.share !== undefined ? ` ${entry.share}% of the possible points` : ""}
+          {context ? ` · ${context}` : ""}
         </p>
-        {entry?.summary ? <p className="summary-text">{entry.summary}</p> : null}
-        {signals.length ? (
-          <dl className="summary-dates">
-            {signals.map(([name, label]) => (
-              <div key={name}>
-                <dt>{label}</dt>
-                <dd>
-                  {row.groupSignals[name]} · {formatAgo(row.groupSignals[name])}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        ) : null}
+        <table className="activity-sources">
+          <tbody>
+            {ACTIVITY_SOURCES.map(([id, label, about]) => {
+              const points = entry.points?.[id];
+              if ((points === null || points === undefined) && id !== "meetings") return null;
+              return (
+                <tr key={id}>
+                  <th scope="row" title={about}>{label}</th>
+                  <td><ActivityPoints points={points} /></td>
+                  <td>{entry.text?.[id] || (id === "meetings" ? "Not included yet" : "")}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
         <div className="summary-meta">
-          {entry?.source === "ai"
-            ? `AI generated on ${entry.generated} from Jira and the group activity report. The text only restates those facts.`
-            : entry
-              ? `Built on ${entry.generated} from Jira and the group activity report.`
-              : "The level is set twice a day from the group activity report."}
+          {`Last ${meta.window_days || 90} days (since ${meta.since}), measured on ${meta.generated}. `}
+          RVI staff and bots are left out. Each source scores 0, 1 or 2; a source the spec does not have is
+          left out. The level is the share of the possible points: 80% Very Active, 50% Active, above 0 Low,
+          0 Stalled.
         </div>
       </div>
     </div>
@@ -1173,16 +1193,16 @@ const EXPORT_COLUMNS = [
   ["Latest Replanning", (row) => row.latestReplanning],
   ["Last Contribution", (row) => formatUpdateDate(row.lastContribution)],
   ["Group", (row) => row.group],
-  ["Group Activity Level", (row) => row.groupActivity],
+  ["Activity", (row, activity) => activity[specKeyOf(row)]?.level],
   ["Fast Track", (row) => (row.fastTrack ? "Yes" : "No")],
   ["BoD Report", (row) => (row.bodFlag ? "Yes" : "No")],
   ["GitHub", (row) => row.github],
 ];
 
-function downloadCsv(rows) {
+function downloadCsv(rows, activity = {}) {
   const csv = Papa.unparse({
     fields: EXPORT_COLUMNS.map(([name]) => name),
-    data: rows.map((row) => EXPORT_COLUMNS.map(([, value]) => value(row) ?? "")),
+    data: rows.map((row) => EXPORT_COLUMNS.map(([, value]) => value(row, activity) ?? "")),
   }, { escapeFormulae: true }); // a Summary starting with = + - @ must not run as a formula
   // The BOM makes Excel read the file as UTF-8.
   const blob = new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" });
@@ -1222,9 +1242,11 @@ function App() {
   const [summaryKey, setSummaryKey] = useState(
     () => new URLSearchParams(window.location.search).get("spec") || ""
   );
-  // Key of the spec whose group activity dialog is open.
-  const [groupSpecKey, setGroupSpecKey] = useState("");
-  const closeGroup = useCallback(() => setGroupSpecKey(""), []);
+  // Key of the spec whose activity dialog is open.
+  const [activityKey, setActivityKey] = useState("");
+  const closeActivity = useCallback(() => setActivityKey(""), []);
+  // Optional: written by spec-activity.py in the Daily Data Fetch.
+  const [activity, setActivity] = useState({ specs: {} });
   const closeSummary = useCallback(() => {
     setSummaryKey("");
     const url = new URL(window.location.href);
@@ -1247,6 +1269,19 @@ function App() {
       .then((response) => (response.ok ? response.json() : {}))
       .then((data) => {
         if (isMounted && data && typeof data === "object") setSummaries(data);
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, [assetBase]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch(`${assetBase}activity.json`, { cache: "no-store" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (isMounted && data && typeof data.specs === "object") setActivity(data);
       })
       .catch(() => {});
     return () => {
@@ -1605,7 +1640,7 @@ function App() {
                       disabled={!displayRows.length}
                       onClick={() => {
                         close();
-                        downloadCsv(displayRows);
+                        downloadCsv(displayRows, activity.specs);
                       }}
                       title="Download the rows shown below as CSV"
                     >
@@ -1703,9 +1738,7 @@ function App() {
                 Ratification Progress{" "}
                 <AboutLink onOpen={openAbout} label="About Ratification Progress" />
               </th>
-              <th className="group-activity-column" rowSpan={2} title={GROUP_ACTIVITY_TITLE}>
-                Group
-                <br />
+              <th className="activity-column" rowSpan={2} title={ACTIVITY_TITLE}>
                 Activity
               </th>
               <th className="links-column" rowSpan={2}>Resources</th>
@@ -1996,29 +2029,21 @@ function App() {
                       </td>
                     );
                   })()}
-                  <td className="narrow-column group-activity-column">
-                    {row.groupKey && row.groupActivity ? (
-                      <button
-                        type="button"
-                        className={`group-activity-dot ${groupActivityClass(row.groupActivity)}`}
-                        onClick={() => setGroupSpecKey(specKey)}
-                        title={`${row.group}: ${row.groupActivity}. Click for the explanation.`}
-                        aria-label={`${row.group}: ${row.groupActivity}`}
-                      />
-                    ) : row.fastTrack ? (
-                      // A fast track has no developing TG; its governing committee's
-                      // activity does not reflect the work, so nothing is shown for it.
-                      <span
-                        className="group-activity-none"
-                        title="Fast track: no developing group"
-                      >
-                        FT
-                      </span>
-                    ) : (
-                      <span className="group-activity-none" title="No developing group linked in Jira (Develops link)">
-                        —
-                      </span>
-                    )}
+                  <td className="narrow-column activity-column">
+                    {(() => {
+                      const entry = activity.specs[specKey];
+                      return entry ? (
+                        <button
+                          type="button"
+                          className={`activity-dot ${activityClass(entry.level)}`}
+                          onClick={() => setActivityKey(specKey)}
+                          title={`${entry.level}. Click for the breakdown.`}
+                          aria-label={`Activity: ${entry.level}`}
+                        />
+                      ) : (
+                        <span className="activity-none" title="Not measured yet">—</span>
+                      );
+                    })()}
                   </td>
                   <td className="links-column">
                     <div className="icon-group">
@@ -2169,9 +2194,10 @@ function App() {
         ) : null;
       })()}
       {(() => {
-        const groupRow = groupSpecKey ? rows.find((row) => specKeyOf(row) === groupSpecKey) : null;
-        return groupRow ? (
-          <GroupActivityDialog row={groupRow} entry={summaries[groupSpecKey]?.group} onClose={closeGroup} />
+        const activityRow = activityKey ? rows.find((row) => specKeyOf(row) === activityKey) : null;
+        const entry = activityKey ? activity.specs[activityKey] : null;
+        return activityRow && entry ? (
+          <ActivityDialog row={activityRow} entry={entry} meta={activity} onClose={closeActivity} />
         ) : null;
       })()}
 

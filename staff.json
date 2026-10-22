@@ -1,0 +1,27 @@
+{
+ "_comment": "RVI staff and service accounts. Their messages, commits and page edits are left out of spec activity (spec-activity.py). Groups.io IDs are the accounts with riscv.org or linuxfoundation.org addresses.",
+ "names": [
+  "Jeff Scheel",
+  "Rafael Sene",
+  "Thomas Gall",
+  "Tom Gall",
+  "RISC-V Tech Admin",
+  "RISC-V Scripts Admin",
+  "RISC-V Technical Admin",
+  "Automation for Jira"
+ ],
+ "github": [
+  "jjscheel",
+  "rpsene",
+  "tom-gall",
+  "riscv-tech-admin"
+ ],
+ "groupsio_user_ids": [
+  6123864,
+  7269833,
+  1749201,
+  6513701,
+  6703738,
+  7845494
+ ]
+}
