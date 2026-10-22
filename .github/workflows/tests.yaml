@@ -4,12 +4,16 @@ on:
   pull_request:
     paths:
       - ai-summaries.py
+      - spec-activity.py
+      - staff.json
       - tests/**
       - .github/workflows/tests.yaml
   push:
     branches: [main]
     paths:
       - ai-summaries.py
+      - spec-activity.py
+      - staff.json
       - tests/**
       - .github/workflows/tests.yaml
 
@@ -19,7 +23,7 @@ permissions:
 
 jobs:
   pytest:
-    name: ai-summaries tests
+    name: ai-summaries and spec-activity tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code

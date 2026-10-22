@@ -31,3 +31,16 @@ The job assumes the IAM role in the repo variable `AWS_HISTORY_ROLE_ARN` through
 python snapshot-history.py web-ui/public/latest.csv
 python weekly-digest.py --out web-ui/public/changes.json
 ```
+
+## Spec activity
+
+`spec-activity.py` measures how active each spec was over the last 90 days and
+writes `web-ui/public/activity.json`, shown in the Activity column. Sources:
+Jira (approval steps, phase changes, comments), the spec's GitHub link, mailing
+list messages naming its extensions (cf `Extensions` field), its Ratification
+Plan page, and PRs in riscv-arch-test, sail-riscv and riscv-unified-db. A spec
+developed by a TG also gets the TG's list and Confluence space. RVI staff and
+bots, listed in `staff.json`, are left out. LFX meetings are not included yet.
+
+It needs the `GROUPSIO_USER` and `GROUPSIO_PASSWORD` repo secrets; without them
+the discussion counts are 0.

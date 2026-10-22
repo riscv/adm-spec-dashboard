@@ -159,6 +159,52 @@ jobs:
           path: web-ui/public/summaries.json
           retention-days: 1
 
+  # How active each spec was over the last 90 days, from Jira, GitHub,
+  # Groups.io and Confluence (spec-activity.py). It needs the Jira and GitHub
+  # tokens plus the Groups.io login, so it runs apart from the AWS jobs. It
+  # takes about 7 minutes (Groups.io answers slowly, so 6 specs run at once).
+  # After 25 minutes it stops and keeps the last result for the specs left;
+  # a failure keeps the old activity.json.
+  activity:
+    name: Measure spec activity
+    needs: data-fetch
+    if: needs.data-fetch.result == 'success'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Get the UI data
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: ui-data
+          path: web-ui/public
+
+      - name: Measure spec activity
+        env:
+          JIRA_TOKEN: ${{ secrets.JIRATOKEN }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          GHTOKEN: ${{ secrets.GHTOKEN }}
+          GROUPSIO_USER: ${{ secrets.GROUPSIO_USER }}
+          GROUPSIO_PASSWORD: ${{ secrets.GROUPSIO_PASSWORD }}
+        run: |
+          set -euo pipefail
+          pip install --quiet requests==2.32.3
+          python spec-activity.py web-ui/public/latest.csv --out web-ui/public/activity.json --budget-minutes 25
+
+      - name: Pass the activity to the landing job
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: activity
+          path: web-ui/public/activity.json
+          retention-days: 1
+
   # One snapshot per spec per day in DynamoDB (snapshot-history.py), then the
   # weekly "what changed" digest built from it (weekly-digest.py). Like the
   # summaries job, this job holds only an AWS OIDC token, for a role that can
@@ -217,7 +263,7 @@ jobs:
   # published UI still refreshes even when no commit is produced.
   land:
     name: Land latest CSV via a signed, DCO-checked PR
-    needs: [data-fetch, summaries, history]
+    needs: [data-fetch, summaries, history, activity]
     # Runs when the summaries or history job failed too; the old
     # summaries.json and changes.json are kept.
     # Only main lands data; a run dispatched from a branch must never write to main.
@@ -246,6 +292,13 @@ jobs:
           name: summaries
           path: web-ui/public
 
+      - name: Get the spec activity
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: activity
+          path: web-ui/public
+
       - name: Get the weekly digest
         continue-on-error: true
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
@@ -258,7 +311,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          if [ -z "$(git status --porcelain -- web-ui/public/latest.csv web-ui/public/latest.csv.meta web-ui/public/summaries.json web-ui/public/changes.json web-ui/public/ratified.json)" ]; then
+          if [ -z "$(git status --porcelain -- web-ui/public/latest.csv web-ui/public/latest.csv.meta web-ui/public/summaries.json web-ui/public/changes.json web-ui/public/ratified.json web-ui/public/activity.json)" ]; then
             echo "No changes."
             exit 0
           fi
@@ -268,6 +321,7 @@ jobs:
             $( [ -f web-ui/public/ratified.json ] && echo --path web-ui/public/ratified.json ) \
             $( [ -f web-ui/public/summaries.json ] && echo --path web-ui/public/summaries.json ) \
             $( [ -f web-ui/public/changes.json ] && echo --path web-ui/public/changes.json ) \
+            $( [ -f web-ui/public/activity.json ] && echo --path web-ui/public/activity.json ) \
             --branch-prefix bot/latest-csv \
             --message "Update latest CSV" \
             --pr-body "Automated refresh of the spec dashboard CSV, opened by the Daily Data Fetch workflow so the commit is signed and DCO-checked."
