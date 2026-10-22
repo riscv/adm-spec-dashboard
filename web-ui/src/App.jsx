@@ -1766,8 +1766,7 @@ function App() {
                 vs Phase Start
               </th>
               <th className="trend-column status-subheader" title="Direction of the last change to Projected in the last 90 days: ↓ slipping, → steady, ↑ improving">
-                Trend{" "}
-                <AboutLink onOpen={openAbout} label="About Trend" />
+                Trend
               </th>
               <th className="activity-column status-subheader" title={ACTIVITY_TITLE}>
                 Activity
