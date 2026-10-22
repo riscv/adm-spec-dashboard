@@ -426,13 +426,6 @@
  },
  "RVS-4180": {
   "generated": "2026-10-22",
-  "group": {
-   "generated": "2026-10-22",
-   "hash": "86d99995a78860e0",
-   "model": "qwen.qwen3-next-80b-a3b",
-   "source": "ai",
-   "summary": "The specification is developed by the Profiles SIG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-09-25. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the mailing list, the main signal for this type of group, was."
-  },
   "hash": "3b2c4d96ed105fdc",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
@@ -440,13 +433,6 @@
  },
  "RVS-4184": {
   "generated": "2026-10-22",
-  "group": {
-   "generated": "2026-10-22",
-   "hash": "86d99995a78860e0",
-   "model": "qwen.qwen3-next-80b-a3b",
-   "source": "ai",
-   "summary": "The specification is developed by the Profiles SIG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-09-25. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the mailing list, the main signal for this type of group, was."
-  },
   "hash": "2e33fb731730aa9b",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
