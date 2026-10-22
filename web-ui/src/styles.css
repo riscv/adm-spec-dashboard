@@ -1030,7 +1030,7 @@ button.group-activity-chip:hover { background: var(--surface-muted); }
 .group-activity-chip.ga-active { border-color: var(--info); color: var(--info); }
 .group-activity-chip.ga-low { border-color: var(--warn); color: var(--warn); }
 .group-activity-chip.ga-stalled { border-color: var(--bad); color: var(--bad); background: var(--bad-bg); }
-.group-activity-none { color: var(--muted); }
+.group-activity-none { color: var(--muted); font-size: 12px; white-space: nowrap; }
 .group-activity-spec { margin: 4px 0 8px; color: var(--muted); }
 
 .trend-column {

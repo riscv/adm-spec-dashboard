@@ -2004,6 +2004,15 @@ function App() {
                       >
                         {row.groupActivity}
                       </button>
+                    ) : row.fastTrack ? (
+                      // A fast track has no developing TG; its governing committee's
+                      // activity does not reflect the work, so nothing is shown for it.
+                      <span
+                        className="group-activity-none"
+                        title="Fast-track specifications have no developing group"
+                      >
+                        Fast track
+                      </span>
                     ) : (
                       <span className="group-activity-none" title="No developing group linked in Jira (Develops link)">
                         —
