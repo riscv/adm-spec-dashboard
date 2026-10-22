@@ -105,10 +105,10 @@
   "generated": "2026-10-22",
   "group": {
    "generated": "2026-10-22",
-   "hash": "877b2f94ca954a7d",
+   "hash": "bfa35ca814e006c2",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the External Debug Security TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-02. Its mailing list last had a message on 2026-10-20. Its repository was last updated on 2026-09-19. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the External Debug Security TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-02. Its mailing list last had a message on 2026-10-20. Its repository was last updated on 2026-10-22. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "c179c76a12084d47",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -146,10 +146,10 @@
   "generated": "2026-10-19",
   "group": {
    "generated": "2026-10-22",
-   "hash": "3a888172198a6002",
+   "hash": "2ae35ed3f9122099",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Integrated Matrix Extension (IME). Its activity level is Active. Its Confluence space was last updated on 2026-10-16. Its mailing list last had a message on 2026-10-21. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Integrated Matrix Extension (IME). Its activity level is Active. Its Confluence space was last updated on 2026-10-16. Its mailing list last had a message on 2026-10-22. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "70a6952cdda82b42",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -157,17 +157,17 @@
   "summary": "The specification is in Freeze. This phase started on 2026-07-20. Development started on 2026-01-26. The projected ratification quarter is 27Q1. It is 2 quarters behind the baseline 26Q3. It matches the phase start quarter 27Q1. The schedule status is On Track. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-19. The projected dates were last set on 2026-10-07. ARC review: Approval In Progress. The last repository activity was on 2026-10-14."
  },
  "RVS-1942": {
-  "generated": "2026-10-21",
+  "generated": "2026-10-22",
   "group": {
    "generated": "2026-10-22",
    "hash": "175b4a9f381cbaac",
    "source": "template",
    "summary": "The specification is developed by the Performance Events TG. The group is Structuring and Chartering."
   },
-  "hash": "de047df32d863dc3",
+  "hash": "ad31e86dfdadf997",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2026-01-16. No projected ratification quarter is set yet. The last repository activity was on 2026-10-21."
+  "summary": "The specification is in Planning. This phase started on 2026-01-16. No projected ratification quarter is set yet. The last repository activity was on 2026-03-07."
  },
  "RVS-1971": {
   "generated": "2026-10-19",
@@ -180,10 +180,10 @@
   "generated": "2026-10-19",
   "group": {
    "generated": "2026-10-22",
-   "hash": "b2a0c3a29c6619dc",
+   "hash": "163eb0fcf8e61860",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-13. Its mailing list last had a message on 2026-10-12. Its repository was last updated on 2026-10-16. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-13. Its mailing list last had a message on 2026-10-12. Its repository was last updated on 2026-10-21. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "74d85b9055e8c43c",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -194,10 +194,10 @@
   "generated": "2026-10-19",
   "group": {
    "generated": "2026-10-22",
-   "hash": "dbd0950bdb065c66",
+   "hash": "ab36821bd01c87b1",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Post-Quantum Cryptography (PQC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-08. Its mailing list last had a message on 2026-10-19. Its repository was last updated on 2026-10-19. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the Post-Quantum Cryptography (PQC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-08. Its mailing list last had a message on 2026-10-22. Its repository was last updated on 2026-10-19. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "35505242198fe722",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -213,10 +213,10 @@
    "source": "ai",
    "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-10-19. Its repository was last updated on 2026-10-21. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "40cc0b906d653d96",
+  "hash": "fe024f3da1745cd8",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Development, which started on 2026-03-04. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. It matches the phase start quarter 27Q2. The schedule status is On Track. On 2026-10-16, the projection moved later from 27Q1 to 27Q2. The next approval is Development complete, projected for 2026-10-23. The projected dates were last set on 2026-10-16. The last repository activity was on 2026-10-21."
+  "summary": "The specification is in Development. This phase started on 2026-03-04. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. It matches the phase start quarter 27Q2. The schedule status is On Track. On 2026-10-16, the projection moved later from 27Q1 to 27Q2. The next approval is Development complete, projected for 2026-10-23. The projected dates were last set on 2026-10-16. The last repository activity was on 2026-10-22."
  },
  "RVS-2611": {
   "generated": "2026-10-19",
