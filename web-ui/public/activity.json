@@ -52,7 +52,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "8 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 2, tech-privileged 1, tech-unprivileged 5); the group's list had 36 messages from 12 people",
-    "github": "43 commits, 43 PRs by 5 people in riscv/riscv-p-spec",
+    "github": "44 commits, 43 PRs by 5 people in riscv/riscv-p-spec",
     "jira": "1 approval step closed (Develop Specification); 3 comments from members",
     "tests": "1 PR by 1 person (sail-riscv 1)"
    }
@@ -148,7 +148,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 4 edits by 1 member; group space: 13 pages edited by members",
-    "discussion": "0 messages from 0 people naming Ztt; the group's list had 147 messages from 23 people",
+    "discussion": "0 messages from 0 people naming Ztt; the group's list had 148 messages from 23 people",
     "github": "54 commits, 18 PRs by 7 people in riscv/riscv-attached-matrix-extension",
     "jira": "3 approval steps closed (Project Committee Approval (required); Develop Specification; Notify TSC and CSC); phase changed 1 time"
    }
@@ -271,8 +271,8 @@
    ],
    "text": {
     "confluence": "group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming \"Performance Events Specification\"; the group's list had 5 messages from 2 people",
-    "github": "0 commits, 4 PRs by 2 people in riscv/riscv-performance-events",
+    "discussion": "0 messages from 0 people naming \"Performance Events Specification\"; the group's list had 6 messages from 2 people",
+    "github": "0 commits, 5 PRs by 2 people in riscv/riscv-performance-events",
     "jira": "no approval step closed, no phase change, no member comment"
    }
   },
@@ -1348,8 +1348,8 @@
    ],
    "text": {
     "confluence": "group space: 0 pages edited by members",
-    "discussion": "8 messages from 3 people naming IOPMP, \"Input/Output Physical Memory Protection\" (tech-arch-review 2, tech-privileged 3, tech-unprivileged 3); the group's list had 43 messages from 9 people",
-    "github": "110 commits, 47 PRs by 3 people in riscv-non-isa/riscv-iopmp",
+    "discussion": "9 messages from 3 people naming IOPMP, \"Input/Output Physical Memory Protection\" (tech-arch-review 3, tech-privileged 3, tech-unprivileged 3); the group's list had 44 messages from 9 people",
+    "github": "110 commits, 48 PRs by 3 people in riscv-non-isa/riscv-iopmp",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }

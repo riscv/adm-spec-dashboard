@@ -4,6 +4,13 @@
   "to": "2026-10-23",
   "changes": [
     {
+      "spec": "RVS-1153",
+      "summary": "Security Model",
+      "field": "next_approval_date",
+      "from": "2026-12-06",
+      "to": "2026-12-19"
+    },
+    {
       "spec": "RVS-4180",
       "summary": "RVA23.1",
       "field": "presence",
