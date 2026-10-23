@@ -4,11 +4,228 @@
   "to": "2026-10-23",
   "changes": [
     {
+      "spec": "RVS-793",
+      "summary": "Input/Output Physical Memory Protection (IOPMP)",
+      "field": "next_approval_date",
+      "from": "2026-11-18",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-1017",
+      "summary": "Fast Interrupts (CLIC)",
+      "field": "next_approval_date",
+      "from": "2026-12-19",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-1135",
+      "summary": "Packed SIMD (P)",
+      "field": "next_approval_date",
+      "from": "2026-12-25",
+      "to": "2026-12-29"
+    },
+    {
       "spec": "RVS-1153",
       "summary": "Security Model",
       "field": "next_approval_date",
       "from": "2026-12-06",
-      "to": "2026-12-19"
+      "to": "2026-12-13"
+    },
+    {
+      "spec": "RVS-1345",
+      "summary": "Supervisor Domains Access Protection (Smmtt)",
+      "field": "next_approval_date",
+      "from": "2026-11-18",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-1618",
+      "summary": "Confidential VM Extension (CoVE) with I/O",
+      "field": "next_approval_date",
+      "from": "2026-12-19",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-1790",
+      "summary": "Attached Matrix Extension (AME)",
+      "field": "next_approval_date",
+      "from": "2026-12-25",
+      "to": "2026-12-29"
+    },
+    {
+      "spec": "RVS-1792",
+      "summary": "External Debug Security (Sdsec)",
+      "field": "next_approval_date",
+      "from": "2026-11-18",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-1906",
+      "summary": "Confidential VM Extension (CoVE)",
+      "field": "next_approval_date",
+      "from": "2026-12-19",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-1915",
+      "summary": "Extra Vector Carry-Less/Crypto Extensions (Zvbc32e, Zvkgs)",
+      "field": "projected_q",
+      "from": "26Q4",
+      "to": "27Q1"
+    },
+    {
+      "spec": "RVS-1915",
+      "summary": "Extra Vector Carry-Less/Crypto Extensions (Zvbc32e, Zvkgs)",
+      "field": "progress",
+      "from": "On Track",
+      "to": "Exposed"
+    },
+    {
+      "spec": "RVS-1915",
+      "summary": "Extra Vector Carry-Less/Crypto Extensions (Zvbc32e, Zvkgs)",
+      "field": "next_approval_date",
+      "from": "2026-10-25",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-1930",
+      "summary": "Integrated Matrix Extension (IME)",
+      "field": "next_approval_date",
+      "from": "2026-12-19",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-1971",
+      "summary": "Dot-Product (Zvdot4a8i)",
+      "field": "next_approval_date",
+      "from": "2026-12-04",
+      "to": "2026-12-08"
+    },
+    {
+      "spec": "RVS-2141",
+      "summary": "CHERI",
+      "field": "next_approval_date",
+      "from": "2026-11-18",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-2360",
+      "summary": "Post-Quantum Cryptography (Keccak)",
+      "field": "projected_q",
+      "from": "27Q1",
+      "to": "27Q2"
+    },
+    {
+      "spec": "RVS-2360",
+      "summary": "Post-Quantum Cryptography (Keccak)",
+      "field": "progress",
+      "from": "On Track",
+      "to": "Exposed"
+    },
+    {
+      "spec": "RVS-2360",
+      "summary": "Post-Quantum Cryptography (Keccak)",
+      "field": "next_approval_date",
+      "from": "2026-10-29",
+      "to": "2026-12-08"
+    },
+    {
+      "spec": "RVS-2362",
+      "summary": "High Assurance Cryptography (HAC)",
+      "field": "next_approval_date",
+      "from": "2026-10-23",
+      "to": "2026-12-29"
+    },
+    {
+      "spec": "RVS-2770",
+      "summary": "Performance Event Sampling",
+      "field": "next_approval_date",
+      "from": "2026-12-04",
+      "to": "2026-12-08"
+    },
+    {
+      "spec": "RVS-2940",
+      "summary": "RISC-V Worlds (Smwid, Smlwid, Smlwidlist, Smwiddeleg, Sswid)",
+      "field": "next_approval_date",
+      "from": "2026-11-04",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-2948",
+      "summary": "PMP-based Memory Types Extension (Smpmpmt)",
+      "field": "next_approval_date",
+      "from": "2026-11-04",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-2977",
+      "summary": "Address-Independent Fault Latency (Svukte)",
+      "field": "next_approval_date",
+      "from": "2026-11-04",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-3569",
+      "summary": "Timing Fences",
+      "field": "next_approval_date",
+      "from": "2026-12-25",
+      "to": "2026-12-29"
+    },
+    {
+      "spec": "RVS-3748",
+      "summary": "BF16 & Minimal OFP8 Vector Compute (Zvfbfa, Zvfofp8min)",
+      "field": "next_approval_date",
+      "from": "2026-11-04",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-3828",
+      "summary": "Branch with Immediate (Zibi)",
+      "field": "next_approval_date",
+      "from": "2026-12-02",
+      "to": "2026-12-13"
+    },
+    {
+      "spec": "RVS-3896",
+      "summary": "Integer Vector Absolute Difference (Zvabd)",
+      "field": "next_approval_date",
+      "from": "2026-11-04",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-3923",
+      "summary": "Vector Matrix Extension (VME)",
+      "field": "next_approval_date",
+      "from": "2026-12-14",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-3925",
+      "summary": "Dot-Product and Batched Dot-Product Extensions (Zvdota and Zvbdota)",
+      "field": "next_approval_date",
+      "from": "2026-11-04",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-3982",
+      "summary": "Sdtrig Enhancements (Sdtrigpend and Sdtrigepm)",
+      "field": "next_approval_date",
+      "from": "2026-12-25",
+      "to": "2026-12-29"
+    },
+    {
+      "spec": "RVS-4146",
+      "summary": "Platform Management Interface - RPMI (2.0)",
+      "field": "next_approval_date",
+      "from": "2026-12-25",
+      "to": "2026-12-29"
+    },
+    {
+      "spec": "RVS-4161",
+      "summary": "Vector Unzip Instruction (Zvzip)",
+      "field": "next_approval_date",
+      "from": "2026-12-24",
+      "to": "2026-12-31"
     },
     {
       "spec": "RVS-4180",
@@ -25,6 +242,27 @@
       "to": "absent"
     },
     {
+      "spec": "RVS-4335",
+      "summary": "Shadow Stacks for M-mode, M+U & SPMP",
+      "field": "next_approval_date",
+      "from": "2026-12-24",
+      "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-4344",
+      "summary": "SPMP for Hypervisor",
+      "field": "next_approval_date",
+      "from": "2026-12-25",
+      "to": "2026-12-29"
+    },
+    {
+      "spec": "RVS-4572",
+      "summary": "RV Worlds H-extension",
+      "field": "next_approval_date",
+      "from": "2026-12-24",
+      "to": "2026-12-31"
+    },
+    {
       "spec": "RVS-4752",
       "summary": "Instrumentation Trace",
       "field": "projected_q",
@@ -37,6 +275,20 @@
       "field": "progress",
       "from": "On Track",
       "to": "Not Set Yet"
+    },
+    {
+      "spec": "RVS-4802",
+      "summary": "CPU Utilization Counter Extension (Sscpuutil)",
+      "field": "next_approval_date",
+      "from": "2026-12-05",
+      "to": "2026-12-29"
+    },
+    {
+      "spec": "RVS-4890",
+      "summary": "RISC-V Indexed Integer Load (Zilx)",
+      "field": "next_approval_date",
+      "from": "2026-11-19",
+      "to": "2026-12-08"
     }
   ]
 }
