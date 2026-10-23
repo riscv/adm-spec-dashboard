@@ -845,11 +845,73 @@ a:hover {
   color: var(--brand);
 }
 
-.spec-table td.quarter-cell {
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
-  color: var(--text);
+/* Ratification quarters as a timeline: Baseline -- Phase Start - - Projected. */
+.quarter-timeline-column { width: 1%; white-space: nowrap; }
+.quarter-timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 76px);
+  justify-items: center;
 }
+.qt-point {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+}
+.qt-quarter {
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  line-height: 16px;
+}
+.qt-unset .qt-quarter { color: var(--muted); font-weight: 400; }
+/* The status colours the quarter; the small note says it. */
+/* Always one line high, so every dot sits at the same height. */
+.qt-note { font-size: 10px; font-weight: 600; line-height: 12px; min-height: 12px; white-space: nowrap; color: var(--muted); }
+.qt-tone-on-track { color: var(--ok); }
+.qt-tone-awaiting-vote { color: var(--info); }
+.qt-tone-exposed, .qt-tone-watch { color: var(--warn); }
+.qt-tone-late, .qt-tone-stalled { color: var(--bad); }
+.qt-tone-completed { color: var(--publication); }
+.qt-quarter { white-space: nowrap; }
+.qt-dot {
+  position: relative;
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--qt, var(--muted));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--qt, var(--muted)) 18%, transparent);
+}
+.qt-unset .qt-dot { background: var(--surface); border: 1.5px solid var(--border-strong); box-shadow: none; }
+.qt-baseline { --qt: #1e4fa3; }
+.qt-phase-start { --qt: #3fa45b; }
+.qt-projected { --qt: #6d3fd9; }
+/* The line into each point from the one before it, centred on the dots. */
+.qt-point + .qt-point::before {
+  content: "";
+  position: absolute;
+  top: 36.5px; /* quarter (16px) + note (12px) + gaps (2 x 2px) + half the dot */
+  right: 50%;
+  width: 100%;
+  border-top: 2px solid var(--border-strong);
+}
+.qt-projected::before { border-top: 2px dashed #8b5cf6 !important; }
+/* A line with an unset end is drawn faint: there is nothing to connect. */
+.qt-point.qt-unset::before,
+.qt-unset + .qt-point::before { border-top-color: var(--border) !important; }
+/* Header legend: the names in each point's colour, aligned over the dots. */
+.qt-legend .qt-point {
+  font-size: 9.5px;
+  line-height: 12px;
+  white-space: normal;
+  text-align: center;
+  color: var(--qt);
+}
+.qt-legend .qt-point::before { display: none; }
 
 .specification-column .tooltip-text {
   visibility: hidden;
@@ -953,6 +1015,12 @@ a:hover {
   line-height: 15px;
   white-space: nowrap;
 }
+
+.isa-tag.isa { border-color: #0f766e; color: #0f766e; background: #f0fdfa; }
+.isa-tag.non-isa { border-color: #b45309; color: #9a3412; background: #fff7ed; }
+.isa-tag.isa-both { padding: 0; overflow: hidden; border-color: #94a3b8; }
+.isa-both .isa-part { padding: 1px 6px; color: #0f766e; background: #f0fdfa; }
+.isa-both .non-isa-part { padding: 1px 6px; color: #9a3412; background: #fff7ed; border-left: 1px solid #94a3b8; }
 
 /* Berkeley Blue */
 .fast-track-badge {
@@ -1143,18 +1211,12 @@ button.activity-chip:hover { background: var(--surface-muted); }
   opacity: 0.3;
 }
 
-/* Summary icon: a solid brand circle, the one coloured icon in the row. */
-.summary-icon-bg {
-  fill: var(--brand);
-}
-
-.summary-button:hover .summary-icon-bg {
-  fill: var(--brand-hover);
-}
-
-.icon-disabled .summary-icon-bg {
-  fill: var(--border-strong);
-}
+/* AI summary icon: a violet sparkle, the one coloured icon in the row. */
+.summary-icon-star { fill: #7c3aed; }
+.summary-icon-star-small { fill: #a855f7; }
+.summary-button:hover .summary-icon-star { fill: #6d28d9; }
+.icon-disabled .summary-icon-star,
+.icon-disabled .summary-icon-star-small { fill: var(--border-strong); }
 
 .resizer {
   position: absolute;

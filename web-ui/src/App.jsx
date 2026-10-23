@@ -333,6 +333,77 @@ const PHASE_START_QUARTER_TITLE =
 const PROJECTED_QUARTER_TITLE =
   "Today's forecast. It moves every time the specification is replanned.";
 
+// The three ratification quarters as a small timeline: Baseline, then Phase
+// Start (solid line: the plan as revised), then Projected (dashed: the forecast).
+// Under each point is what it tells: Projected against Baseline, Projected
+// against Phase Start, and the direction Projected last moved (Trend).
+const QUARTER_POINTS = [
+  ["baseline", "Baseline", "planned", BASELINE_QUARTER_TITLE],
+  ["phase-start", "Phase Start", "revised plan", PHASE_START_QUARTER_TITLE],
+  ["projected", "Projected", "current forecast", PROJECTED_QUARTER_TITLE],
+];
+
+// What a point tells: the status colours the quarter and a small note under
+// it says it ("late 2Q"); under Projected the note is the Trend.
+function quarterReading(row, id) {
+  if (id === "baseline") {
+    const vs = baselineStatus(row);
+    // "Late (2Q)" -> "late 2Q"
+    const note = vs.label.toLowerCase().replace(/(\d+)q/, "$1Q").replace(/[()]/g, "");
+    return { tone: vs.rowClass, note, title: vs.title && `vs Baseline: ${vs.title}` };
+  }
+  if (id === "phase-start") {
+    const status = String(row.ratificationProgress || "").trim();
+    if (!status || /^not set/i.test(status)) return { tone: "", note: "", title: "" };
+    const slip = quarterSlip(row.planQuarter, row.trendingQuarter);
+    const amount = /^(late|exposed)$/i.test(status) && slip > 0 ? ` ${slip}Q` : "";
+    const title = phaseStatusTitle(row);
+    return {
+      tone: normalizeProgressClass(status.toLowerCase()),
+      note: `${status.toLowerCase()}${amount}`,
+      title: title && `vs Phase Start: ${title}`,
+    };
+  }
+  return { trend: projectedTrend(row) };
+}
+
+function QuarterTimeline({ row }) {
+  const values = [row.plannedQuarter, row.planQuarter, row.trendingQuarter];
+  return (
+    <div className="quarter-timeline">
+      {QUARTER_POINTS.map(([id, name, note, title], i) => {
+        const quarter = String(values[i] || "").trim();
+        const set = /^\d\dQ[1-4]$/.test(quarter);
+        const reading = quarterReading(row, id);
+        const tips = [`${name} (${note}): ${set ? quarter : "not set"}. ${title}`];
+        if (reading.title) tips.push(reading.title);
+        if (reading.trend) tips.push(`Trend: ${reading.trend.title}`);
+        return (
+          <span
+            key={id}
+            className={`qt-point qt-${id}${set ? "" : " qt-unset"}`}
+            title={tips.join("\n")}
+          >
+            <span className={`qt-quarter${set && reading.tone ? ` qt-tone-${reading.tone}` : ""}`}>
+              {set ? quarter : "—"}
+            </span>
+            {reading.trend ? (
+              <span className={`qt-note ${reading.trend.className}`} aria-label={`Trend: ${reading.trend.name}`}>
+                {reading.trend.label} {reading.trend.name.toLowerCase()}
+              </span>
+            ) : (
+              <span className={`qt-note${reading.tone ? ` qt-tone-${reading.tone}` : ""}`}>
+                {set ? reading.note : ""}
+              </span>
+            )}
+            <span className="qt-dot" />
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 function getCurrentQuarter(date = new Date()) {
   const month = date.getMonth() + 1;
   return Math.ceil(month / 3);
@@ -665,15 +736,10 @@ function summaryShareText(row, entry) {
 
 function SummaryIcon() {
   return (
-    <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
-      <circle cx="10" cy="10" r="10" className="summary-icon-bg" />
-      <path
-        d="M6 6.5h8M6 10h8M6 13.5h5"
-        stroke="#fff"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        fill="none"
-      />
+    // AI sparkle: a large and a small four-point star.
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path className="summary-icon-star" d="M10 2.5l2.1 5.6 5.6 2.1-5.6 2.1L10 17.9l-2.1-5.6-5.6-2.1 5.6-2.1z" />
+      <path className="summary-icon-star-small" d="M18 13.5l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" />
     </svg>
   );
 }
@@ -1099,17 +1165,34 @@ function formatIsaLabel(value) {
 }
 
 // ISA / Non-ISA and Fast-Track tags, at the end of the contribution line.
+// Teal for ISA, burnt orange for Non-ISA; a spec that is both gets a pill
+// split in the two colours.
+function IsaTag({ value }) {
+  const title = `ISA or Non-ISA: ${formatIsaLabel(value)}`;
+  const isIsa = /(^|[^-])\bisa\b/i.test(value.replace(/non-isa/gi, ""));
+  const isNonIsa = /non-isa/i.test(value);
+  if (isIsa && isNonIsa) {
+    return (
+      <span className="spec-tag isa-tag isa-both" title={title}>
+        <span className="isa-part">ISA</span>
+        <span className="non-isa-part">{formatIsaLabel("Non-ISA")}</span>
+      </span>
+    );
+  }
+  return (
+    <span className={`spec-tag isa-tag ${isNonIsa ? "non-isa" : "isa"}`} title={title}>
+      {formatIsaLabel(value)}
+    </span>
+  );
+}
+
 function SpecTags({ row }) {
   const isa = String(row.isaOrNonIsa || "").trim();
   const showIsa = isa && !/^(n\/a|not set( yet)?)$/i.test(isa);
   if (!showIsa && !row.fastTrack) return null;
   return (
     <span className="spec-tags">
-      {showIsa ? (
-        <span className="spec-tag isa-tag" title={`ISA or Non-ISA: ${formatIsaLabel(isa)}`}>
-          {formatIsaLabel(isa).replace(/\s*\+\s*/, "+")}
-        </span>
-      ) : null}
+      {showIsa ? <IsaTag value={isa} /> : null}
       {row.fastTrack ? (
         <span className="spec-tag fast-track-badge" title="Fast-Track Specification" aria-label="Fast-Track">
           FT
@@ -1749,15 +1832,11 @@ function App() {
               >
                 Publication
               </th>
-              <th className="narrow-column quarter-group-header progress-divider" colSpan={3}>
-                Ratification Quarter{" "}
-                <AboutLink onOpen={openAbout} label="About Ratification Quarter" />
-              </th>
-              <th className="narrow-column status-group-header status-divider" colSpan={4}>
+              <th className="narrow-column status-group-header progress-divider" colSpan={2}>
                 Ratification Progress{" "}
                 <AboutLink onOpen={openAbout} label="About Ratification Progress" />
               </th>
-              <th className="links-column" rowSpan={2}>Resources</th>
+              <th className="links-column progress-divider" rowSpan={2}>Resources</th>
             </tr>
             <tr>
               <th className="narrow-column freeze-subheader">ARC Approval</th>
@@ -1769,23 +1848,14 @@ function App() {
               <th className="narrow-column ratready-subheader">Tasks</th>
               <th className="narrow-column publication-subheader">BoD Approval</th>
               <th className="narrow-column publication-subheader">Tasks</th>
-              <th className="narrow-column quarter-subheader progress-divider" title={BASELINE_QUARTER_TITLE}>
-                Baseline
-              </th>
-              <th className="narrow-column quarter-subheader" title={PHASE_START_QUARTER_TITLE}>
-                Phase Start
-              </th>
-              <th className="narrow-column quarter-subheader" title={PROJECTED_QUARTER_TITLE}>
-                Projected
-              </th>
-              <th className="narrow-column status-subheader status-divider" title="Projected vs Baseline: 1 quarter behind is Exposed, 2 or more is Late">
-                vs Baseline
-              </th>
-              <th className="narrow-column status-subheader" title="Projected vs Phase Start (the current phase): 1 quarter behind is Exposed, 2 or more is Late">
-                vs Phase Start
-              </th>
-              <th className="trend-column status-subheader" title="Direction of the last change to Projected in the last 90 days: ↓ slipping, → steady, ↑ improving">
-                Trend
+              <th className="quarter-timeline-column status-subheader progress-divider">
+                <div className="quarter-timeline qt-legend">
+                  {QUARTER_POINTS.map(([id, name, note, title]) => (
+                    <span key={id} className={`qt-point qt-${id}`} title={title}>
+                      {name}
+                    </span>
+                  ))}
+                </div>
               </th>
               <th className="activity-column status-subheader" title={ACTIVITY_TITLE}>
                 Activity
@@ -2018,32 +2088,9 @@ function App() {
 
                     return [cell, arcCell];
                   })}
-                  <td className="narrow-column quarter-cell progress-divider">{row.plannedQuarter}</td>
-                  <td className="narrow-column quarter-cell">{row.planQuarter || "Not Set Yet"}</td>
-                  <td className="narrow-column quarter-cell">{row.trendingQuarter}</td>
-                  {(() => {
-                    const vsBaseline = baselineStatus(row);
-                    return (
-                      <td className="narrow-column status-col status-divider" title={vsBaseline.title}>
-                        <span className={`status-chip ${vsBaseline.className}`}>{vsBaseline.label}</span>
-                      </td>
-                    );
-                  })()}
-                  <td className="narrow-column status-col" title={phaseStatusTitle(row)}>
-                    {row.ratificationProgress ? (
-                      <span className={`status-chip ${statusClassName(row.ratificationProgress)}`}>
-                        {String(row.ratificationProgress).replace(/^on track$/i, "On\u00A0Track")}
-                      </span>
-                    ) : null}
+                  <td className="quarter-timeline-column progress-divider">
+                    <QuarterTimeline row={row} />
                   </td>
-                  {(() => {
-                    const trend = projectedTrend(row);
-                    return (
-                      <td className={`trend-column ${trend.className}`} title={trend.title} aria-label={trend.name}>
-                        {trend.label}
-                      </td>
-                    );
-                  })()}
                   <td className="narrow-column activity-column">
                     {(() => {
                       const entry = activity.specs[specKey];
@@ -2060,20 +2107,20 @@ function App() {
                       );
                     })()}
                   </td>
-                  <td className="links-column">
+                  <td className="links-column progress-divider">
                     <div className="icon-group">
                       {specSummary?.summary ? (
                         <button
                           type="button"
                           className="icon-button summary-button"
                           onClick={() => setSummaryKey(specKey)}
-                          title="Summary"
-                          aria-label={`Summary of ${row.summary}`}
+                          title="AI summary"
+                          aria-label={`AI summary of ${row.summary}`}
                         >
                           <SummaryIcon />
                         </button>
                       ) : (
-                        <span className="icon-disabled" title="No summary yet">
+                        <span className="icon-disabled" title="No AI summary yet">
                           <SummaryIcon />
                         </span>
                       )}
