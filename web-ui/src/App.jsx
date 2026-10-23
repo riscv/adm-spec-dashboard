@@ -531,6 +531,7 @@ function normalizeRow(raw) {
     phaseHistory: parseDatePairs(raw["Phase History"]),
     projectedPhaseEnds: parseDatePairs(raw["Projected Phase Ends"]),
     groupKey: raw["Group Key"] || "",
+    category: raw["Category"] || "",
     group: raw["Group"] || "",
     currentPhase,
     nextPhase,
@@ -715,6 +716,17 @@ function ExplorerIcon() {
       <rect x="3" y="10.5" width="18" height="4.5" rx="1.2" />
       <path d="M6 18.5h12" />
       <path d="M6 6.25h5M6 12.75h8" />
+    </svg>
+  );
+}
+
+function RadarIcon() {
+  return (
+    // A small radar chart: two rings, three spokes and a filled shape.
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" strokeLinejoin="round">
+      <path d="M12 3l8.5 6.2-3.2 10H6.7L3.5 9.2z" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M12 3v9m0 0l8.5-2.8M12 12l-5.3 7.2" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+      <path d="M12 6.5l5.6 3.3-2.9 6.4-4.6-1.2-3.4-5.1z" fill="currentColor" fillOpacity="0.35" stroke="currentColor" strokeWidth="1.4" />
     </svg>
   );
 }
@@ -964,6 +976,110 @@ function ActivityDialog({ row, entry, meta, onClose }) {
           RVI staff and bots are left out. Each source scores 0, 1 or 2, and GitHub and Discussion count double;
           a source the spec does not have is left out. The level is the share of the possible points: 80% Very Active, 50% Active, above 0 Low,
           0 Stalled.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Jira's Category values, ordered so related areas sit next to each other on the radar.
+const CATEGORIES = [
+  "ISA & Architecture",
+  "Vector & SIMD",
+  "Performance & Profiling",
+  "Debug & Trace",
+  "Platform & System Management",
+  "Memory & Protection",
+  "Security & Cryptography",
+  "Profiles",
+];
+
+// Where the specifications in progress concentrate, by Category, as a radar chart.
+function CategoryRadarDialog({ rows, onClose }) {
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    dialogRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const active = rows.filter((row) => !/cancel/i.test(row.status));
+  const counts = CATEGORIES.map((name) => active.filter((row) => row.category === name).length);
+  const uncategorized = active.filter((row) => !CATEGORIES.includes(row.category)).length;
+  const max = Math.max(4, Math.ceil(Math.max(...counts) / 4) * 4);
+  // Wider than tall, so the labels on the left and right fit.
+  const width = 680;
+  const height = 380;
+  const cx = width / 2;
+  const cy = height / 2;
+  const radius = 125;
+  const point = (i, value) => {
+    const angle = (Math.PI * 2 * i) / CATEGORIES.length - Math.PI / 2;
+    const r = (radius * value) / max;
+    return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
+  };
+  const ring = (value) => CATEGORIES.map((_, i) => point(i, value).join(",")).join(" ");
+  const shape = counts.map((count, i) => point(i, count).join(",")).join(" ");
+
+  return (
+    <div className="summary-overlay" onClick={onClose}>
+      <div
+        className="summary-dialog radar-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="radar-dialog-title"
+        tabIndex={-1}
+        ref={dialogRef}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="summary-close" onClick={onClose} aria-label="Close">
+          ×
+        </button>
+        <h2 id="radar-dialog-title">
+          Specifications in progress by category <span className="summary-key">{active.length}</span>
+        </h2>
+        <svg className="radar-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Radar chart of specifications in progress by category">
+          {[1, 2, 3, 4].map((step) => (
+            <polygon key={step} className="radar-ring" points={ring((max * step) / 4)} />
+          ))}
+          {CATEGORIES.map((_, i) => {
+            const [x, y] = point(i, max);
+            return <line key={i} className="radar-spoke" x1={cx} y1={cy} x2={x} y2={y} />;
+          })}
+          {[1, 2, 3, 4].map((step) => {
+            const [x, y] = point(0, (max * step) / 4);
+            return (
+              <text key={step} className="radar-scale" x={x + 4} y={y + 3}>
+                {(max * step) / 4}
+              </text>
+            );
+          })}
+          <polygon className="radar-shape" points={shape} />
+          {counts.map((count, i) => {
+            const [x, y] = point(i, count);
+            return (
+              <circle key={i} className="radar-point" cx={x} cy={y} r="3.5">
+                <title>{`${CATEGORIES[i]}: ${count}`}</title>
+              </circle>
+            );
+          })}
+          {CATEGORIES.map((name, i) => {
+            const [x, y] = point(i, max * 1.13);
+            const anchor = Math.abs(x - cx) < 1 ? "middle" : x > cx ? "start" : "end";
+            return (
+              <text key={name} className="radar-label" x={x} y={y + 4} textAnchor={anchor}>
+                {name} <tspan className="radar-count">{counts[i]}</tspan>
+              </text>
+            );
+          })}
+        </svg>
+        <div className="summary-meta">
+          {`Every specification on this page except the cancelled ones, by its Category in Jira.`}
+          {uncategorized ? ` ${uncategorized} with no Category are not shown.` : ""}
         </div>
       </div>
     </div>
@@ -1302,6 +1418,8 @@ function App() {
   // Key of the spec whose activity dialog is open.
   const [activityKey, setActivityKey] = useState("");
   const closeActivity = useCallback(() => setActivityKey(""), []);
+  const [showRadar, setShowRadar] = useState(false);
+  const closeRadar = useCallback(() => setShowRadar(false), []);
   // Optional: written by spec-activity.py in the Daily Data Fetch.
   const [activity, setActivity] = useState({ specs: {} });
   const closeSummary = useCallback(() => {
@@ -1741,6 +1859,15 @@ function App() {
             <span><i className="timeline-dot trend-slipping" />projected, slipping</span>
             <span><i className="timeline-dot trend-steady" />projected, steady</span>
             <span><i className="timeline-dot trend-improving" />projected, improving</span>
+            <button
+              type="button"
+              className="radar-button"
+              onClick={() => setShowRadar(true)}
+              title="Specifications in progress by category"
+              aria-label="Show specifications in progress by category"
+            >
+              <RadarIcon />
+            </button>
           </div>
         </div>
       </section>
@@ -2374,6 +2501,7 @@ function App() {
           <ActivityDialog row={activityRow} entry={entry} meta={activity} onClose={closeActivity} />
         ) : null;
       })()}
+      {showRadar ? <CategoryRadarDialog rows={rows} onClose={closeRadar} /> : null}
 
       {showBackToTop ? (
         <button

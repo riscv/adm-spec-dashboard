@@ -487,6 +487,7 @@ REQUIRED_FIELDS = [
     "customfield_10136",
     "customfield_11060",
     "customfield_10048",  # Latest Replanning: when the projected dates were last set
+    "customfield_10676",  # Category (cascading select)
     "issuelinks",  # the Develops link to the group that develops the spec
 ]
 
@@ -808,6 +809,7 @@ def parse_issues(issues, github_session=None, jira=None, groups=None, signals=No
             'Group Type': group.get('type', ''),
             'Group Activity Level': group.get('level', ''),
             'Group Activity Signals': group_signals if group_key else '',
+            'Category': (fields.get('customfield_10676') or {}).get('value') or '',
         })
     return parsed_issues
 
@@ -947,7 +949,8 @@ def get_data_from_jira(jira_token, jira_email):
             'Group',
             'Group Type',
             'Group Activity Level',
-            'Group Activity Signals'
+            'Group Activity Signals',
+            'Category'
         ])
 
         # Writing each issue to the CSV file
@@ -986,7 +989,8 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Group'],
                 issue['Group Type'],
                 issue['Group Activity Level'],
-                issue['Group Activity Signals']
+                issue['Group Activity Signals'],
+                issue['Category']
             ])
 
     print(f"Data successfully written to {csv_filename}")
