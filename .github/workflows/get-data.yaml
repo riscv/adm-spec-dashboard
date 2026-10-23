@@ -2,8 +2,9 @@ name: Daily Data Fetch
 
 on:
   schedule:
-    # This will run at 00:00, 08:00, and 16:00 UTC
-    - cron: "0 0,8,16 * * *"
+    # Morning, afternoon and night in GMT-3: 08:00, 14:00 and 20:00
+    # (11:00, 17:00 and 23:00 UTC). GitHub may start a scheduled run late.
+    - cron: "0 11,17,23 * * *"
   workflow_dispatch:
     inputs:
       release_notes:
