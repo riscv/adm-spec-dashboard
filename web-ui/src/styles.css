@@ -11,6 +11,7 @@
   --brand: #283272;
   --brand-hover: #1d2558;
   --brand-soft: #eef0f8;
+  --berkeley-blue: #003262;
   --gold: #f6b21b;
   --radius: 14px;
   --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
@@ -780,9 +781,14 @@ a:hover {
 }
 
 /* Thin rules between the pipeline, the gates and the schedule columns. */
-.spec-table .ratification-divider,
 .spec-table .status-divider {
   border-left: 1px solid var(--border-strong);
+}
+
+/* Freeze -> Ratification-Ready: from here the spec can be consumed and enters
+   its final sprint, so this line is Berkeley Blue and heavier than the rest. */
+.spec-table .ratification-divider {
+  border-left: 3px solid var(--berkeley-blue);
 }
 
 .spec-table .progress-divider {
@@ -1024,8 +1030,8 @@ a:hover {
 
 /* Berkeley Blue */
 .fast-track-badge {
-  border-color: #003262;
-  color: #003262;
+  border-color: var(--berkeley-blue);
+  color: var(--berkeley-blue);
   font-style: italic;
 }
 
