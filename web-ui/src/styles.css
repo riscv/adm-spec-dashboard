@@ -849,7 +849,7 @@ a:hover {
 .quarter-timeline-column { width: 1%; white-space: nowrap; }
 .quarter-timeline {
   display: grid;
-  grid-template-columns: repeat(3, 96px);
+  grid-template-columns: repeat(3, 76px);
   justify-items: center;
 }
 .qt-point {
@@ -857,7 +857,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   width: 100%;
 }
 .qt-quarter {
@@ -868,15 +868,15 @@ a:hover {
   line-height: 16px;
 }
 .qt-unset .qt-quarter { color: var(--muted); font-weight: 400; }
-/* What each point tells, under its dot; the line runs through the dots only. */
-.qt-reading {
-  display: flex;
-  align-items: center;
-  min-height: 22px;
-  margin-top: 2px;
-}
-.qt-reading .status-chip { font-size: 11px; padding: 1px 7px; line-height: 16px; }
-.qt-trend { font-size: 15px; font-weight: 700; }
+/* The status colours the quarter; the small note says it. */
+/* Always one line high, so every dot sits at the same height. */
+.qt-note { font-size: 10px; font-weight: 600; line-height: 12px; min-height: 12px; white-space: nowrap; color: var(--muted); }
+.qt-tone-on-track { color: var(--ok); }
+.qt-tone-awaiting-vote { color: var(--info); }
+.qt-tone-exposed, .qt-tone-watch { color: var(--warn); }
+.qt-tone-late, .qt-tone-stalled { color: var(--bad); }
+.qt-tone-completed { color: var(--publication); }
+.qt-quarter { white-space: nowrap; }
 .qt-dot {
   position: relative;
   z-index: 1;
@@ -894,7 +894,7 @@ a:hover {
 .qt-point + .qt-point::before {
   content: "";
   position: absolute;
-  top: 24.5px; /* quarter line (16px) + gap (4px) + half the dot */
+  top: 36.5px; /* quarter (16px) + note (12px) + gaps (2 x 2px) + half the dot */
   right: 50%;
   width: 100%;
   border-top: 2px solid var(--border-strong);

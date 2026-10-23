@@ -343,32 +343,28 @@ const QUARTER_POINTS = [
   ["projected", "Projected", "current forecast", PROJECTED_QUARTER_TITLE],
 ];
 
-function QuarterReading({ row, id }) {
+// What a point tells: the status colours the quarter and a small note under
+// it says it ("late 2Q"); under Projected the note is the Trend.
+function quarterReading(row, id) {
   if (id === "baseline") {
     const vs = baselineStatus(row);
-    return (
-      <span className="qt-reading" title={`vs Baseline: ${vs.title}`}>
-        <span className={`status-chip ${vs.className}`}>{vs.label}</span>
-      </span>
-    );
+    // "Late (2Q)" -> "late 2Q"
+    const note = vs.label.toLowerCase().replace(/(\d+)q/, "$1Q").replace(/[()]/g, "");
+    return { tone: vs.rowClass, note, title: vs.title && `vs Baseline: ${vs.title}` };
   }
   if (id === "phase-start") {
-    return (
-      <span className="qt-reading" title={`vs Phase Start: ${phaseStatusTitle(row)}`}>
-        {row.ratificationProgress ? (
-          <span className={`status-chip ${statusClassName(row.ratificationProgress)}`}>
-            {String(row.ratificationProgress).replace(/^on track$/i, "On\u00A0Track")}
-          </span>
-        ) : null}
-      </span>
-    );
+    const status = String(row.ratificationProgress || "").trim();
+    if (!status || /^not set/i.test(status)) return { tone: "", note: "", title: "" };
+    const slip = quarterSlip(row.planQuarter, row.trendingQuarter);
+    const amount = /^(late|exposed)$/i.test(status) && slip > 0 ? ` ${slip}Q` : "";
+    const title = phaseStatusTitle(row);
+    return {
+      tone: normalizeProgressClass(status.toLowerCase()),
+      note: `${status.toLowerCase()}${amount}`,
+      title: title && `vs Phase Start: ${title}`,
+    };
   }
-  const trend = projectedTrend(row);
-  return (
-    <span className={`qt-reading qt-trend ${trend.className}`} title={`Trend: ${trend.title}`} aria-label={`Trend: ${trend.name}`}>
-      {trend.label}
-    </span>
-  );
+  return { trend: projectedTrend(row) };
 }
 
 function QuarterTimeline({ row }) {
@@ -378,15 +374,29 @@ function QuarterTimeline({ row }) {
       {QUARTER_POINTS.map(([id, name, note, title], i) => {
         const quarter = String(values[i] || "").trim();
         const set = /^\d\dQ[1-4]$/.test(quarter);
+        const reading = quarterReading(row, id);
+        const tips = [`${name} (${note}): ${set ? quarter : "not set"}. ${title}`];
+        if (reading.title) tips.push(reading.title);
+        if (reading.trend) tips.push(`Trend: ${reading.trend.title}`);
         return (
           <span
             key={id}
             className={`qt-point qt-${id}${set ? "" : " qt-unset"}`}
-            title={`${name} (${note}): ${set ? quarter : "not set"}. ${title}`}
+            title={tips.join("\n")}
           >
-            <span className="qt-quarter">{set ? quarter : "—"}</span>
+            <span className={`qt-quarter${set && reading.tone ? ` qt-tone-${reading.tone}` : ""}`}>
+              {set ? quarter : "—"}
+            </span>
+            {reading.trend ? (
+              <span className={`qt-note ${reading.trend.className}`} aria-label={`Trend: ${reading.trend.name}`}>
+                {reading.trend.label} {reading.trend.name.toLowerCase()}
+              </span>
+            ) : (
+              <span className={`qt-note${reading.tone ? ` qt-tone-${reading.tone}` : ""}`}>
+                {set ? reading.note : ""}
+              </span>
+            )}
             <span className="qt-dot" />
-            <QuarterReading row={row} id={id} />
           </span>
         );
       })}
