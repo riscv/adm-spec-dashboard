@@ -25,8 +25,6 @@ def test_development_on_track(ais):
         "This phase started on 2026-03-09",
         "The projected ratification quarter is 27Q1",
         "It matches the baseline 27Q1",
-        "It matches the phase start quarter 27Q1",
-        "The schedule status is On Track",
         "The projection has not changed in the last 90 days",
         "The next approval is Development complete, projected for 2026-12-25",
         "The projected dates were last set on 2026-03-09",
@@ -41,8 +39,6 @@ def test_stabilization_exposed_with_recent_slip(ais):
         "Development started on 2025-01-10",
         "The projected ratification quarter is 27Q2",
         "It is 2 quarters behind the baseline 26Q4",
-        "It has not been replanned since entering this phase",
-        "The schedule status is Exposed",
         "On 2026-10-01 the projection moved later, from 27Q1 to 27Q2",
         "The next approval is Stabilization approval, projected for 2027-02-01",
         "ARC review: Approval In Progress",
@@ -54,8 +50,6 @@ def test_ratification_ready_late_against_baseline(ais):
         "The specification is in Ratification-Ready",
         "The projected ratification quarter is 26Q4",
         "It is 4 quarters behind the baseline 25Q4",
-        "It is 1 quarter ahead of the phase start quarter 27Q1",
-        "The schedule status is Late",
         "On 2026-09-01 the projection moved earlier, from 27Q1 to 26Q4",
         "ARC review: Approved",
         "Public review: Public Review Done",
@@ -73,8 +67,6 @@ def test_fast_track(ais):
         "This phase started on 2026-07-08",
         "Development started on 2024-03-08",
         "The projected ratification quarter is 27Q1",
-        "It has not been replanned since entering this phase",
-        "The schedule status is On Track",
         "The next approval is Freeze approval, projected for 2026-12-19",
     ]
 
@@ -102,41 +94,12 @@ def test_facts_pass_their_own_checks(ais, name):
     assert not ais.OPINION.search(text)
 
 
-REPLAN = "It has not been replanned since entering this phase"
-
-
-@pytest.mark.parametrize("status,phase", [
-    ("Specification Under Development", "Development"),
-    ("Specification Under Stabilization", "Stabilization"),
-    ("Specification in Freeze", "Freeze"),
-    ("Specification in Ratification-Ready", "Ratification-Ready"),
-    ("Specification in Publication", "Publication"),
-])
-def test_not_replanned_in_tracked_phases(ais, status, phase):
-    facts = ais.build_facts(make_row(**{
-        "Status": status,
-        "Target Ratification Quarter": "27Q1",
-        "Plan Ratification Quarter": "Not Set Yet",
-    }), TODAY)
-    assert facts[0] == f"The specification is in {phase}"
-    assert REPLAN in facts
-    # Right after the projection, before the schedule status.
-    assert facts.index(REPLAN) == facts.index("The projected ratification quarter is 27Q1") + 1
-
-
-@pytest.mark.parametrize("status", ["Specification Inception", "Specification in Planning"])
-def test_not_replanned_absent_before_development(ais, status):
-    facts = ais.build_facts(make_row(**{
-        "Status": status,
-        "Target Ratification Quarter": "27Q1",
-        "Plan Ratification Quarter": "Not Set Yet",
-    }), TODAY)
-    assert REPLAN not in facts
-
-
-def test_not_replanned_absent_when_phase_start_set(ais):
-    facts = facts_for(ais, "development_on_track")
-    assert REPLAN not in facts
+def test_no_phase_start_or_schedule_status(ais):
+    """Neither the Phase Start quarter nor the Ratification Progress status is a fact."""
+    for name in ROWS:
+        for fact in facts_for(ais, name):
+            assert "phase start quarter" not in fact and "schedule status" not in fact
+            assert "replanned since entering" not in fact
 
 
 @pytest.mark.parametrize("changed,expected", [

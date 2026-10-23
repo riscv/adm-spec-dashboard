@@ -264,21 +264,6 @@ function quarterSlip(plan, target) {
   return (t.year * 4 + t.qtr) - (p.year * 4 + p.qtr);
 }
 
-function statusClassName(value) {
-  const normalized = String(value || "").trim().toLowerCase();
-  if (normalized === "not set" || normalized === "not set yet") {
-    return "status-cell not-set";
-  }
-  const classValue = normalizeProgressClass(normalized);
-  return classValue ? `status-cell ${classValue}` : "status-cell";
-}
-
-function phaseStatusTitle(row) {
-  const slip = quarterSlip(row.planQuarter, row.trendingQuarter);
-  if (slip === null) return undefined;
-  return slipText(slip, "the start of the current phase");
-}
-
 function slipText(slip, reference) {
   if (slip <= 0) return `Projected is on or ahead of ${reference}`;
   return `Projected is ${slip} quarter${slip === 1 ? "" : "s"} behind ${reference}`;
@@ -327,24 +312,19 @@ function projectedTrend(row, now = new Date()) {
 
 const BASELINE_QUARTER_TITLE =
   "Original commitment, set when the Ratification Plan was approved. It never changes.";
-const PHASE_START_QUARTER_TITLE =
-  "Projected quarter from the first plan made in the current phase. " +
-  "It is reset only when the specification moves to a new phase.";
 const PROJECTED_QUARTER_TITLE =
   "Today's forecast. It moves every time the specification is replanned.";
 
-// The three ratification quarters as a small timeline: Baseline, then Phase
-// Start (solid line: the plan as revised), then Projected (dashed: the forecast).
-// Under each point is what it tells: Projected against Baseline, Projected
-// against Phase Start, and the direction Projected last moved (Trend).
+// The ratification quarters as a small timeline: Baseline, then a dashed line
+// to Projected (the forecast). Under Baseline is how far Projected has moved
+// from it; under Projected, the direction it last moved (Trend).
 const QUARTER_POINTS = [
   ["baseline", "Baseline", "planned", BASELINE_QUARTER_TITLE],
-  ["phase-start", "Phase Start", "revised plan", PHASE_START_QUARTER_TITLE],
   ["projected", "Projected", "current forecast", PROJECTED_QUARTER_TITLE],
 ];
 
-// What a point tells: the status colours the quarter and a small note under
-// it says it ("late 2Q"); under Projected the note is the Trend.
+// What a point tells: the Baseline status colours the quarter and a small note
+// under it says it ("late 2Q"); under Projected the note is the Trend.
 function quarterReading(row, id) {
   if (id === "baseline") {
     const vs = baselineStatus(row);
@@ -352,23 +332,11 @@ function quarterReading(row, id) {
     const note = vs.label.toLowerCase().replace(/(\d+)q/, "$1Q").replace(/[()]/g, "");
     return { tone: vs.rowClass, note, title: vs.title && `vs Baseline: ${vs.title}` };
   }
-  if (id === "phase-start") {
-    const status = String(row.ratificationProgress || "").trim();
-    if (!status || /^not set/i.test(status)) return { tone: "", note: "", title: "" };
-    const slip = quarterSlip(row.planQuarter, row.trendingQuarter);
-    const amount = /^(late|exposed)$/i.test(status) && slip > 0 ? ` ${slip}Q` : "";
-    const title = phaseStatusTitle(row);
-    return {
-      tone: normalizeProgressClass(status.toLowerCase()),
-      note: `${status.toLowerCase()}${amount}`,
-      title: title && `vs Phase Start: ${title}`,
-    };
-  }
   return { trend: projectedTrend(row) };
 }
 
 function QuarterTimeline({ row }) {
-  const values = [row.plannedQuarter, row.planQuarter, row.trendingQuarter];
+  const values = [row.plannedQuarter, row.trendingQuarter];
   return (
     <div className="quarter-timeline">
       {QUARTER_POINTS.map(([id, name, note, title], i) => {
@@ -540,11 +508,9 @@ function normalizeRow(raw) {
     updated: raw["Updated"] || "",
     isaOrNonIsa: raw["ISA or NON-ISA?"] || "",
     plannedQuarter: planned,
-    planQuarter: isSetQuarter(raw["Plan Ratification Quarter"]) ? raw["Plan Ratification Quarter"] : "",
     trendingQuarter: trending,
     previousTrendingQuarter: raw["Previous Target Ratification Quarter"] || "",
     targetChanged: raw["Target Changed"] || "",
-    ratificationProgress: raw["Ratification Progress"] || "",
     previousRatificationProgress: raw["Previous Ratification Progress"] || "",
     github: raw["GitHub"] || "",
     bodReport,
@@ -1135,10 +1101,8 @@ function buildEmailBody(row, phases) {
     `- Publication - BoD Approval: ${phases["BoD Approval"] || "N/A"}`,
     `- Publication - Tasks: ${phases["Specification in Publication"] || "N/A"}`,
     `- Baseline Quarter: ${row.plannedQuarter || "N/A"}`,
-    `- Phase Start Quarter: ${row.planQuarter || "N/A"}`,
     `- Projected Quarter: ${row.trendingQuarter || "N/A"}`,
     `- Status vs Baseline: ${baselineStatus(row).label.replace(/ /g, " ")}`,
-    `- Status vs Phase Start: ${row.ratificationProgress || "N/A"}`,
     `- Trend: ${projectedTrend(row).name}`,
     `- Previous Ratification Status: ${row.previousRatificationProgress || "N/A"}`,
     `- GitHub Link: ${row.github || "N/A"}`,
@@ -1284,10 +1248,8 @@ const EXPORT_COLUMNS = [
   ["TSC Approval Status", (row) => row.tscApprovalStatus],
   ["BoD Approval Status", (row) => row.bodApprovalStatus],
   ["Baseline Quarter", (row) => row.plannedQuarter],
-  ["Phase Start Quarter", (row) => row.planQuarter],
   ["Projected Quarter", (row) => row.trendingQuarter],
   ["Status vs Baseline", (row) => baselineStatus(row).label],
-  ["Status vs Phase Start", (row) => row.ratificationProgress],
   ["Trend", (row) => projectedTrend(row).name],
   ["Next Approval", (row) => row.nextApproval],
   ["Next Approval Date", (row) => row.nextApprovalDate],
@@ -1459,20 +1421,16 @@ function App() {
           (row) => !String(row.status || "").toLowerCase().includes("cancelled")
         );
 
-        const progressOrder = {
-          late: 0,
-          exposed: 1,
-          "on track": 2,
-          completed: 3,
-        };
+        // Within a phase: slipping first, then steady, then improving.
+        const progressOrder = { slipping: 0, steady: 1, improving: 2 };
 
         const sorted = withoutCancelled.sort((a, b) => {
           const phaseRankA = getPhaseSortRank(a);
           const phaseRankB = getPhaseSortRank(b);
           if (phaseRankA !== phaseRankB) return phaseRankA - phaseRankB;
 
-          const progressAKey = String(a.ratificationProgress || "").toLowerCase();
-          const progressBKey = String(b.ratificationProgress || "").toLowerCase();
+          const progressAKey = projectedTrend(a).name.toLowerCase();
+          const progressBKey = projectedTrend(b).name.toLowerCase();
           const progressA = progressOrder[progressAKey] ?? 99;
           const progressB = progressOrder[progressBKey] ?? 99;
 
@@ -1864,7 +1822,8 @@ function App() {
           </thead>
           <tbody>
             {displayRows.map((row, index) => {
-              const progressClass = normalizeProgressClass(row.ratificationProgress);
+              // The row colour follows the Trend: red when slipping, green when improving.
+              const progressClass = `row-${projectedTrend(row).name.toLowerCase()}`;
               const currentPhaseIndex = WORKFLOW_PHASES.indexOf(row.currentPhase);
               const githubValue = String(row.github || "").trim();
               const hasGithub =
@@ -2217,8 +2176,6 @@ function App() {
             <ul>
               <li><strong>Baseline</strong>: the original commitment, set when the Ratification Plan
                 was approved. It never changes.</li>
-              <li><strong>Phase Start</strong>: the Projected quarter from the first plan made in the
-                current phase. It is reset only when the specification moves to a new phase.</li>
               <li><strong>Projected</strong>: today's forecast, from the latest replan. It moves every
                 time the specification is replanned.</li>
             </ul>
@@ -2226,12 +2183,8 @@ function App() {
             <ul>
               <li><strong>vs Baseline</strong>: Projected compared with Baseline. On Track if it is the
                 same quarter or earlier, Exposed if 1 quarter later, Late if 2 or more quarters
-                later; the number of quarters is shown, e.g. Late (3Q). This is the long-term view:
-                are we late against what we committed?</li>
-              <li><strong>vs Phase Start</strong>: Projected compared with Phase Start, using the same
-                rule. It shows whether the specification has slipped since its current phase began,
-                and it sets the row colour. Awaiting Vote, Watch and Stalled are set by hand and
-                shown here when they apply.</li>
+                later; the number of quarters is shown, e.g. late 3Q. It colours the Baseline
+                quarter: are we late against what we committed?</li>
               <li><strong>Trend</strong>: the direction of the <strong>last change to Projected</strong>,
                 read from the Jira history each time the dashboard data is refreshed.
                 <ul>
