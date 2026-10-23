@@ -1300,6 +1300,21 @@ function downloadCsv(rows, activity = {}) {
 
 function App() {
   const [rows, setRows] = useState([]);
+  // A spec named in the URL (?row=RVS-123 or #RVS-123, as the Development
+  // Explorer links back): its line is highlighted and scrolled into view.
+  const [focusRowKey] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    const key = (params.get("row") || window.location.hash.replace(/^#/, "")).trim().toUpperCase();
+    return /^RVS-\d+$/.test(key) ? key : "";
+  });
+  const focusRowDone = useRef(false);
+  useEffect(() => {
+    if (!focusRowKey || focusRowDone.current || !rows.length) return;
+    focusRowDone.current = true;
+    requestAnimationFrame(() => {
+      document.getElementById(`spec-${focusRowKey}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }, [rows, focusRowKey]);
   const [loading, setLoading] = useState(true);
   const [aboutTrendOpen, setAboutTrendOpen] = useState(false);
   // The About section sits below the table: open it, then scroll to it and
@@ -1857,7 +1872,10 @@ function App() {
               return (
                 <tr
                   key={`${row.jiraUrl || row.summary}-${index}`}
-                  className={`${progressClass} ${phaseClass(row.currentPhase)}`.trim()}
+                  id={specKey ? `spec-${specKey}` : undefined}
+                  className={`${progressClass} ${phaseClass(row.currentPhase)}${
+                    specKey && specKey === focusRowKey ? " row-focused" : ""
+                  }`.trim()}
                 >
                   <td className="specification-column">
                     <a href={row.jiraUrl} target="_blank" rel="noreferrer">
