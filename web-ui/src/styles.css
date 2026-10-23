@@ -1062,6 +1062,8 @@ a:hover {
 .isa-tag.isa { border-color: #0f766e; color: #0f766e; background: #f0fdfa; }
 .isa-tag.non-isa { border-color: #b45309; color: #9a3412; background: #fff7ed; }
 .isa-tag.isa-both { padding: 0; overflow: hidden; border-color: #94a3b8; }
+/* The "+" between the halves, so the split pill reads "ISA + Non-ISA". */
+.isa-both .isa-plus { padding: 1px 4px; color: #475569; background: #fff; font-weight: 700; border-left: 1px solid #94a3b8; }
 .isa-both .isa-part { padding: 1px 6px; color: #0f766e; background: #f0fdfa; }
 .isa-both .non-isa-part { padding: 1px 6px; color: #9a3412; background: #fff7ed; border-left: 1px solid #94a3b8; }
 

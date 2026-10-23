@@ -1221,6 +1221,7 @@ function IsaTag({ value }) {
     return (
       <span className="spec-tag isa-tag isa-both" title={title}>
         <span className="isa-part">ISA</span>
+        <span className="isa-plus" aria-hidden="true">+</span>
         <span className="non-isa-part">{formatIsaLabel("Non-ISA")}</span>
       </span>
     );
