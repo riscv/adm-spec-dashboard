@@ -1255,13 +1255,23 @@ function App() {
       document.getElementById(`spec-${focusRowKey}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
     });
   }, [rows, focusRowKey]);
-  // Highlight a spec's line and scroll to it (a timeline dot was clicked).
-  const focusRow = useCallback((key) => {
+  // Highlight a spec's line and put it in the URL (?row=), as a link to it
+  // would; a timeline dot also scrolls to it, a click on the line does not.
+  const focusRow = useCallback((key, { scroll = true } = {}) => {
     setFocusRowKey(key);
     const url = new URL(window.location.href);
     url.searchParams.set("row", key);
+    url.hash = "";
     window.history.replaceState(null, "", url);
-    document.getElementById(`spec-${key}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (scroll) document.getElementById(`spec-${key}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, []);
+  const clearFocusRow = useCallback(() => {
+    setFocusRowKey("");
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("row") && !/^#RVS-\d+$/i.test(url.hash)) return;
+    url.searchParams.delete("row");
+    if (/^#RVS-\d+$/i.test(url.hash)) url.hash = "";
+    window.history.replaceState(null, "", url);
   }, []);
   const [loading, setLoading] = useState(true);
   const [aboutTrendOpen, setAboutTrendOpen] = useState(false);
@@ -1342,6 +1352,16 @@ function App() {
   // The ratified spec a golden timeline dot points at, highlighted in the
   // "Ratified in YYYY" table below the specifications.
   const [ratifiedFocusKey, setRatifiedFocusKey] = useState("");
+  // A click anywhere but on a spec's line (or a timeline dot) clears the highlight.
+  useEffect(() => {
+    const onPointerDown = (event) => {
+      if (event.target.closest?.('tr[id^="spec-"], tr[id^="ratified-"], .timeline-dot')) return;
+      clearFocusRow();
+      setRatifiedFocusKey("");
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [clearFocusRow]);
   const showRatified = useCallback((key = "") => {
     setRatifiedFocusKey(key);
     const target = key ? document.getElementById(`ratified-${key}`) : document.getElementById("ratified");
@@ -1913,6 +1933,7 @@ function App() {
                 <tr
                   key={`${row.jiraUrl || row.summary}-${index}`}
                   id={specKey ? `spec-${specKey}` : undefined}
+                  onClick={() => specKey && focusRow(specKey, { scroll: false })}
                   className={`${progressClass} ${phaseClass(row.currentPhase)}${
                     specKey && specKey === focusRowKey ? " row-focused" : ""
                   }`.trim()}
@@ -2280,6 +2301,7 @@ function App() {
                           key={spec.key}
                           id={`ratified-${spec.key}`}
                           className={spec.key === ratifiedFocusKey ? "row-focused" : undefined}
+                          onClick={() => setRatifiedFocusKey(spec.key)}
                         >
                           <td>
                             <a href={`https://riscv.atlassian.net/browse/${spec.key}`} target="_blank" rel="noreferrer">
