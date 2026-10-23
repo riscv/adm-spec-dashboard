@@ -773,66 +773,6 @@ function Dropdown({ label, icon, badge, children, align = "right" }) {
   );
 }
 
-// The specs ratified this year, opened from the year card's "ratified" pill.
-function RatifiedDialog({ ratified, onClose }) {
-  const dialogRef = useRef(null);
-
-  useEffect(() => {
-    const onKey = (event) => {
-      if (event.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", onKey);
-    dialogRef.current?.focus();
-    return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
-  return (
-    <div className="summary-overlay" onClick={onClose}>
-      <div
-        className="summary-dialog ratified-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="ratified-dialog-title"
-        tabIndex={-1}
-        ref={dialogRef}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <button type="button" className="summary-close" onClick={onClose} aria-label="Close">
-          ×
-        </button>
-        <h2 id="ratified-dialog-title">
-          Ratified in {ratified.year} <span className="summary-key">{ratified.count} specifications</span>
-        </h2>
-        <table className="ratified-table">
-          <thead>
-            <tr>
-              <th>Specification</th>
-              <th>Key</th>
-              <th>Ratified</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ratified.specs.map((spec) => (
-              <tr key={spec.key}>
-                <td>
-                  <a href={`https://riscv.atlassian.net/browse/${spec.key}`} target="_blank" rel="noreferrer">
-                    {spec.summary}
-                  </a>
-                </td>
-                <td className="ratified-key">{spec.key}</td>
-                <td className="ratified-date">{spec.date || "\u2013"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="summary-meta">
-          Ratified = the date the specification moved to Specification Ratified in Jira.
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function SummaryDialog({ row, entry, onClose }) {
   const [copied, setCopied] = useState("");
   const dialogRef = useRef(null);
@@ -1302,7 +1242,7 @@ function App() {
   const [rows, setRows] = useState([]);
   // A spec named in the URL (?row=RVS-123 or #RVS-123, as the Development
   // Explorer links back): its line is highlighted and scrolled into view.
-  const [focusRowKey] = useState(() => {
+  const [focusRowKey, setFocusRowKey] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const key = (params.get("row") || window.location.hash.replace(/^#/, "")).trim().toUpperCase();
     return /^RVS-\d+$/.test(key) ? key : "";
@@ -1315,6 +1255,14 @@ function App() {
       document.getElementById(`spec-${focusRowKey}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
     });
   }, [rows, focusRowKey]);
+  // Highlight a spec's line and scroll to it (a timeline dot was clicked).
+  const focusRow = useCallback((key) => {
+    setFocusRowKey(key);
+    const url = new URL(window.location.href);
+    url.searchParams.set("row", key);
+    window.history.replaceState(null, "", url);
+    document.getElementById(`spec-${key}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, []);
   const [loading, setLoading] = useState(true);
   const [aboutTrendOpen, setAboutTrendOpen] = useState(false);
   // The About section sits below the table: open it, then scroll to it and
@@ -1391,8 +1339,14 @@ function App() {
   // Optional: specs ratified this year, written by get-specs-data.py (the CSV
   // only holds specs still in progress). Hidden when missing.
   const [ratified, setRatified] = useState(null);
-  const [ratifiedOpen, setRatifiedOpen] = useState(false);
-  const closeRatified = useCallback(() => setRatifiedOpen(false), []);
+  // The ratified spec a golden timeline dot points at, highlighted in the
+  // "Ratified in YYYY" table below the specifications.
+  const [ratifiedFocusKey, setRatifiedFocusKey] = useState("");
+  const showRatified = useCallback((key = "") => {
+    setRatifiedFocusKey(key);
+    const target = key ? document.getElementById(`ratified-${key}`) : document.getElementById("ratified");
+    target?.scrollIntoView({ behavior: "smooth", block: key ? "center" : "start" });
+  }, []);
   useEffect(() => {
     let isMounted = true;
     fetch(`${assetBase}ratified.json`, { cache: "no-store" })
@@ -1562,6 +1516,44 @@ function App() {
   const daysLeftInYear = getDaysLeftInYear(now);
   const yearProgress = getYearProgressFraction() * 100;
 
+  // The year card's timeline runs from Q1 of this year through the furthest
+  // Projected quarter. Each spec with a Projected quarter is a dot on it,
+  // coloured by its Trend, and each spec ratified this year a golden dot at
+  // the quarter it was ratified.
+  const timeline = useMemo(() => {
+    const year = now.getFullYear();
+    const indexOf = (q) => {
+      const m = /^(\d\d)Q([1-4])$/.exec(String(q || "").trim());
+      return m ? (2000 + Number(m[1])) * 4 + Number(m[2]) - 1 : null;
+    };
+    const first = year * 4;
+    let last = first + 3;
+    const dots = {};
+    const trendOrder = { slipping: 0, steady: 1, improving: 2 };
+    displayRows.forEach((row) => {
+      const index = indexOf(row.trendingQuarter);
+      if (index === null || index < first) return;
+      last = Math.max(last, index);
+      const trend = projectedTrend(row);
+      (dots[index] = dots[index] || []).push({ key: specKeyOf(row), summary: row.summary, trend });
+    });
+    Object.values(dots).forEach((list) =>
+      list.sort((a, b) => trendOrder[a.trend.name.toLowerCase()] - trendOrder[b.trend.name.toLowerCase()])
+    );
+    (ratified?.year === year ? ratified.specs || [] : []).forEach((spec) => {
+      const month = Number(String(spec.date || "").slice(5, 7));
+      if (!month) return;
+      const index = year * 4 + Math.floor((month - 1) / 3);
+      (dots[index] = dots[index] || []).unshift({ key: spec.key, summary: spec.summary, ratified: spec.date });
+    });
+    const quarters = [];
+    for (let i = first; i <= last; i += 1) quarters.push(i);
+    const spanStart = new Date(year, 0, 1);
+    const spanEnd = new Date(Math.floor((last + 1) / 4), ((last + 1) % 4) * 3, 1);
+    const elapsed = Math.min(1, Math.max(0, (now - spanStart) / (spanEnd - spanStart)));
+    return { quarters, dots, current: year * 4 + currentQuarter - 1, multiYear: last >= first + 4, elapsed };
+  }, [displayRows, currentQuarter, ratified]);
+
   const handleSaveImage = () => {
     if (!tableContainerRef.current) return;
     const now = new Date();
@@ -1640,14 +1632,23 @@ function App() {
 
       <section className="card year-card">
         <div className="card-header">
-          <h2 className="card-title">{now.getFullYear()} progress</h2>
+          <h2 className="card-title">
+            Ratification timeline{" "}
+            <span className="card-hint">
+              {(() => {
+                const name = (i) => `${String(Math.floor(i / 4)).slice(2)}Q${(i % 4) + 1}`;
+                const q = timeline.quarters;
+                return `${name(q[0])} \u2013 ${name(q[q.length - 1])}`;
+              })()}
+            </span>
+          </h2>
           <div className="card-actions">
             {ratified ? (
               <button
                 type="button"
                 className="count-chip strong count-chip-button"
-                onClick={() => setRatifiedOpen(true)}
-                title="Show the specifications ratified this year"
+                onClick={() => showRatified()}
+                title="Go to the specifications ratified this year"
               >
                 {ratified.count} ratified in {ratified.year}
               </button>
@@ -1662,25 +1663,64 @@ function App() {
           </div>
         </div>
         <div className="card-body">
-          <div className="timeline">
+          <div className={`timeline${timeline.multiYear ? " multi-year" : ""}`}>
             <div className="timeline-fill">
-              <div className="timeline-fill-past" style={{ width: `${yearProgress}%` }}></div>
+              <div className="timeline-fill-past" style={{ width: `${timeline.elapsed * 100}%` }}></div>
             </div>
-            {[1, 2, 3, 4].map((quarter) => {
+            {timeline.quarters.map((index, i) => {
+              const year = Math.floor(index / 4);
+              const quarter = (index % 4) + 1;
+              const label = timeline.multiYear ? `${String(year).slice(2)}Q${quarter}` : `Q${quarter}`;
               let pointState = "";
-              if (quarter < currentQuarter) pointState = " completed";
-              else if (quarter === currentQuarter) pointState = " current";
+              if (index < timeline.current) pointState = " completed";
+              else if (index === timeline.current) pointState = " current";
+              else if (year > now.getFullYear()) pointState = " next-year";
+              const dots = timeline.dots[index] || [];
               return (
                 <div
-                  key={quarter}
+                  key={index}
                   className={`timeline-point${pointState}`}
-                  style={{ left: `${getQuarterEndFractionOfYear(quarter) * 100}%` }}
-                  title={quarter === currentQuarter ? `Q${quarter}: ${daysLeft} days left` : `Q${quarter}`}
+                  style={{ left: `${((i + 1) / timeline.quarters.length) * 100}%` }}
+                  title={index === timeline.current ? `${label}: ${daysLeft} days left` : label}
                 >
-                  <div className="timeline-label">Q{quarter}</div>
+                  <div className="timeline-label">{label}</div>
+                  {dots.length ? (
+                    <div className="timeline-dots">
+                      <span className="timeline-dots-count">{dots.length}</span>
+                      <div className="timeline-dots-grid">
+                        {dots.map((dot) =>
+                          dot.ratified ? (
+                            <button
+                              key={dot.key}
+                              type="button"
+                              className="timeline-dot ratified"
+                              title={`${dot.key} · ${dot.summary} (ratified ${dot.ratified})`}
+                              aria-label={`${dot.summary}, ratified ${dot.ratified}`}
+                              onClick={() => showRatified(dot.key)}
+                            />
+                          ) : (
+                            <button
+                              key={dot.key}
+                              type="button"
+                              className={`timeline-dot ${dot.trend.className}`}
+                              title={`${dot.key} · ${dot.summary} (${dot.trend.name.toLowerCase()})`}
+                              aria-label={`${dot.summary}, projected ${label}, ${dot.trend.name.toLowerCase()}`}
+                              onClick={() => focusRow(dot.key)}
+                            />
+                          )
+                        )}
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               );
             })}
+          </div>
+          <div className="timeline-legend">
+            <span><i className="timeline-dot ratified" />ratified this year</span>
+            <span><i className="timeline-dot trend-slipping" />projected, slipping</span>
+            <span><i className="timeline-dot trend-steady" />projected, steady</span>
+            <span><i className="timeline-dot trend-improving" />projected, improving</span>
           </div>
         </div>
       </section>
@@ -2212,6 +2252,55 @@ function App() {
         </div>
         </section>
 
+        {ratified?.specs?.length ? (
+          <section className="card ratified-card" id="ratified">
+            <div className="card-header">
+              <h2 className="card-title">
+                Ratified in {ratified.year} <span className="card-hint">{ratified.count}</span>
+              </h2>
+            </div>
+            <div className="card-body">
+              <table className="ratified-table">
+                <thead>
+                  <tr>
+                    <th>Specification</th>
+                    <th>Key</th>
+                    <th>Quarter</th>
+                    <th>Ratified</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...ratified.specs]
+                    .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))
+                    .map((spec) => {
+                      const month = Number(String(spec.date || "").slice(5, 7));
+                      const quarter = month ? `${String(ratified.year).slice(2)}Q${Math.floor((month - 1) / 3) + 1}` : "\u2013";
+                      return (
+                        <tr
+                          key={spec.key}
+                          id={`ratified-${spec.key}`}
+                          className={spec.key === ratifiedFocusKey ? "row-focused" : undefined}
+                        >
+                          <td>
+                            <a href={`https://riscv.atlassian.net/browse/${spec.key}`} target="_blank" rel="noreferrer">
+                              {spec.summary}
+                            </a>
+                          </td>
+                          <td className="ratified-key">{spec.key}</td>
+                          <td className="ratified-key">{quarter}</td>
+                          <td className="ratified-date">{spec.date || "\u2013"}</td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+              <div className="summary-meta">
+                Ratified = the date the Board of Directors ratified the specification.
+              </div>
+            </div>
+          </section>
+        ) : null}
+
         {/* Upcoming approvals is hidden for now (to be reworked); its data is still computed. */}
         <details
           id="about-ratification"
@@ -2249,7 +2338,6 @@ function App() {
           </div>
         </details>
       </div>
-      {ratifiedOpen && ratified ? <RatifiedDialog ratified={ratified} onClose={closeRatified} /> : null}
       {(() => {
         const summaryRow = summaryKey ? rows.find((row) => specKeyOf(row) === summaryKey) : null;
         const entry = summaryKey ? summaries[summaryKey] : null;
