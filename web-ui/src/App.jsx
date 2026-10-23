@@ -1165,17 +1165,34 @@ function formatIsaLabel(value) {
 }
 
 // ISA / Non-ISA and Fast-Track tags, at the end of the contribution line.
+// Teal for ISA, burnt orange for Non-ISA; a spec that is both gets a pill
+// split in the two colours.
+function IsaTag({ value }) {
+  const title = `ISA or Non-ISA: ${formatIsaLabel(value)}`;
+  const isIsa = /(^|[^-])\bisa\b/i.test(value.replace(/non-isa/gi, ""));
+  const isNonIsa = /non-isa/i.test(value);
+  if (isIsa && isNonIsa) {
+    return (
+      <span className="spec-tag isa-tag isa-both" title={title}>
+        <span className="isa-part">ISA</span>
+        <span className="non-isa-part">{formatIsaLabel("Non-ISA")}</span>
+      </span>
+    );
+  }
+  return (
+    <span className={`spec-tag isa-tag ${isNonIsa ? "non-isa" : "isa"}`} title={title}>
+      {formatIsaLabel(value)}
+    </span>
+  );
+}
+
 function SpecTags({ row }) {
   const isa = String(row.isaOrNonIsa || "").trim();
   const showIsa = isa && !/^(n\/a|not set( yet)?)$/i.test(isa);
   if (!showIsa && !row.fastTrack) return null;
   return (
     <span className="spec-tags">
-      {showIsa ? (
-        <span className="spec-tag isa-tag" title={`ISA or Non-ISA: ${formatIsaLabel(isa)}`}>
-          {formatIsaLabel(isa).replace(/\s*\+\s*/, "+")}
-        </span>
-      ) : null}
+      {showIsa ? <IsaTag value={isa} /> : null}
       {row.fastTrack ? (
         <span className="spec-tag fast-track-badge" title="Fast-Track Specification" aria-label="Fast-Track">
           FT

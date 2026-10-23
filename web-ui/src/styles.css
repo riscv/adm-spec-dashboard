@@ -1016,6 +1016,12 @@ a:hover {
   white-space: nowrap;
 }
 
+.isa-tag.isa { border-color: #0f766e; color: #0f766e; background: #f0fdfa; }
+.isa-tag.non-isa { border-color: #b45309; color: #9a3412; background: #fff7ed; }
+.isa-tag.isa-both { padding: 0; overflow: hidden; border-color: #94a3b8; }
+.isa-both .isa-part { padding: 1px 6px; color: #0f766e; background: #f0fdfa; }
+.isa-both .non-isa-part { padding: 1px 6px; color: #9a3412; background: #fff7ed; border-left: 1px solid #94a3b8; }
+
 /* Berkeley Blue */
 .fast-track-badge {
   border-color: #003262;
