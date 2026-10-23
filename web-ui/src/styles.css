@@ -2009,6 +2009,11 @@ button.activity-chip:hover { background: var(--surface-muted); }
 .radar-count { fill: var(--brand); font-weight: 700; }
 
 
+/* The table card lets its menus hang below it (Quick filters can be taller
+   than a filtered table); the scroll area keeps the rounded bottom corners. */
+.table-card { overflow: visible; }
+.table-card .table-scroll { border-radius: 0 0 var(--radius) var(--radius); }
+
 /* Table card header: title, search, phase key, links and menus on one row. */
 .table-card > .card-header {
   justify-content: flex-start;
