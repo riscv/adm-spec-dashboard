@@ -824,10 +824,17 @@ a:hover {
   background-image: linear-gradient(var(--row-hover), var(--row-hover));
 }
 
+/* The spec a link points at (?row=RVS-...), e.g. back from the Development Explorer. */
+.spec-table tbody tr.row-focused > td {
+  border-top: 2px solid var(--brand);
+  border-bottom: 2px solid var(--brand);
+}
+
 /* Rows take the Trend colour: slipping red, improving green, steady neutral. */
 .spec-table tbody tr.row-slipping { --row-tint: rgba(239, 68, 68, 0.055); }
 .spec-table tbody tr.row-improving { --row-tint: rgba(16, 185, 129, 0.05); }
 .spec-table tbody tr.row-steady { --row-tint: rgba(100, 116, 139, 0.03); }
+.spec-table tbody tr.row-focused { --row-tint: rgba(40, 50, 114, 0.08); }
 
 .spec-table td.specification-column {
   position: relative;
