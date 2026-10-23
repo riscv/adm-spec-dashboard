@@ -16,11 +16,11 @@
  "RVS-1135": {
   "generated": "2026-10-23",
   "group": {
-   "generated": "2026-10-22",
-   "hash": "e60ad2e6976ffa4c",
+   "generated": "2026-10-23",
+   "hash": "b518ad1349bf3201",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Packed Single Instruction, Multiple Data (SIMD) - P TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-10-16. Its repository was last updated on 2026-10-21. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Packed Single Instruction, Multiple Data (SIMD) - P TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-10-16. Its repository was last updated on 2026-10-23. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "eea5b990d6c2c734",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -42,16 +42,16 @@
  "RVS-1153": {
   "generated": "2026-10-23",
   "group": {
-   "generated": "2026-10-22",
-   "hash": "94aedb7af7305909",
+   "generated": "2026-10-23",
+   "hash": "d8be223ccde510f2",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Security Model TG. Its activity level is Low. Its Confluence space was last updated on 2026-06-30. Its mailing list last had a message on 2026-10-14. No repository update is recorded. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
+   "summary": "The specification is developed by the Security Model TG. Its activity level is Low. Its Confluence space was last updated on 2026-06-30. Its mailing list last had a message on 2026-10-23. No repository update is recorded. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
   },
-  "hash": "a102da1bffc80f31",
+  "hash": "0842a43492064c77",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Ratification-Ready. This phase started on 2026-10-14. Development started on 2024-08-28. The projected ratification quarter is 26Q4. It is 8 quarters behind the baseline 24Q4. The projection has not changed in the last 90 days. The next approval is TSC ratification, projected for 2026-12-13. The projected dates were last set on 2026-10-23. ARC review: Approved. Public review: Not Started. TSC approval: Not Started. The last repository activity was on 2026-10-16."
+  "summary": "The specification is in Ratification-Ready. This phase started on 2026-10-14. Development started on 2024-08-28. The projected ratification quarter is 26Q4. It is 8 quarters behind the baseline 24Q4. The projection has not changed in the last 90 days. The next approval is TSC ratification, projected for 2026-12-13. The projected dates were last set on 2026-10-23. ARC review: Approved. Public review: Public Review In Progress. TSC approval: Not Started. The last repository activity was on 2026-10-23."
  },
  "RVS-1185": {
   "generated": "2026-10-23",
@@ -90,11 +90,11 @@
  "RVS-1790": {
   "generated": "2026-10-23",
   "group": {
-   "generated": "2026-10-22",
-   "hash": "0f8e971683e74d1a",
+   "generated": "2026-10-23",
+   "hash": "e32064f88c59e20b",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Attached Matrix Extension (AME) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-12. Its mailing list last had a message on 2026-10-19. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Attached Matrix Extension (AME) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-12. Its mailing list last had a message on 2026-10-23. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "1f3d68ff9a1240da",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -452,13 +452,6 @@
   "source": "ai",
   "summary": "The specification is in Development under the fast-track process. This phase started on 2026-08-24. The projected ratification quarter is 27Q2, matching the baseline. The projection has not changed in the last 90 days. The next approval, Development complete, is projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last repository activity was on 2026-09-01."
  },
- "RVS-4454": {
-  "generated": "2026-10-23",
-  "hash": "6677a19279050d3e",
-  "model": "qwen.qwen3-next-80b-a3b",
-  "source": "ai",
-  "summary": "The specification is in Publication following the fast-track process. This phase started on 2026-09-30. Development started on 2026-05-15. The projected ratification quarter is 26Q4, matching the baseline. The projection has not changed in the last 90 days. The next approval is Board ratification, projected for 2026-10-29. The projected dates were last set on 2026-09-16. ARC review: Approved. Public review: Public Review Done. TSC approval: Approved. Board approval: Approved. The last repository activity was on 2026-04-13."
- },
  "RVS-4463": {
   "generated": "2026-10-19",
   "hash": "dbb00d1c5c5ea340",
@@ -478,20 +471,6 @@
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
   "summary": "The specification is in Freeze, following the fast-track process. This phase started on 2026-10-16. Development started on 2026-08-24. The projected ratification quarter is 27Q1, which is 1 quarter ahead of the baseline 27Q2. On 2026-09-16, the projection moved earlier from 27Q2 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Not Started. The last repository activity was on 2026-10-09."
- },
- "RVS-4600": {
-  "generated": "2026-10-23",
-  "hash": "4e4446889aa15310",
-  "model": "qwen.qwen3-next-80b-a3b",
-  "source": "ai",
-  "summary": "The specification is in Publication following the fast-track process. This phase started on 2026-09-30. Development started on 2026-05-15. The projected ratification quarter is 26Q4, matching the baseline. The projection has not changed in the last 90 days. The next approval is Board ratification, projected for 2026-10-29. The projected dates were last set on 2026-09-16. ARC review: Approved. Public review: Public Review Done. TSC approval: Approved. Board approval: Approved. The last repository activity was on 2026-10-23."
- },
- "RVS-4637": {
-  "generated": "2026-10-23",
-  "hash": "f366c7b734e5d6d0",
-  "model": "qwen.qwen3-next-80b-a3b",
-  "source": "ai",
-  "summary": "The specification is in Publication following the fast-track process. This phase started on 2026-09-30. Development started on 2026-06-22. The projected ratification quarter is 26Q4, matching the baseline. The projection has not changed in the last 90 days. The next approval is Board ratification, projected for 2026-10-29. The projected dates were last set on 2026-09-16. ARC review: Approved. Public review: Public Review Done. TSC approval: Approved. Board approval: Approved. The last repository activity was on 2026-10-23."
  },
  "RVS-4646": {
   "generated": "2026-10-19",
@@ -633,11 +612,11 @@
  "RVS-793": {
   "generated": "2026-10-23",
   "group": {
-   "generated": "2026-10-22",
-   "hash": "a9121ca755f66e87",
+   "generated": "2026-10-23",
+   "hash": "e7de1560319300be",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the I/O Physical Memory Protection Unit (IOPMP) TG. Its activity level is Low. Its Confluence space was last updated on 2026-08-03. Its mailing list last had a message on 2026-10-14. No repository update is recorded. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
+   "summary": "The specification is developed by the I/O Physical Memory Protection Unit (IOPMP) TG. Its activity level is Low. Its Confluence space was last updated on 2026-08-03. Its mailing list last had a message on 2026-10-22. No repository update is recorded. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
   },
   "hash": "1597b312c5ce149c",
   "model": "qwen.qwen3-next-80b-a3b",
