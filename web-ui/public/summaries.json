@@ -48,10 +48,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Security Model TG. Its activity level is Low. Its Confluence space was last updated on 2026-06-30. Its mailing list last had a message on 2026-10-23. No repository update is recorded. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
   },
-  "hash": "0842a43492064c77",
+  "hash": "fe6727403d65f7d2",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Ratification-Ready. This phase started on 2026-10-14. Development started on 2024-08-28. The projected ratification quarter is 26Q4. It is 8 quarters behind the baseline 24Q4. The projection has not changed in the last 90 days. The next approval is TSC ratification, projected for 2026-12-13. The projected dates were last set on 2026-10-23. ARC review: Approved. Public review: Public Review In Progress. TSC approval: Not Started. The last repository activity was on 2026-10-23."
+  "summary": "The specification is in Ratification-Ready. This phase started on 2026-10-14. Development started on 2024-08-28. The projected ratification quarter is 26Q4. It is 8 quarters behind the baseline 24Q4. The projection has not changed in the last 90 days. The next approval is TSC ratification, projected for 2026-12-19. The projected dates were last set on 2026-10-23. ARC review: Approved. Public review: Public Review In Progress. TSC approval: Not Started. The last repository activity was on 2026-10-23."
  },
  "RVS-1185": {
   "generated": "2026-10-23",
@@ -351,10 +351,10 @@
  },
  "RVS-3828": {
   "generated": "2026-10-23",
-  "hash": "3f5c4efb552e681a",
+  "hash": "09f07e7aa5f1dc58",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Ratification-Ready, following the fast-track process. This phase started on 2026-09-28. Development started on 2025-08-26. The projected ratification quarter is 26Q4, which is 2 quarters behind the baseline 26Q2. On 2026-09-16, the projection moved earlier from 27Q1 to 26Q4. The next approval is TSC ratification, projected for 2026-12-13. The projected dates were last set on 2026-10-23. ARC review: Approved. Public review: Public Review In Progress. TSC approval: Not Started. The last repository activity was on 2026-10-16."
+  "summary": "The specification is in Ratification-Ready, following the fast-track process. This phase started on 2026-09-28. Development started on 2025-08-26. The projected ratification quarter is 26Q4, which is 2 quarters behind the baseline 26Q2. On 2026-09-16 the projection moved earlier from 27Q1 to 26Q4. The next approval is TSC ratification, projected for 2026-12-02. The projected dates were last set on 2026-10-23. ARC review: Approved. Public review: Public Review In Progress. TSC approval: Not Started. The last repository activity was on 2026-10-16."
  },
  "RVS-3896": {
   "generated": "2026-10-23",
