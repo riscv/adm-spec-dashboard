@@ -1158,7 +1158,7 @@ button.activity-chip:hover { background: var(--surface-muted); }
 
 /* ---------- Resources column ---------- */
 .links-column {
-  width: 124px;
+  width: 154px;
   white-space: nowrap;
 }
 

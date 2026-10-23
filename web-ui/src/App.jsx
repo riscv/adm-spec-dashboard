@@ -700,6 +700,25 @@ function summaryShareText(row, entry) {
   ].join("\n");
 }
 
+const EXPLORER_URL = "https://riscv.github.io/adm-riscv-sde/";
+
+// The spec's card in the Development Explorer: its phase and subtasks open.
+function explorerUrl(key) {
+  return key ? `${EXPLORER_URL}?spec=${encodeURIComponent(key)}` : EXPLORER_URL;
+}
+
+// Phases stacked in a list, for the Development Explorer link.
+function ExplorerIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="#1f2328" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="icon-img">
+      <rect x="3" y="4" width="18" height="4.5" rx="1.2" />
+      <rect x="3" y="10.5" width="18" height="4.5" rx="1.2" />
+      <path d="M6 18.5h12" />
+      <path d="M6 6.25h5M6 12.75h8" />
+    </svg>
+  );
+}
+
 function SummaryIcon() {
   return (
     // AI sparkle: a large and a small four-point star.
@@ -1747,7 +1766,7 @@ function App() {
                 }
               </Dropdown>
               <a
-                href="https://riscv.github.io/adm-riscv-sde/"
+                href={EXPLORER_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="btn sm toolbar-link"
@@ -2137,6 +2156,18 @@ function App() {
                           />
                         </span>
                       )}
+                      {specKey ? (
+                        <a
+                          href={explorerUrl(specKey)}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="icon-link"
+                          title="Open in the Development Explorer"
+                          aria-label={`${row.summary} in the Development Explorer`}
+                        >
+                          <ExplorerIcon />
+                        </a>
+                      ) : null}
                       {!bodOnly && (
                         <button
                           type="button"
