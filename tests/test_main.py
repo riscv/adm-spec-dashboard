@@ -57,12 +57,12 @@ def test_cache_hit_makes_no_calls(rows, run_main):
 
 def test_changed_facts_trigger_a_call(rows, run_main):
     first, _ = run_main(spec_rows(rows))
-    rows["stabilization_exposed_slip"]["Ratification Progress"] = "Late"
+    rows["stabilization_exposed_slip"]["Baseline Ratification Quarter"] = "25Q4"
     second, client = run_main(spec_rows(rows))
     assert len(client.calls) == 1
-    assert "The schedule status is Late" in client.calls[0]["messages"][0]["content"][0]["text"]
+    assert "It is 6 quarters behind the baseline 25Q4" in client.calls[0]["messages"][0]["content"][0]["text"]
     assert second["RVS-3"]["hash"] != first["RVS-3"]["hash"]
-    assert "Late" in second["RVS-3"]["summary"]
+    assert "25Q4" in second["RVS-3"]["summary"]
     assert {k: v for k, v in second.items() if k != "RVS-3"} == {k: v for k, v in first.items() if k != "RVS-3"}
 
 
@@ -122,12 +122,12 @@ def test_cancelled_never_calls_the_model(rows, run_main):
 
 def test_no_model_uses_templates_and_keeps_ai_cache(rows, run_main):
     first, _ = run_main(spec_rows(rows))
-    rows["fast_track_freeze"]["Ratification Progress"] = "Exposed"
+    rows["fast_track_freeze"]["Baseline Ratification Quarter"] = "26Q1"
     out, client = run_main(spec_rows(rows), extra=["--no-model"])
     assert client.calls == []
     assert out["RVS-2"] == first["RVS-2"]  # unchanged ai summary kept
     assert out["RVS-6"]["source"] == "template"
-    assert "Exposed" in out["RVS-6"]["summary"]
+    assert "26Q1" in out["RVS-6"]["summary"]
 
 
 def test_only_prints_and_does_not_write(rows, run_main, capsys):

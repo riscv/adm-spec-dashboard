@@ -85,10 +85,11 @@ def build_facts(row, today):
     if dev and phase != "Development":
         facts.append(f"Development started on {dev}")
 
+    # Baseline and Projected only, as on the dashboard: the Phase Start quarter
+    # in Jira was filled in with the Projected quarter of 2026-10-19, and the
+    # Ratification Progress status is not shown either.
     baseline = row.get("Baseline Ratification Quarter", "")
-    phase_start = row.get("Plan Ratification Quarter", "")
     target = row.get("Target Ratification Quarter", "")
-    progress = row.get("Ratification Progress", "")
 
     if target in NOT_SET:
         facts.append("No projected ratification quarter is set yet")
@@ -96,12 +97,6 @@ def build_facts(row, today):
         facts.append(f"The projected ratification quarter is {target}")
         if baseline not in NOT_SET:
             facts.append(gap_text(target, baseline, "baseline"))
-        if phase_start not in NOT_SET:
-            facts.append(gap_text(target, phase_start, "phase start quarter"))
-        elif phase in ("Development", "Stabilization", "Freeze", "Ratification-Ready", "Publication"):
-            facts.append("It has not been replanned since entering this phase")
-    if progress not in NOT_SET:
-        facts.append(f"The schedule status is {progress}")
 
     prev, changed = row.get("Previous Target Ratification Quarter", ""), row.get("Target Changed", "")
     if target not in NOT_SET and changed:
