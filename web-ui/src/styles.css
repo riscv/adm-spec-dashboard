@@ -824,15 +824,10 @@ a:hover {
   background-image: linear-gradient(var(--row-hover), var(--row-hover));
 }
 
-.spec-table tbody tr.on-track { --row-tint: rgba(16, 185, 129, 0.05); }
-.spec-table tbody tr.awaiting-vote { --row-tint: rgba(59, 130, 246, 0.055); }
-.spec-table tbody tr.exposed { --row-tint: rgba(245, 158, 11, 0.07); }
-.spec-table tbody tr.watch { --row-tint: rgba(245, 158, 11, 0.05); }
-.spec-table tbody tr.late { --row-tint: rgba(239, 68, 68, 0.055); }
-.spec-table tbody tr.stalled { --row-tint: rgba(239, 68, 68, 0.08); }
-.spec-table tbody tr.completed { --row-tint: rgba(99, 102, 241, 0.05); }
-.spec-table tbody tr.not-set,
-.spec-table tbody tr.not-set-yet { --row-tint: rgba(100, 116, 139, 0.045); }
+/* Rows take the Trend colour: slipping red, improving green, steady neutral. */
+.spec-table tbody tr.row-slipping { --row-tint: rgba(239, 68, 68, 0.055); }
+.spec-table tbody tr.row-improving { --row-tint: rgba(16, 185, 129, 0.05); }
+.spec-table tbody tr.row-steady { --row-tint: rgba(100, 116, 139, 0.03); }
 
 .spec-table td.specification-column {
   position: relative;
@@ -851,11 +846,11 @@ a:hover {
   color: var(--brand);
 }
 
-/* Ratification quarters as a timeline: Baseline -- Phase Start - - Projected. */
+/* Ratification quarters as a timeline: Baseline - - Projected. */
 .quarter-timeline-column { width: 1%; white-space: nowrap; }
 .quarter-timeline {
   display: grid;
-  grid-template-columns: repeat(3, 76px);
+  grid-template-columns: repeat(2, 96px);
   justify-items: center;
 }
 .qt-point {
@@ -894,7 +889,6 @@ a:hover {
 }
 .qt-unset .qt-dot { background: var(--surface); border: 1.5px solid var(--border-strong); box-shadow: none; }
 .qt-baseline { --qt: #1e4fa3; }
-.qt-phase-start { --qt: #3fa45b; }
 .qt-projected { --qt: #6d3fd9; }
 /* The line into each point from the one before it, centred on the dots. */
 .qt-point + .qt-point::before {
