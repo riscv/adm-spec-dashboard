@@ -892,30 +892,6 @@
     "jira": "1 approval step closed (Notify TSC and CSC); phase changed 1 time"
    }
   },
-  "RVS-4454": {
-   "governing": "SOC Infrastructure (HC)",
-   "level": "Low",
-   "measured": "2026-10-23",
-   "points": {
-    "confluence": 0,
-    "discussion": 1,
-    "github": 0,
-    "jira": 2,
-    "meetings": null,
-    "tests": 1
-   },
-   "share": 36,
-   "terms": [
-    "\"Implicit Return\""
-   ],
-   "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members",
-    "discussion": "1 message from 1 person naming \"Implicit Return\" (soc-infra 1)",
-    "github": "0 commits by 0 people in riscv-non-isa/riscv-trace-spec PR #264",
-    "jira": "10 approval steps closed (BoD Approval; Schedule BoD Review; Ensure Compliance with RISC-V Specification Policies; ...); phase changed 2 times; 12 comments from members",
-    "tests": "2 PRs by 1 person (riscv-unified-db 2)"
-   }
-  },
   "RVS-4463": {
    "governing": "",
    "level": "Stalled",
@@ -959,52 +935,6 @@
     "github": "5 commits, 3 PRs by 2 people in riscv/riscv-worlds",
     "jira": "3 approval steps closed (Internal Review (required); Develop Specification; Notify TSC and CSC); phase changed 5 times",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
-   }
-  },
-  "RVS-4600": {
-   "governing": "SOC Infrastructure (HC)",
-   "level": "Low",
-   "measured": "2026-10-23",
-   "points": {
-    "confluence": 0,
-    "discussion": 0,
-    "github": 0,
-    "jira": 2,
-    "meetings": null,
-    "tests": null
-   },
-   "share": 17,
-   "terms": [
-    "\"Standard Support Packet extension to E-trace\""
-   ],
-   "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members",
-    "discussion": "0 messages from 0 people naming \"Standard Support Packet extension to E-trace\"",
-    "github": "0 commits by 0 people in riscv-non-isa/riscv-trace-spec PR #276",
-    "jira": "10 approval steps closed (BoD Approval; Schedule BoD Review; Ensure Compliance with RISC-V Specification Policies; ...); phase changed 2 times; 10 comments from members"
-   }
-  },
-  "RVS-4637": {
-   "governing": "SOC Infrastructure (HC)",
-   "level": "Low",
-   "measured": "2026-10-23",
-   "points": {
-    "confluence": 1,
-    "discussion": 1,
-    "github": 0,
-    "jira": 2,
-    "meetings": null,
-    "tests": null
-   },
-   "share": 42,
-   "terms": [
-    "\"Data Trace of Multiple-Memory Access and Compare and Swap\""
-   ],
-   "text": {
-    "confluence": "Ratification Plan: 1 edit by 1 member",
-    "discussion": "1 message from 1 person naming \"Data Trace of Multiple-Memory Access and Compare and Swap\" (soc-infra 1)",
-    "github": "0 commits by 0 people in riscv-non-isa/riscv-trace-spec PR #269",
-    "jira": "10 approval steps closed (BoD Approval; Schedule BoD Review; Ensure Compliance with RISC-V Specification Policies; ...); phase changed 2 times; 10 comments from members"
    }
   },
   "RVS-4646": {

@@ -256,11 +256,32 @@
       "to": "2026-12-29"
     },
     {
+      "spec": "RVS-4454",
+      "summary": "Implicit Return (E-Trace 2.0)",
+      "field": "presence",
+      "from": "present",
+      "to": "absent"
+    },
+    {
       "spec": "RVS-4572",
       "summary": "RV Worlds H-extension",
       "field": "next_approval_date",
       "from": "2026-12-24",
       "to": "2026-12-31"
+    },
+    {
+      "spec": "RVS-4600",
+      "summary": "Standard Support Packet extension to E-trace",
+      "field": "presence",
+      "from": "present",
+      "to": "absent"
+    },
+    {
+      "spec": "RVS-4637",
+      "summary": "Data Trace of Multiple-Memory Access and Compare and Swap",
+      "field": "presence",
+      "from": "present",
+      "to": "absent"
     },
     {
       "spec": "RVS-4752",

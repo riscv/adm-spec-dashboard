@@ -1,6 +1,6 @@
 {
  "year": 2026,
- "count": 8,
+ "count": 11,
  "specs": [
   {
    "key": "RVS-1781",
@@ -40,6 +40,21 @@
   {
    "key": "RVS-4184",
    "summary": "RVB23.1",
+   "date": "2026-10-20"
+  },
+  {
+   "key": "RVS-4454",
+   "summary": "Implicit Return (E-Trace 2.0)",
+   "date": "2026-10-20"
+  },
+  {
+   "key": "RVS-4600",
+   "summary": "Standard Support Packet extension to E-trace",
+   "date": "2026-10-20"
+  },
+  {
+   "key": "RVS-4637",
+   "summary": "Data Trace of Multiple-Memory Access and Compare and Swap",
    "date": "2026-10-20"
   }
  ]
