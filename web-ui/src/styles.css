@@ -1973,6 +1973,7 @@ button.activity-chip:hover { background: var(--surface-muted); }
 .timeline-legend {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 6px 16px;
   margin: 0 10px;
   font-size: 12px;
@@ -1980,6 +1981,32 @@ button.activity-chip:hover { background: var(--surface-muted); }
 }
 .timeline-legend .timeline-dot { display: inline-block; margin-right: 6px; vertical-align: 0; cursor: default; }
 .timeline-legend .timeline-dot:hover { outline: none; }
+
+/* Opens the radar of specifications by category, at the right end of the legend. */
+.radar-button {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--brand);
+  cursor: pointer;
+}
+.radar-button:hover { background: var(--surface-muted); }
+.radar-dialog { width: min(640px, 100%); }
+.radar-chart { display: block; width: 100%; height: auto; overflow: visible; }
+.radar-ring { fill: none; stroke: var(--border); stroke-width: 1; }
+.radar-spoke { stroke: var(--border); stroke-width: 1; }
+.radar-scale { font-size: 10px; fill: var(--muted); }
+.radar-shape { fill: rgba(40, 50, 114, 0.18); stroke: var(--brand); stroke-width: 2; stroke-linejoin: round; }
+.radar-point { fill: var(--brand); }
+.radar-label { font-size: 12px; font-weight: 600; fill: var(--text); }
+.radar-count { fill: var(--brand); font-weight: 700; }
 
 
 /* Table card header: title, search, phase key, links and menus on one row. */
