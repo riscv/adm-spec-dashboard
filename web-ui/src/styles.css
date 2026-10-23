@@ -788,7 +788,7 @@ a:hover {
 /* Freeze -> Ratification-Ready: from here the spec can be consumed and enters
    its final sprint, so this line is Berkeley Blue and heavier than the rest. */
 .spec-table .ratification-divider {
-  border-left: 3px solid var(--berkeley-blue);
+  border-left: 2px solid var(--berkeley-blue);
 }
 
 .spec-table .progress-divider {
