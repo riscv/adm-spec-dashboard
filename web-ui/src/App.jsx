@@ -335,11 +335,41 @@ const PROJECTED_QUARTER_TITLE =
 
 // The three ratification quarters as a small timeline: Baseline, then Phase
 // Start (solid line: the plan as revised), then Projected (dashed: the forecast).
+// Under each point is what it tells: Projected against Baseline, Projected
+// against Phase Start, and the direction Projected last moved (Trend).
 const QUARTER_POINTS = [
   ["baseline", "Baseline", "planned", BASELINE_QUARTER_TITLE],
   ["phase-start", "Phase Start", "revised plan", PHASE_START_QUARTER_TITLE],
   ["projected", "Projected", "current forecast", PROJECTED_QUARTER_TITLE],
 ];
+
+function QuarterReading({ row, id }) {
+  if (id === "baseline") {
+    const vs = baselineStatus(row);
+    return (
+      <span className="qt-reading" title={`vs Baseline: ${vs.title}`}>
+        <span className={`status-chip ${vs.className}`}>{vs.label}</span>
+      </span>
+    );
+  }
+  if (id === "phase-start") {
+    return (
+      <span className="qt-reading" title={`vs Phase Start: ${phaseStatusTitle(row)}`}>
+        {row.ratificationProgress ? (
+          <span className={`status-chip ${statusClassName(row.ratificationProgress)}`}>
+            {String(row.ratificationProgress).replace(/^on track$/i, "On\u00A0Track")}
+          </span>
+        ) : null}
+      </span>
+    );
+  }
+  const trend = projectedTrend(row);
+  return (
+    <span className={`qt-reading qt-trend ${trend.className}`} title={`Trend: ${trend.title}`} aria-label={`Trend: ${trend.name}`}>
+      {trend.label}
+    </span>
+  );
+}
 
 function QuarterTimeline({ row }) {
   const values = [row.plannedQuarter, row.planQuarter, row.trendingQuarter];
@@ -356,6 +386,7 @@ function QuarterTimeline({ row }) {
           >
             <span className="qt-quarter">{set ? quarter : "—"}</span>
             <span className="qt-dot" />
+            <QuarterReading row={row} id={id} />
           </span>
         );
       })}
@@ -1779,7 +1810,7 @@ function App() {
               >
                 Publication
               </th>
-              <th className="narrow-column status-group-header progress-divider" colSpan={5}>
+              <th className="narrow-column status-group-header progress-divider" colSpan={2}>
                 Ratification Progress{" "}
                 <AboutLink onOpen={openAbout} label="About Ratification Progress" />
               </th>
@@ -1803,15 +1834,6 @@ function App() {
                     </span>
                   ))}
                 </div>
-              </th>
-              <th className="narrow-column status-subheader status-divider" title="Projected vs Baseline: 1 quarter behind is Exposed, 2 or more is Late">
-                vs Baseline
-              </th>
-              <th className="narrow-column status-subheader" title="Projected vs Phase Start (the current phase): 1 quarter behind is Exposed, 2 or more is Late">
-                vs Phase Start
-              </th>
-              <th className="trend-column status-subheader" title="Direction of the last change to Projected in the last 90 days: ↓ slipping, → steady, ↑ improving">
-                Trend
               </th>
               <th className="activity-column status-subheader" title={ACTIVITY_TITLE}>
                 Activity
@@ -2047,29 +2069,6 @@ function App() {
                   <td className="quarter-timeline-column progress-divider">
                     <QuarterTimeline row={row} />
                   </td>
-                  {(() => {
-                    const vsBaseline = baselineStatus(row);
-                    return (
-                      <td className="narrow-column status-col status-divider" title={vsBaseline.title}>
-                        <span className={`status-chip ${vsBaseline.className}`}>{vsBaseline.label}</span>
-                      </td>
-                    );
-                  })()}
-                  <td className="narrow-column status-col" title={phaseStatusTitle(row)}>
-                    {row.ratificationProgress ? (
-                      <span className={`status-chip ${statusClassName(row.ratificationProgress)}`}>
-                        {String(row.ratificationProgress).replace(/^on track$/i, "On\u00A0Track")}
-                      </span>
-                    ) : null}
-                  </td>
-                  {(() => {
-                    const trend = projectedTrend(row);
-                    return (
-                      <td className={`trend-column ${trend.className}`} title={trend.title} aria-label={trend.name}>
-                        {trend.label}
-                      </td>
-                    );
-                  })()}
                   <td className="narrow-column activity-column">
                     {(() => {
                       const entry = activity.specs[specKey];

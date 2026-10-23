@@ -849,7 +849,7 @@ a:hover {
 .quarter-timeline-column { width: 1%; white-space: nowrap; }
 .quarter-timeline {
   display: grid;
-  grid-template-columns: repeat(3, 52px);
+  grid-template-columns: repeat(3, 96px);
   justify-items: center;
 }
 .qt-point {
@@ -868,6 +868,15 @@ a:hover {
   line-height: 16px;
 }
 .qt-unset .qt-quarter { color: var(--muted); font-weight: 400; }
+/* What each point tells, under its dot; the line runs through the dots only. */
+.qt-reading {
+  display: flex;
+  align-items: center;
+  min-height: 22px;
+  margin-top: 2px;
+}
+.qt-reading .status-chip { font-size: 11px; padding: 1px 7px; line-height: 16px; }
+.qt-trend { font-size: 15px; font-weight: 700; }
 .qt-dot {
   position: relative;
   z-index: 1;
@@ -885,7 +894,7 @@ a:hover {
 .qt-point + .qt-point::before {
   content: "";
   position: absolute;
-  bottom: 4.5px;
+  top: 24.5px; /* quarter line (16px) + gap (4px) + half the dot */
   right: 50%;
   width: 100%;
   border-top: 2px solid var(--border-strong);
