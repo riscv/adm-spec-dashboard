@@ -931,6 +931,13 @@ a:hover {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--qt, var(--muted)) 18%, transparent);
 }
 .qt-unset .qt-dot { background: var(--surface); border: 1.5px solid var(--border-strong); box-shadow: none; }
+/* Baseline opens the Ratification Plan; Projected explains its Trend. */
+.qt-dot-action { display: block; padding: 0; border: 0; cursor: pointer; transition: box-shadow .15s, transform .15s; }
+.qt-dot-action:hover, .qt-dot-action:focus-visible {
+  transform: scale(1.25);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--qt, var(--muted)) 32%, transparent);
+  outline: none;
+}
 .qt-baseline { --qt: #1e4fa3; }
 .qt-projected { --qt: #6d3fd9; }
 /* The line into each point from the one before it, centred on the dots. */
@@ -2176,3 +2183,10 @@ button.activity-chip:hover { background: var(--surface-muted); }
   color: #fff;
   text-decoration: none;
 }
+
+/* Why a spec is steady, slipping or improving. */
+.trend-dialog { width: min(520px, 100%); }
+.trend-verdict { margin: 4px 0 8px; }
+.trend-verdict .qt-note { font-size: 13px; line-height: 18px; }
+.trend-reasons { margin: 0 0 12px; padding-left: 18px; font-size: 13.5px; line-height: 1.5; }
+.trend-reasons li + li { margin-top: 4px; }
