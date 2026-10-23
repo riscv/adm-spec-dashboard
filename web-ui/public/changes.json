@@ -4,18 +4,18 @@
   "to": "2026-10-23",
   "changes": [
     {
-      "spec": "RVS-4184",
-      "summary": "RVB23.1",
-      "field": "progress",
-      "from": "On Track",
-      "to": "Completed"
+      "spec": "RVS-4180",
+      "summary": "RVA23.1",
+      "field": "presence",
+      "from": "present",
+      "to": "absent"
     },
     {
       "spec": "RVS-4184",
       "summary": "RVB23.1",
-      "field": "next_approval_date",
-      "from": "2026-10-29",
-      "to": "2026-10-20"
+      "field": "presence",
+      "from": "present",
+      "to": "absent"
     },
     {
       "spec": "RVS-4752",

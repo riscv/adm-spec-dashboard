@@ -424,20 +424,6 @@
   "source": "ai",
   "summary": "The specification is in Freeze, following the fast-track process. This phase started on 2026-10-16. Development started on 2025-11-26. The projected ratification quarter is 27Q1. It is 1 quarter behind the baseline 26Q4. It matches the phase start quarter 27Q1. The schedule status is On Track. On 2026-08-24 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-24. The projected dates were last set on 2026-10-16. ARC review: Not Started. The last repository activity was on 2026-09-30."
  },
- "RVS-4180": {
-  "generated": "2026-10-22",
-  "hash": "3b2c4d96ed105fdc",
-  "model": "qwen.qwen3-next-80b-a3b",
-  "source": "ai",
-  "summary": "The specification is in Publication, following the fast-track process. This phase started on 2026-09-25. Development started on 2025-11-07. The projected ratification quarter is 26Q4. It is 2 quarters behind the baseline 26Q2. It matches the phase start quarter 26Q4. The schedule status is On Track. The projection has not changed in the last 90 days. The next approval is Board ratification, projected for 2026-10-29. The projected dates were last set on 2026-09-16. ARC review: Approved. Public review: Public Review Done. TSC approval: Approved. Board approval: Approved. The last repository activity was on 2026-10-21."
- },
- "RVS-4184": {
-  "generated": "2026-10-22",
-  "hash": "2e33fb731730aa9b",
-  "model": "qwen.qwen3-next-80b-a3b",
-  "source": "ai",
-  "summary": "The specification is in Publication following the fast-track process. This phase started on 2026-09-25. Development started on 2025-11-07. The projected ratification quarter is 26Q4. It is 2 quarters behind the baseline 26Q2. It matches the phase start quarter 26Q4. The schedule status is Completed. The projection has not changed in the last 90 days. The next approval is Board ratification, projected for 2026-10-20. The projected dates were last set on 2026-09-16. ARC review: Approved. Public review: Public Review Done. TSC approval: Approved. Board approval: Approved. The last repository activity was on 2026-10-21."
- },
  "RVS-4281": {
   "generated": "2026-10-21",
   "group": {
