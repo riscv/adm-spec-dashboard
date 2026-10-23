@@ -1206,10 +1206,17 @@ function formatIsaLabel(value) {
 // ISA / Non-ISA and Fast-Track tags, at the end of the contribution line.
 // Teal for ISA, burnt orange for Non-ISA; a spec that is both gets a pill
 // split in the two colours.
+function isaKinds(value) {
+  const text = String(value || "");
+  return {
+    isIsa: /(^|[^-])\bisa\b/i.test(text.replace(/non-isa/gi, "")),
+    isNonIsa: /non-isa/i.test(text),
+  };
+}
+
 function IsaTag({ value }) {
   const title = `ISA or Non-ISA: ${formatIsaLabel(value)}`;
-  const isIsa = /(^|[^-])\bisa\b/i.test(value.replace(/non-isa/gi, ""));
-  const isNonIsa = /non-isa/i.test(value);
+  const { isIsa, isNonIsa } = isaKinds(value);
   if (isIsa && isNonIsa) {
     return (
       <span className="spec-tag isa-tag isa-both" title={title}>
@@ -1260,15 +1267,19 @@ function daysUntil(value) {
 const STALE_DAYS = 90;
 
 // Quick filters; they combine with AND, and with the search and BoD toggle.
+// Quick filters in groups. Within a group a spec matches any ticked filter;
+// across groups it must match every group that has one ticked.
 const QUICK_FILTERS = [
   {
     id: "late",
+    group: "Schedule",
     label: "Late vs baseline",
     title: "Projected is 2 or more quarters behind Baseline",
     test: (row) => baselineStatus(row).label.startsWith("Late"),
   },
   {
     id: "approval30",
+    group: "Schedule",
     label: "Next approval \u2264 30 days",
     title: "Next approval projected within 30 days, or already overdue",
     test: (row) => {
@@ -1278,6 +1289,7 @@ const QUICK_FILTERS = [
   },
   {
     id: "stale",
+    group: "Schedule",
     label: `No activity ${STALE_DAYS}+ days`,
     title: `No contribution found in the last ${STALE_DAYS} days`,
     test: (row) => {
@@ -1285,7 +1297,19 @@ const QUICK_FILTERS = [
       return days === null || days > STALE_DAYS;
     },
   },
+  { id: "isa", group: "Type", label: "ISA", title: "ISA specifications", test: (row) => isaKinds(row.isaOrNonIsa).isIsa },
+  { id: "non-isa", group: "Type", label: "Non-ISA", title: "Non-ISA specifications", test: (row) => isaKinds(row.isaOrNonIsa).isNonIsa },
+  { id: "ft", group: "Track", label: "Fast track", title: "Specifications on the fast track", test: (row) => row.fastTrack },
+  ...["Very Active", "Active", "Low", "Stalled"].map((level) => ({
+    id: `activity-${level.toLowerCase().replace(" ", "-")}`,
+    group: "Activity",
+    label: level,
+    title: `Activity level over the last 90 days: ${level}`,
+    test: (row, { activity }) => String(activity.specs[specKeyOf(row)]?.level || "").toLowerCase() === level.toLowerCase(),
+  })),
 ];
+
+const QUICK_FILTER_GROUPS = [...new Set(QUICK_FILTERS.map((filter) => filter.group))];
 
 function getInitialQuickFilters() {
   const ids = (new URLSearchParams(window.location.search).get("f") || "").split(",");
@@ -1636,12 +1660,13 @@ function App() {
       const summary = String(row.summary || "").toLowerCase();
       const matchesSearch = !term || summary.includes(term);
       const matchesBod = !bodOnly || row.bodFlag;
-      const matchesQuick = QUICK_FILTERS.every(
-        (filter) => !quickFilters.includes(filter.id) || filter.test(row)
-      );
+      const matchesQuick = QUICK_FILTER_GROUPS.every((group) => {
+        const ticked = QUICK_FILTERS.filter((filter) => filter.group === group && quickFilters.includes(filter.id));
+        return !ticked.length || ticked.some((filter) => filter.test(row, { activity }));
+      });
       return matchesSearch && matchesBod && matchesQuick;
     });
-  }, [rows, searchTerm, bodOnly, quickFilters]);
+  }, [rows, searchTerm, bodOnly, quickFilters, activity]);
 
   const upcomingApprovals = useMemo(() => groupUpcomingApprovals(rows), [rows]);
   const upcomingCount = upcomingApprovals.reduce((total, group) => total + group.items.length, 0);
@@ -1952,19 +1977,21 @@ function App() {
                 badge={quickFilters.length || null}
               >
                 {() =>
-                  QUICK_FILTERS.map((filter) => {
-                    const active = quickFilters.includes(filter.id);
-                    return (
-                      <label key={filter.id} className="menu-item menu-check" title={filter.title}>
-                        <input
-                          type="checkbox"
-                          checked={active}
-                          onChange={() => toggleQuickFilter(filter.id)}
-                        />
-                        {filter.label}
-                      </label>
-                    );
-                  })
+                  QUICK_FILTER_GROUPS.map((group) => (
+                    <div key={group} className="menu-group">
+                      <div className="menu-heading">{group}</div>
+                      {QUICK_FILTERS.filter((filter) => filter.group === group).map((filter) => (
+                        <label key={filter.id} className="menu-item menu-check" title={filter.title}>
+                          <input
+                            type="checkbox"
+                            checked={quickFilters.includes(filter.id)}
+                            onChange={() => toggleQuickFilter(filter.id)}
+                          />
+                          {filter.label}
+                        </label>
+                      ))}
+                    </div>
+                  ))
                 }
               </Dropdown>
               <a
