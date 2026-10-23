@@ -148,7 +148,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 4 edits by 1 member; group space: 13 pages edited by members",
-    "discussion": "0 messages from 0 people naming Ztt; the group's list had 148 messages from 23 people",
+    "discussion": "0 messages from 0 people naming Ztt; the group's list had 150 messages from 24 people",
     "github": "54 commits, 18 PRs by 7 people in riscv/riscv-attached-matrix-extension",
     "jira": "3 approval steps closed (Project Committee Approval (required); Develop Specification; Notify TSC and CSC); phase changed 1 time"
    }
@@ -1175,11 +1175,11 @@
     "confluence": 2,
     "discussion": 1,
     "github": 1,
-    "jira": 1,
+    "jira": 2,
     "meetings": null,
     "tests": null
    },
-   "share": 58,
+   "share": 67,
    "terms": [
     "\"CBQRI Bandwidth Inactive Entry\""
    ],
@@ -1187,7 +1187,7 @@
     "confluence": "Ratification Plan: 9 edits by 1 member",
     "discussion": "6 messages from 2 people naming \"CBQRI Bandwidth Inactive Entry\" (soc-infra 3, tech-arch-review 1, tech-privileged 1, tech-unprivileged 1)",
     "github": "1 commit by 1 person in riscv-non-isa/riscv-cbqri",
-    "jira": "1 comment from members"
+    "jira": "3 approval steps closed (Develop Specification Plan; Notify TSC of Fast-Track Approval; Initial Infrastructure Setup); phase changed 1 time; 1 comment from members"
    }
   },
   "RVS-5086": {
