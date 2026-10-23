@@ -349,6 +349,42 @@ a:hover {
   color: var(--brand);
 }
 
+.timeline-point.next-year .timeline-label { color: var(--border-strong); }
+
+/* One dot per spec projected for the quarter, coloured by its Trend; room
+   above the line is made only when there are dots. */
+.timeline:has(.timeline-dots) { margin-top: 64px; }
+.timeline-dots {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.timeline-dots-count { font-size: 11px; font-weight: 700; color: var(--muted); line-height: 1; }
+.timeline-dots-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(4, 7px);
+  gap: 3px;
+}
+.timeline-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #8b5cf6;
+  cursor: pointer;
+}
+.timeline-dot.trend-slipping { background: var(--bad); }
+.timeline-dot.trend-improving { background: var(--ok); }
+.timeline-dot.ratified { background: var(--gold); }
+.timeline-dot:hover, .timeline-dot:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+
 /* The last quarter ends at the right edge: keep its label inside the card. */
 .timeline-point:last-child .timeline-label {
   left: auto;
@@ -1882,7 +1918,7 @@ button.activity-chip:hover { background: var(--surface-muted); }
 
 
 
-/* "N ratified in YYYY" pill opens the list of specs ratified this year. */
+/* "N ratified in YYYY" pill goes to the list of specs ratified this year. */
 .count-chip-button {
   font: inherit;
   cursor: pointer;
@@ -1929,6 +1965,21 @@ button.activity-chip:hover { background: var(--surface-muted); }
 .ratified-date {
   color: var(--text);
 }
+
+.ratified-card { margin-top: 18px; }
+.ratified-table tr.row-focused > td { background: rgba(40, 50, 114, 0.08); border-top: 2px solid var(--brand); border-bottom: 2px solid var(--brand); }
+
+/* What the timeline dots mean, under the line. */
+.timeline-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 0 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.timeline-legend .timeline-dot { display: inline-block; margin-right: 6px; vertical-align: 0; cursor: default; }
+.timeline-legend .timeline-dot:hover { outline: none; }
 
 
 /* Table card header: title, search, phase key, links and menus on one row. */

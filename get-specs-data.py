@@ -811,19 +811,53 @@ def parse_issues(issues, github_session=None, jira=None, groups=None, signals=No
         })
     return parsed_issues
 
+COMPLETION_DATE_FIELD = "customfield_10057"
+
+
+def get_bod_approval_dates(jira, keys):
+    """Return {spec key: date} the Board approved each spec: the Completion Date
+    of its `[Publication] - BoD Approval` subtask, else the day it was resolved.
+    Specs without such a subtask are left out.
+    """
+    dates = {}
+    if not keys:
+        return dates
+    jql = (f'parent in ({",".join(keys)}) AND summary ~ "\\"BoD Approval\\"" ORDER BY key')
+    next_page_token = None
+    while True:
+        response = jira.enhanced_jql(jql=jql, limit=100, nextPageToken=next_page_token,
+                                     fields=f"summary,parent,resolutiondate,{COMPLETION_DATE_FIELD}") or {}
+        for sub in response.get('issues', []):
+            fields = sub.get('fields', {}) or {}
+            if not BOD_APPROVAL_PATTERN.match(fields.get('summary') or ""):
+                continue
+            parent = (fields.get('parent') or {}).get('key')
+            date = (fields.get(COMPLETION_DATE_FIELD) or fields.get('resolutiondate') or "")[:10]
+            if parent and date:
+                dates[parent] = max(dates.get(parent, ""), date)
+        next_page_token = response.get('nextPageToken')
+        if not next_page_token:
+            break
+    return dates
+
+
 def write_ratified_this_year(jira, path="ratified.json"):
     """Write the specs ratified this calendar year to ratified.json.
 
     The CSV leaves ratified specs out, so the dashboard reads this count from a
     separate file. A spec counts when its status moved to Specification Ratified
     this year (status history), not by the Actual BoD Ratification field, which
-    is also filled on some Cancelled specs.
+    is also filled on some Cancelled specs. Its date is the day the Board
+    ratified it, from the `[Publication] - BoD Approval` subtask; the move to
+    Specification Ratified is used only when that subtask has no date.
     """
     year = datetime.now().year
     jql = ('project = RVS AND issuetype = Specification AND '
            'status changed to "Specification Ratified" during (startOfYear(), now()) ORDER BY key')
     specs = []
-    for issue in fetch_all_issues(jira, jql):
+    issues = fetch_all_issues(jira, jql)
+    bod_dates = get_bod_approval_dates(jira, [issue.get('key') for issue in issues if issue.get('key')])
+    for issue in issues:
         key = issue.get('key')
         fields = issue.get('fields', {})
         status = (fields.get('status') or {}).get('name') or ""
@@ -831,7 +865,7 @@ def write_ratified_this_year(jira, path="ratified.json"):
         specs.append({
             'key': key,
             'summary': fields.get('summary') or "",
-            'date': dates.get('first_entered', {}).get("Specification Ratified", ""),
+            'date': bod_dates.get(key) or dates.get('first_entered', {}).get("Specification Ratified", ""),
         })
     specs.sort(key=lambda spec: spec['date'])
     with open(path, 'w') as fh:
