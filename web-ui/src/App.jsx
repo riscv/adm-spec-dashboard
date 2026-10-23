@@ -726,15 +726,10 @@ function summaryShareText(row, entry) {
 
 function SummaryIcon() {
   return (
-    <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
-      <circle cx="10" cy="10" r="10" className="summary-icon-bg" />
-      <path
-        d="M6 6.5h8M6 10h8M6 13.5h5"
-        stroke="#fff"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        fill="none"
-      />
+    // AI sparkle: a large and a small four-point star.
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      <path className="summary-icon-star" d="M10 2.5l2.1 5.6 5.6 2.1-5.6 2.1L10 17.9l-2.1-5.6-5.6-2.1 5.6-2.1z" />
+      <path className="summary-icon-star-small" d="M18 13.5l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" />
     </svg>
   );
 }
@@ -1814,7 +1809,7 @@ function App() {
                 Ratification Progress{" "}
                 <AboutLink onOpen={openAbout} label="About Ratification Progress" />
               </th>
-              <th className="links-column" rowSpan={2}>Resources</th>
+              <th className="links-column progress-divider" rowSpan={2}>Resources</th>
             </tr>
             <tr>
               <th className="narrow-column freeze-subheader">ARC Approval</th>
@@ -2085,20 +2080,20 @@ function App() {
                       );
                     })()}
                   </td>
-                  <td className="links-column">
+                  <td className="links-column progress-divider">
                     <div className="icon-group">
                       {specSummary?.summary ? (
                         <button
                           type="button"
                           className="icon-button summary-button"
                           onClick={() => setSummaryKey(specKey)}
-                          title="Summary"
-                          aria-label={`Summary of ${row.summary}`}
+                          title="AI summary"
+                          aria-label={`AI summary of ${row.summary}`}
                         >
                           <SummaryIcon />
                         </button>
                       ) : (
-                        <span className="icon-disabled" title="No summary yet">
+                        <span className="icon-disabled" title="No AI summary yet">
                           <SummaryIcon />
                         </span>
                       )}

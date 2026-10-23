@@ -1205,18 +1205,12 @@ button.activity-chip:hover { background: var(--surface-muted); }
   opacity: 0.3;
 }
 
-/* Summary icon: a solid brand circle, the one coloured icon in the row. */
-.summary-icon-bg {
-  fill: var(--brand);
-}
-
-.summary-button:hover .summary-icon-bg {
-  fill: var(--brand-hover);
-}
-
-.icon-disabled .summary-icon-bg {
-  fill: var(--border-strong);
-}
+/* AI summary icon: a violet sparkle, the one coloured icon in the row. */
+.summary-icon-star { fill: #7c3aed; }
+.summary-icon-star-small { fill: #a855f7; }
+.summary-button:hover .summary-icon-star { fill: #6d28d9; }
+.icon-disabled .summary-icon-star,
+.icon-disabled .summary-icon-star-small { fill: var(--border-strong); }
 
 .resizer {
   position: absolute;
