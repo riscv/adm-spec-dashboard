@@ -2015,6 +2015,16 @@ function App() {
                 <IconExternal />
                 <span className="toolbar-text">ISA Explorer</span>
               </a>
+              <a
+                href="https://riscv.github.io/adm-tc-dashboard/?committees"
+                target="_blank"
+                rel="noreferrer"
+                className="btn sm toolbar-link"
+                title="RISC-V Technical Committee Dashboard"
+              >
+                <IconExternal />
+                <span className="toolbar-text">Technical Committees</span>
+              </a>
             </div>
           </div>
 
