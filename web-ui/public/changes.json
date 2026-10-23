@@ -303,6 +303,13 @@
       "field": "next_approval_date",
       "from": "2026-11-19",
       "to": "2026-12-08"
+    },
+    {
+      "spec": "RVS-5082",
+      "summary": "CBQRI Bandwidth Inactive Entry",
+      "field": "status",
+      "from": "Specification Inception",
+      "to": "Specification in Planning"
     }
   ]
 }
