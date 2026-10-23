@@ -817,52 +817,6 @@
     "tests": "1 PR by 1 person (riscv-unified-db 1)"
    }
   },
-  "RVS-4180": {
-   "governing": "Technical Steering Committee (TSC)",
-   "level": "Active",
-   "measured": "2026-10-23",
-   "points": {
-    "confluence": 0,
-    "discussion": 1,
-    "github": 2,
-    "jira": 2,
-    "meetings": null,
-    "tests": null
-   },
-   "share": 67,
-   "terms": [
-    "RVA23.1"
-   ],
-   "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members",
-    "discussion": "6 messages from 2 people naming RVA23.1 (tsc 6)",
-    "github": "0 commits by 7 people in riscv/riscv-isa-manual PR #3298",
-    "jira": "9 approval steps closed (Set Specification Version to v1.0; BoD Approval; Schedule BoD Review; ...); phase changed 2 times; 2 comments from members"
-   }
-  },
-  "RVS-4184": {
-   "governing": "Technical Steering Committee (TSC)",
-   "level": "Active",
-   "measured": "2026-10-23",
-   "points": {
-    "confluence": 0,
-    "discussion": 1,
-    "github": 2,
-    "jira": 2,
-    "meetings": null,
-    "tests": null
-   },
-   "share": 67,
-   "terms": [
-    "RVB23.1"
-   ],
-   "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members",
-    "discussion": "6 messages from 2 people naming RVB23.1 (tsc 6)",
-    "github": "0 commits by 7 people in riscv/riscv-isa-manual PR #3298",
-    "jira": "9 approval steps closed (Set Specification Version to v1.0; BoD Approval; Schedule BoD Review; ...); phase changed 2 times"
-   }
-  },
   "RVS-4281": {
    "governing": "SOC Infrastructure (HC)",
    "level": "Active",
