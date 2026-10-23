@@ -488,6 +488,7 @@ REQUIRED_FIELDS = [
     "customfield_11060",
     "customfield_10048",  # Latest Replanning: when the projected dates were last set
     "customfield_10676",  # Category (cascading select)
+    "customfield_10244",  # Ratification Plan (Confluence page URL)
     "issuelinks",  # the Develops link to the group that develops the spec
 ]
 
@@ -810,6 +811,7 @@ def parse_issues(issues, github_session=None, jira=None, groups=None, signals=No
             'Group Activity Level': group.get('level', ''),
             'Group Activity Signals': group_signals if group_key else '',
             'Category': (fields.get('customfield_10676') or {}).get('value') or '',
+            'Ratification Plan': (fields.get('customfield_10244') or '').strip(),
         })
     return parsed_issues
 
@@ -950,7 +952,8 @@ def get_data_from_jira(jira_token, jira_email):
             'Group Type',
             'Group Activity Level',
             'Group Activity Signals',
-            'Category'
+            'Category',
+            'Ratification Plan'
         ])
 
         # Writing each issue to the CSV file
@@ -990,7 +993,8 @@ def get_data_from_jira(jira_token, jira_email):
                 issue['Group Type'],
                 issue['Group Activity Level'],
                 issue['Group Activity Signals'],
-                issue['Category']
+                issue['Category'],
+                issue['Ratification Plan']
             ])
 
     print(f"Data successfully written to {csv_filename}")

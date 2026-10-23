@@ -335,7 +335,7 @@ function quarterReading(row, id) {
   return { trend: projectedTrend(row) };
 }
 
-function QuarterTimeline({ row }) {
+function QuarterTimeline({ row, onTrend }) {
   const values = [row.plannedQuarter, row.trendingQuarter];
   return (
     <div className="quarter-timeline">
@@ -364,10 +364,143 @@ function QuarterTimeline({ row }) {
                 {set ? reading.note : ""}
               </span>
             )}
-            <span className="qt-dot" />
+            {id === "baseline" && row.ratificationPlan ? (
+              <a
+                className="qt-dot qt-dot-action"
+                href={row.ratificationPlan}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Open the Ratification Plan"
+                title="Open the Ratification Plan"
+              />
+            ) : id === "projected" && onTrend ? (
+              <button
+                type="button"
+                className="qt-dot qt-dot-action"
+                onClick={onTrend}
+                aria-label={`Why ${reading.trend.name.toLowerCase()}?`}
+                title={`Why ${reading.trend.name.toLowerCase()}?`}
+              />
+            ) : (
+              <span className="qt-dot" />
+            )}
           </span>
         );
       })}
+    </div>
+  );
+}
+
+const DAY_MS = 86400000;
+
+// What makes a spec steady, slipping or improving, in words.
+function trendReasons(row, now = new Date()) {
+  const trend = projectedTrend(row, now);
+  const from = row.previousTrendingQuarter;
+  const to = row.trendingQuarter;
+  const slip = quarterSlip(from, to);
+  const changed = row.targetChanged ? new Date(row.targetChanged) : null;
+  const days = changed && !Number.isNaN(changed.getTime()) ? Math.floor((now - changed) / DAY_MS) : null;
+  const ago = days === null ? "" : ` (${days} day${days === 1 ? "" : "s"} ago)`;
+  const quarters = (n) => `${Math.abs(n)} quarter${Math.abs(n) === 1 ? "" : "s"}`;
+  const reasons = [];
+  if (!isSetQuarter(to)) {
+    reasons.push("Projected is not set, so there is nothing to follow yet.");
+  } else if (trend.name === "Slipping") {
+    reasons.push(`Projected moved later, from ${from} to ${to} (${quarters(slip)}), on ${row.targetChanged}${ago}.`);
+    reasons.push(`That change is inside the last ${TREND_WINDOW_DAYS} days.`);
+  } else if (trend.name === "Improving") {
+    reasons.push(`Projected moved earlier, from ${from} to ${to} (${quarters(slip)}), on ${row.targetChanged}${ago}.`);
+    reasons.push(`That change is inside the last ${TREND_WINDOW_DAYS} days.`);
+  } else if (slip === null || !changed) {
+    reasons.push(`Projected has been ${to} since it was set; no earlier value is recorded.`);
+  } else if (slip === 0) {
+    reasons.push(`The last change${row.targetChanged ? `, on ${row.targetChanged}${ago},` : ""} kept Projected in ${to}.`);
+  } else {
+    reasons.push(
+      `Projected last moved ${slip > 0 ? "later" : "earlier"}, from ${from} to ${to}, on ${row.targetChanged}${ago}. ` +
+      `That is more than ${TREND_WINDOW_DAYS} days ago, so it no longer counts.`
+    );
+  }
+  if (row.latestReplanning) {
+    reasons.push(`The plan was last replanned on ${row.latestReplanning}.`);
+  }
+  const vs = baselineStatus(row);
+  if (vs.title) reasons.push(`${vs.title} (${row.plannedQuarter}).`);
+  return { trend, reasons };
+}
+
+function TrendDialog({ row, onClose }) {
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    const onKey = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    dialogRef.current?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const { trend, reasons } = trendReasons(row);
+  const facts = [
+    ["Baseline", row.plannedQuarter, BASELINE_QUARTER_TITLE],
+    ["Projected", row.trendingQuarter, PROJECTED_QUARTER_TITLE],
+    ["Previous Projected", row.previousTrendingQuarter, "The Projected quarter before the last change."],
+    ["Projected changed", row.targetChanged, "When Projected last changed."],
+    ["Latest replanning", row.latestReplanning, "When the projected dates were last set."],
+  ];
+
+  return (
+    <div className="summary-overlay" onClick={onClose}>
+      <div
+        className="summary-dialog trend-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="trend-dialog-title"
+        tabIndex={-1}
+        ref={dialogRef}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button type="button" className="summary-close" onClick={onClose} aria-label="Close">
+          ×
+        </button>
+        <h2 id="trend-dialog-title">
+          {row.summary} <span className="summary-key">{specKeyOf(row)}</span>
+        </h2>
+        <p className="trend-verdict">
+          <span className={`qt-note ${trend.className}`}>{trend.label} {trend.name.toLowerCase()}</span>
+        </p>
+        <ul className="trend-reasons">
+          {reasons.map((text) => <li key={text}>{text}</li>)}
+        </ul>
+        <table className="activity-sources">
+          <tbody>
+            {facts.map(([label, value, about]) => (
+              <tr key={label}>
+                <th scope="row" title={about}>{label}</th>
+                <td>{String(value || "").trim() || "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="summary-meta">
+          Trend follows the last change to Projected. A move to a later quarter in the last {TREND_WINDOW_DAYS} days
+          is slipping, a move to an earlier quarter is improving, and anything else is steady.
+          {row.ratificationPlan ? (
+            <>
+              {" "}
+              <a href={row.ratificationPlan} target="_blank" rel="noreferrer">Ratification Plan</a>
+            </>
+          ) : null}
+          {row.jiraUrl ? (
+            <>
+              {" · "}
+              <a href={row.jiraUrl} target="_blank" rel="noreferrer">Jira</a>
+            </>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 }
@@ -532,6 +665,7 @@ function normalizeRow(raw) {
     projectedPhaseEnds: parseDatePairs(raw["Projected Phase Ends"]),
     groupKey: raw["Group Key"] || "",
     category: raw["Category"] || "",
+    ratificationPlan: /^https:\/\//.test(raw["Ratification Plan"] || "") ? raw["Ratification Plan"] : "",
     group: raw["Group"] || "",
     currentPhase,
     nextPhase,
@@ -1443,6 +1577,8 @@ function App() {
   // Key of the spec whose activity dialog is open.
   const [activityKey, setActivityKey] = useState("");
   const closeActivity = useCallback(() => setActivityKey(""), []);
+  const [trendKey, setTrendKey] = useState("");
+  const closeTrend = useCallback(() => setTrendKey(""), []);
   const [showRadar, setShowRadar] = useState(false);
   const closeRadar = useCallback(() => setShowRadar(false), []);
   // Optional: written by spec-activity.py in the Daily Data Fetch.
@@ -2311,7 +2447,7 @@ function App() {
                     return [cell, arcCell];
                   })}
                   <td className="quarter-timeline-column progress-divider">
-                    <QuarterTimeline row={row} />
+                    <QuarterTimeline row={row} onTrend={() => setTrendKey(specKey)} />
                   </td>
                   <td className="narrow-column activity-column">
                     {(() => {
@@ -2538,6 +2674,10 @@ function App() {
         return activityRow && entry ? (
           <ActivityDialog row={activityRow} entry={entry} meta={activity} onClose={closeActivity} />
         ) : null;
+      })()}
+      {(() => {
+        const trendRow = trendKey ? rows.find((row) => specKeyOf(row) === trendKey) : null;
+        return trendRow ? <TrendDialog row={trendRow} onClose={closeTrend} /> : null;
       })()}
       {showRadar ? <CategoryRadarDialog rows={rows} onClose={closeRadar} /> : null}
 
