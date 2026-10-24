@@ -1255,7 +1255,7 @@
     "discussion": "0 messages from 0 people naming \"Long Instruction\"; the group's list had 8 messages from 3 people",
     "github": "11 commits by 1 person in riscv/riscv-long-instruction",
     "jira": "1 approval step closed (Initial Infrastructure Setup)",
-    "tests": "3 PRs by 2 people (riscv-unified-db 3)"
+    "tests": "4 PRs by 2 people (riscv-unified-db 4)"
    }
   },
   "RVS-793": {
