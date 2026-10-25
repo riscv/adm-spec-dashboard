@@ -12,9 +12,9 @@
     "github": 2,
     "jira": 1,
     "meetings": null,
-    "tests": 0
+    "tests": 1
    },
-   "share": 64,
+   "share": 71,
    "terms": [
     "Smidctrl",
     "Ssidctrl",
@@ -30,7 +30,7 @@
     "discussion": "0 messages from 0 people naming Smidctrl, Ssidctrl, Smeihv, Sseihv, Smnip, Ssnip, Smijt, Ssijt; the group's list had 10 messages from 2 people",
     "github": "9 commits, 10 PRs by 2 people in riscv/riscv-fast-interrupt",
     "jira": "6 comments from members",
-    "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
+    "tests": "1 PR by 1 person (riscv-unified-db 1)"
    }
   },
   "RVS-1135": {
