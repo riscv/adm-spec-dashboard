@@ -283,19 +283,19 @@
    "points": {
     "confluence": 0,
     "discussion": 1,
-    "github": 1,
+    "github": 2,
     "jira": 1,
     "meetings": null,
     "tests": 2
    },
-   "share": 50,
+   "share": 64,
    "terms": [
     "Zvdot4a8i"
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members",
     "discussion": "3 messages from 2 people naming Zvdot4a8i (tech-unprivileged 3)",
-    "github": "0 commits by 2 people in riscv/riscv-isa-manual PR #2576",
+    "github": "5 commits by 3 people in riscv/riscv-isa-manual PR #2576",
     "jira": "2 comments from members",
     "tests": "3 PRs by 3 people (riscv-unified-db 2, sail-riscv 1)"
    }
