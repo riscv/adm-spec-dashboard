@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 4 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 9 messages from 2 people",
-    "github": "89 commits, 100 PRs by 5 people in riscv/riscv-cheri",
+    "github": "89 commits, 101 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -345,7 +345,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zvknhk; the group's list had 24 messages from 4 people",
+    "discussion": "0 messages from 0 people naming Zvknhk; the group's list had 25 messages from 4 people",
     "github": "18 commits, 6 PRs by 3 people in riscv/riscv-pqc",
     "jira": "1 approval step closed (Internal Review (required))"
    }
@@ -375,7 +375,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 46 messages from 9 people",
+    "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 47 messages from 9 people",
     "github": "992 commits, 40 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
     "jira": "1 approval step closed (Develop Specification)"
    }
@@ -424,7 +424,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 2 edits by 1 member; group space: 1 page edited by members",
-    "discussion": "1 message from 1 person naming Zimt, Svatag, Smvatag (tech-privileged 1); the group's list had 7 messages from 2 people",
+    "discussion": "1 message from 1 person naming Zimt, Svatag, Smvatag (tech-privileged 1); the group's list had 8 messages from 2 people",
     "github": "32 commits, 5 PRs by 3 people in riscv/riscv-memory-tagging",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "1 PR by 1 person (sail-riscv 1)"
