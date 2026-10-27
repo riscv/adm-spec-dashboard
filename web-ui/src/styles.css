@@ -38,6 +38,13 @@
   --neutral: #64748b;
   --neutral-bg: #f1f5f9;
 
+  /* Activity: the plain green, blue, yellow and red everyone reads at a glance */
+  --act-green: #16a34a;
+  --act-blue: #2563eb;
+  --act-yellow: #facc15;
+  --act-yellow-text: #a16207; /* yellow is too light for text on white */
+  --act-red: #dc2626;
+
   color-scheme: light;
 }
 
@@ -1019,7 +1026,6 @@ a:hover {
   align-items: center;
   row-gap: 4px;
 }
-.spec-updated .activity-dot,
 .spec-updated-text { flex-shrink: 0; white-space: nowrap; }
 .spec-tags {
   display: inline-flex;
@@ -1033,23 +1039,6 @@ a:hover {
   font-style: italic;
   opacity: 0.8;
 }
-
-/* Recent-activity indicator: last real code contribution to the spec's repo. */
-.activity-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  margin-right: 6px;
-  border-radius: 50%;
-  vertical-align: 1px;
-  background: #94a3b8;
-}
-
-.activity-dot.activity-fresh { background: #10b981; } /* within 14 days */
-.activity-dot.activity-slowing { background: #f59e0b; } /* 15-45 days */
-.activity-dot.activity-stale { background: #ef4444; } /* over 45 days */
-.activity-dot.activity-neutral { background: #64748b; } /* post-Freeze */
-.activity-dot.activity-none { background: #cbd5e1; } /* no GitHub data */
 
 .spec-tag {
   display: inline-flex;
@@ -1093,6 +1082,11 @@ a:hover {
 
 /* In progress: an hourglass in the phase colour (asked for by the VP). The
    markup keeps the hourglass character for screen readers and copy/paste. */
+/* The hourglass opens the spec in the Development Explorer. */
+.explorer-hourglass { display: block; width: 100%; height: 100%; }
+.in-progress:has(> .explorer-hourglass:hover),
+.in-progress:has(> .explorer-hourglass:focus-visible) { opacity: 0.6; }
+
 .phase-cell .in-progress,
 .phase-key .in-progress {
   display: inline-block;
@@ -1159,10 +1153,10 @@ a:hover {
   vertical-align: middle;
 }
 .activity-dot:hover, .activity-dot:focus-visible { box-shadow: 0 0 0 3px var(--brand-soft); outline: none; }
-.activity-dot.ga-very-active { border-color: var(--ok); background: var(--ok); }
-.activity-dot.ga-active { border-color: var(--info); background: var(--info); }
-.activity-dot.ga-low { border-color: var(--warn); background: var(--warn); }
-.activity-dot.ga-stalled { border-color: var(--bad); background: var(--bad); }
+.activity-dot.ga-very-active { border-color: var(--act-green); background: var(--act-green); }
+.activity-dot.ga-active { border-color: var(--act-blue); background: var(--act-blue); }
+.activity-dot.ga-low { border-color: var(--act-yellow); background: var(--act-yellow); }
+.activity-dot.ga-stalled { border-color: var(--act-red); background: var(--act-red); }
 .activity-chip {
   display: inline-block;
   padding: 2px 9px;
@@ -1178,10 +1172,10 @@ a:hover {
 }
 button.activity-chip { cursor: pointer; }
 button.activity-chip:hover { background: var(--surface-muted); }
-.activity-chip.ga-very-active { border-color: var(--ok); color: var(--ok); background: var(--ok-bg); }
-.activity-chip.ga-active { border-color: var(--info); color: var(--info); }
-.activity-chip.ga-low { border-color: var(--warn); color: var(--warn); }
-.activity-chip.ga-stalled { border-color: var(--bad); color: var(--bad); background: var(--bad-bg); }
+.activity-chip.ga-very-active { border-color: var(--act-green); color: var(--act-green); background: #f0fdf4; }
+.activity-chip.ga-active { border-color: var(--act-blue); color: var(--act-blue); background: #eff6ff; }
+.activity-chip.ga-low { border-color: var(--act-yellow); color: var(--act-yellow-text); background: #fefce8; }
+.activity-chip.ga-stalled { border-color: var(--act-red); color: var(--act-red); background: #fef2f2; }
 .activity-none { color: var(--muted); font-size: 10px; white-space: nowrap; }
 .activity-spec { margin: 4px 0 8px; color: var(--muted); }
 .activity-sources { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 13px; }

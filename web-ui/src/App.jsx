@@ -809,6 +809,10 @@ function summaryKeyDates(row) {
   if (row.latestReplanning) {
     items.push(["Projected dates last set", `${row.latestReplanning} · ${formatAgo(row.latestReplanning)}`]);
   }
+  if (row.lastContribution) {
+    const date = String(row.lastContribution).slice(0, 10);
+    items.push(["Last GitHub contribution", `${date} · ${formatAgo(row.lastContribution)}`]);
+  }
   return items;
 }
 
@@ -851,6 +855,21 @@ function ExplorerIcon() {
       <path d="M6 18.5h12" />
       <path d="M6 6.25h5M6 12.75h8" />
     </svg>
+  );
+}
+
+// An in-progress hourglass, linked to the spec's card in the Development Explorer.
+function ExplorerHourglass({ specKey }) {
+  return (
+    <a
+      className="explorer-hourglass"
+      href={explorerUrl(specKey)}
+      target="_blank"
+      rel="noreferrer"
+      aria-label="Open in the Development Explorer"
+    >
+      {"\u23F3"}
+    </a>
   );
 }
 
@@ -1239,20 +1258,6 @@ function formatRelativeAge(value) {
   const years = Math.floor(days / 365);
   const months = Math.round((days % 365) / 30);
   return months ? `${years}y ${months}mo ago` : `${years}y ago`;
-}
-
-// Recency bucket driving the activity dot. Post-Freeze phases legitimately
-// have little code activity, so they are marked neutral rather than "stale".
-function activityRecencyClass(row) {
-  const postFreeze =
-    row.currentPhase === "Ratification-Ready" ||
-    row.currentPhase === "Specification in Publication";
-  const days = daysSince(row.lastContribution);
-  if (days === null) return "activity-none";
-  if (postFreeze) return "activity-neutral";
-  if (days <= 14) return "activity-fresh";
-  if (days <= 45) return "activity-slowing";
-  return "activity-stale";
 }
 
 function getLatestReleaseUrl(rawUrl) {
@@ -2253,10 +2258,6 @@ function App() {
                               : ""
                           }`}
                         >
-                          <span
-                            className={`activity-dot ${activityRecencyClass(row)}`}
-                            aria-hidden="true"
-                          />
                           <span className="spec-updated-text">
                             {formatUpdateDate(row.lastContribution)} · {formatRelativeAge(row.lastContribution)}
                           </span>
@@ -2264,7 +2265,6 @@ function App() {
                         </div>
                       ) : (
                         <div className="spec-updated no-activity">
-                          <span className="activity-dot activity-none" aria-hidden="true" />
                           <span className="spec-updated-text">No recent contribution found</span>
                           {specTags}
                         </div>
@@ -2292,7 +2292,7 @@ function App() {
                       className = "bg-completed";
                       title = `Tasks Complete: ${phase}`;
                     } else if (phase === row.currentPhase) {
-                      content = "\u23F3";
+                      content = <ExplorerHourglass specKey={specKey} />;
                       className = "in-progress";
                       title = `In Progress: ${phase}`;
                     } else if (currentPhaseIndex >= 0 && phaseIndex < currentPhaseIndex) {
@@ -2325,7 +2325,7 @@ function App() {
                           bod.label ? `: ${bod.label}` : ""
                         }`;
                       } else if (bod.kind === "in-progress") {
-                        bodContent = "\u23F3";
+                        bodContent = <ExplorerHourglass specKey={specKey} />;
                         bodClass = "in-progress";
                         bodTitle = `BoD Approval In Progress${
                           bod.label ? `: ${bod.label}` : ""
@@ -2361,7 +2361,7 @@ function App() {
                           publicReview.label ? `: ${publicReview.label}` : ""
                         }`;
                       } else if (publicReview.kind === "in-progress") {
-                        prContent = "\u23F3";
+                        prContent = <ExplorerHourglass specKey={specKey} />;
                         prClass = "in-progress";
                         prTitle = `Public Review In Progress${
                           publicReview.label ? `: ${publicReview.label}` : ""
@@ -2396,7 +2396,7 @@ function App() {
                           tscApproval.label ? `: ${tscApproval.label}` : ""
                         }`;
                       } else if (tscApproval.kind === "in-progress") {
-                        tscContent = "\u23F3";
+                        tscContent = <ExplorerHourglass specKey={specKey} />;
                         tscClass = "in-progress";
                         tscTitle = `TSC Approval In Progress${
                           tscApproval.label ? `: ${tscApproval.label}` : ""
@@ -2431,7 +2431,7 @@ function App() {
                       arcClass = "bg-completed";
                       arcTitle = `ARC Approval Complete${arc.label ? `: ${arc.label}` : ""}`;
                     } else if (arc.kind === "in-progress") {
-                      arcContent = "\u23F3";
+                      arcContent = <ExplorerHourglass specKey={specKey} />;
                       arcClass = "in-progress";
                       arcTitle = `ARC Approval In Progress${arc.label ? `: ${arc.label}` : ""}`;
                     }
