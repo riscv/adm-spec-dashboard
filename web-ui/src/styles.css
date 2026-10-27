@@ -1083,9 +1083,55 @@ a:hover {
 /* In progress: an hourglass in the phase colour (asked for by the VP). The
    markup keeps the hourglass character for screen readers and copy/paste. */
 /* The hourglass opens the spec in the Development Explorer. */
-.explorer-hourglass { display: block; width: 100%; height: 100%; }
-.in-progress:has(> .explorer-hourglass:hover),
-.in-progress:has(> .explorer-hourglass:focus-visible) { opacity: 0.6; }
+/* Drawn inline (not masked) so its sand can move; same look at rest. */
+.phase-cell .in-progress:has(> .explorer-hourglass) {
+  -webkit-mask: none;
+  mask: none;
+  background: none;
+  color: var(--ph, var(--brand));
+}
+.explorer-hourglass,
+.explorer-hourglass:hover { display: block; width: 100%; height: 100%; color: inherit; }
+.explorer-hourglass:focus-visible { outline: 2px solid var(--ph, var(--brand)); outline-offset: 2px; }
+.hg-glass { display: block; width: 100%; height: 100%; overflow: visible; transform-origin: 50% 50%; }
+.hg-sand-top, .hg-sand-bottom { transform-box: fill-box; transform-origin: 50% 100%; }
+.hg-sand-top, .hg-stream { opacity: 0; }
+.hg-stream { stroke-dasharray: 1.2 2; }
+
+/* Hover: the glass flips (its sand ends up on top), snaps back unseen since
+   the frame is symmetric, then the sand runs down; repeats while hovered. */
+@media (prefers-reduced-motion: no-preference) {
+  .explorer-hourglass:hover .hg-glass,
+  .explorer-hourglass:focus-visible .hg-glass { animation: hg-flip 2.6s infinite; }
+  .explorer-hourglass:hover .hg-sand-top,
+  .explorer-hourglass:focus-visible .hg-sand-top { animation: hg-drain 2.6s infinite; }
+  .explorer-hourglass:hover .hg-sand-bottom,
+  .explorer-hourglass:focus-visible .hg-sand-bottom { animation: hg-fill 2.6s infinite; }
+  .explorer-hourglass:hover .hg-stream,
+  .explorer-hourglass:focus-visible .hg-stream { animation: hg-stream 2.6s infinite, hg-fall 0.35s linear infinite; }
+}
+@keyframes hg-flip {
+  0% { transform: rotate(0deg); animation-timing-function: cubic-bezier(0.5, 0, 0.2, 1.3); }
+  18% { transform: rotate(180deg); }
+  18.01%, 100% { transform: rotate(0deg); }
+}
+@keyframes hg-drain {
+  0%, 18% { opacity: 0; transform: scale(1); }
+  18.01% { opacity: 1; transform: scale(1); animation-timing-function: linear; }
+  92% { opacity: 1; transform: scale(0); }
+  100% { opacity: 0; transform: scale(0); }
+}
+@keyframes hg-fill {
+  0%, 18% { transform: scale(1); }
+  18.01% { transform: scale(0); animation-timing-function: linear; }
+  92%, 100% { transform: scale(1); }
+}
+@keyframes hg-stream {
+  0%, 20% { opacity: 0; }
+  22%, 88% { opacity: 1; }
+  92%, 100% { opacity: 0; }
+}
+@keyframes hg-fall { to { stroke-dashoffset: -3.2; } }
 
 .phase-cell .in-progress,
 .phase-key .in-progress {

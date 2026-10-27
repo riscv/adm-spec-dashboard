@@ -868,7 +868,17 @@ function ExplorerHourglass({ specKey }) {
       rel="noreferrer"
       aria-label="Open in the Development Explorer"
     >
-      {"\u23F3"}
+      {/* The same frame and sand as the CSS-masked hourglass, drawn inline so
+          hovering can flip the glass and run the sand down. */}
+      <svg className="hg-glass" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"
+        strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 2h14M5 22h14" />
+        <path d="M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2" />
+        <path d="M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22" />
+        <path className="hg-sand-top" d="M9 4h6l-3 3z" fill="currentColor" strokeWidth="1" />
+        <path className="hg-stream" d="M12 8v11" strokeWidth="1.2" />
+        <path className="hg-sand-bottom" d="M9 20l3-3 3 3z" fill="currentColor" strokeWidth="1" />
+      </svg>
     </a>
   );
 }
