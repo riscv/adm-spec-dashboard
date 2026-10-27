@@ -596,7 +596,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 3 edits by 1 member; group space: 16 pages edited by members",
-    "discussion": "2 messages from 1 person naming \"RVM Profile\" (tech-privileged 1, tech-unprivileged 1); the group's list had 8 messages from 4 people",
+    "discussion": "2 messages from 1 person naming \"RVM Profile\" (tech-privileged 1, tech-unprivileged 1); the group's list had 9 messages from 4 people",
     "github": "0 commits, 1 PR by 1 person in riscv/riscv-rvm-profile",
     "jira": "2 approval steps closed (Governing Committee Plan Review (required); Develop Specification Plan)"
    }
@@ -634,9 +634,9 @@
     "github": 0,
     "jira": 0,
     "meetings": null,
-    "tests": 1
+    "tests": 2
    },
-   "share": 7,
+   "share": 14,
    "terms": [
     "Zvfbfa",
     "Zvfofp8min"
@@ -646,7 +646,7 @@
     "discussion": "0 messages from 0 people naming Zvfbfa, Zvfofp8min",
     "github": "0 commits by 0 people in aswaterman/riscv-misc main/isa",
     "jira": "no approval step closed, no phase change, no member comment",
-    "tests": "3 PRs by 1 person (riscv-unified-db 3)"
+    "tests": "4 PRs by 2 people (riscv-unified-db 3, sail-riscv 1)"
    }
   },
   "RVS-3828": {
@@ -1278,7 +1278,7 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "9 messages from 3 people naming IOPMP, \"Input/Output Physical Memory Protection\" (tech-arch-review 3, tech-privileged 3, tech-unprivileged 3); the group's list had 44 messages from 9 people",
-    "github": "115 commits, 48 PRs by 3 people in riscv-non-isa/riscv-iopmp",
+    "github": "115 commits, 54 PRs by 4 people in riscv-non-isa/riscv-iopmp",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
