@@ -1095,41 +1095,47 @@ a:hover {
 .explorer-hourglass:focus-visible { outline: 2px solid var(--ph, var(--brand)); outline-offset: 2px; }
 .hg-glass { display: block; width: 100%; height: 100%; overflow: visible; transform-origin: 50% 50%; }
 .hg-sand-top, .hg-sand-bottom { transform-box: fill-box; transform-origin: 50% 100%; }
-.hg-sand-top, .hg-stream { opacity: 0; }
+/* At rest the sand is mid-flow: half the top left, the pile building. */
+.hg-sand-top { transform: scale(0.5); }
+.hg-sand-bottom { transform: scale(0.87); }
 .hg-stream { stroke-dasharray: 1.2 2; }
 
-/* Hover: the glass flips (its sand ends up on top), snaps back unseen since
-   the frame is symmetric, then the sand runs down; repeats while hovered. */
+/* Hover: the last of the sand runs down, the glass flips (its sand ends up on
+   top) and snaps back unseen since the frame is symmetric, then the sand runs
+   down to the resting mid-flow state; repeats while hovered. */
 @media (prefers-reduced-motion: no-preference) {
   .explorer-hourglass:hover .hg-glass,
   .explorer-hourglass:focus-visible .hg-glass { animation: hg-flip 2.6s infinite; }
   .explorer-hourglass:hover .hg-sand-top,
-  .explorer-hourglass:focus-visible .hg-sand-top { animation: hg-drain 2.6s infinite; }
+  .explorer-hourglass:focus-visible .hg-sand-top { animation: hg-drain 2.6s linear infinite; }
   .explorer-hourglass:hover .hg-sand-bottom,
-  .explorer-hourglass:focus-visible .hg-sand-bottom { animation: hg-fill 2.6s infinite; }
+  .explorer-hourglass:focus-visible .hg-sand-bottom { animation: hg-fill 2.6s linear infinite; }
   .explorer-hourglass:hover .hg-stream,
-  .explorer-hourglass:focus-visible .hg-stream { animation: hg-stream 2.6s infinite, hg-fall 0.35s linear infinite; }
+  .explorer-hourglass:focus-visible .hg-stream { animation: hg-stream 2.6s linear infinite, hg-fall 0.35s linear infinite; }
 }
 @keyframes hg-flip {
-  0% { transform: rotate(0deg); animation-timing-function: cubic-bezier(0.5, 0, 0.2, 1.3); }
-  18% { transform: rotate(180deg); }
-  18.01%, 100% { transform: rotate(0deg); }
+  0% { transform: rotate(0deg); }
+  12% { transform: rotate(0deg); animation-timing-function: cubic-bezier(0.5, 0, 0.2, 1.3); }
+  28% { transform: rotate(180deg); }
+  28.01%, 100% { transform: rotate(0deg); }
 }
 @keyframes hg-drain {
-  0%, 18% { opacity: 0; transform: scale(1); }
-  18.01% { opacity: 1; transform: scale(1); animation-timing-function: linear; }
-  92% { opacity: 1; transform: scale(0); }
-  100% { opacity: 0; transform: scale(0); }
+  0% { opacity: 1; transform: scale(0.5); }
+  12% { opacity: 1; transform: scale(0); }
+  12.01%, 28% { opacity: 0; transform: scale(1); }
+  28.01% { opacity: 1; transform: scale(1); }
+  100% { opacity: 1; transform: scale(0.5); }
 }
 @keyframes hg-fill {
-  0%, 18% { transform: scale(1); }
-  18.01% { transform: scale(0); animation-timing-function: linear; }
-  92%, 100% { transform: scale(1); }
+  0% { transform: scale(0.87); }
+  12%, 28% { transform: scale(1); }
+  28.01% { transform: scale(0); }
+  100% { transform: scale(0.87); }
 }
 @keyframes hg-stream {
-  0%, 20% { opacity: 0; }
-  22%, 88% { opacity: 1; }
-  92%, 100% { opacity: 0; }
+  0%, 10% { opacity: 1; }
+  12%, 30% { opacity: 0; }
+  32%, 100% { opacity: 1; }
 }
 @keyframes hg-fall { to { stroke-dashoffset: -3.2; } }
 
@@ -1140,8 +1146,8 @@ a:hover {
   height: 15px;
   vertical-align: -2px;
   background: var(--ph, var(--brand));
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M9 20l3-3 3 3z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M9 20l3-3 3 3z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M10.5 5.5h3L12 7z' fill='black' stroke-width='1'/%3E%3Cpath d='M12 8v9' stroke-width='1.2' stroke-dasharray='1.2 2'/%3E%3Cpath d='M9.4 20l2.6-2.6 2.6 2.6z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M10.5 5.5h3L12 7z' fill='black' stroke-width='1'/%3E%3Cpath d='M12 8v9' stroke-width='1.2' stroke-dasharray='1.2 2'/%3E%3Cpath d='M9.4 20l2.6-2.6 2.6 2.6z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
   font-size: 0;
   line-height: 0;
   color: transparent;
@@ -1500,8 +1506,8 @@ button.activity-chip:hover { background: var(--surface-muted); }
   width: 10px;
   height: 10px;
   background: var(--ph, var(--brand));
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M9 20l3-3 3 3z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M9 20l3-3 3 3z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M10.5 5.5h3L12 7z' fill='black' stroke-width='1'/%3E%3Cpath d='M12 8v9' stroke-width='1.2' stroke-dasharray='1.2 2'/%3E%3Cpath d='M9.4 20l2.6-2.6 2.6 2.6z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2h14M5 22h14'/%3E%3Cpath d='M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2'/%3E%3Cpath d='M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22'/%3E%3Cpath d='M10.5 5.5h3L12 7z' fill='black' stroke-width='1'/%3E%3Cpath d='M12 8v9' stroke-width='1.2' stroke-dasharray='1.2 2'/%3E%3Cpath d='M9.4 20l2.6-2.6 2.6 2.6z' fill='black' stroke-width='1'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .phase-name {
