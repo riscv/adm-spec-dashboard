@@ -320,9 +320,9 @@
     "Zabhlrsc"
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 4 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 12 messages from 4 people",
-    "github": "88 commits, 100 PRs by 5 people in riscv/riscv-cheri",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
+    "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 13 messages from 4 people",
+    "github": "88 commits, 101 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
