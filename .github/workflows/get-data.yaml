@@ -119,9 +119,11 @@ jobs:
   # reach the Jira or GitHub tokens. A failure keeps the old summaries.
   summaries:
     name: Write AI summaries
-    needs: data-fetch
+    # After the activity job, so the summaries carry that day's GitHub counts.
+    needs: [data-fetch, activity]
     # Branch runs are for testing the fetch only; the AWS roles trust main anyway.
-    if: github.ref == 'refs/heads/main'
+    # always(): a failed activity job must not hold the summaries back.
+    if: always() && needs.data-fetch.result == 'success' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     continue-on-error: true
     permissions:
@@ -137,6 +139,14 @@ jobs:
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: ui-data
+          path: web-ui/public
+
+      # Missing when the activity job failed: the checked-in activity.json is used.
+      - name: Get the spec activity
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: activity
           path: web-ui/public
 
       - name: Configure AWS credentials for Bedrock

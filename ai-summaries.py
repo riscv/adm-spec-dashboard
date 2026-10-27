@@ -28,6 +28,7 @@ import sys
 
 MODEL_ID = os.environ.get("BEDROCK_MODEL_ID", "qwen.qwen3-next-80b-a3b")
 TREND_WINDOW_DAYS = 90  # same as the dashboard
+ACTIVITY_WINDOW_DAYS = 90  # spec-activity.py's window
 NOT_SET = ("", "Not Set", "Not Set Yet")
 
 SYSTEM = (
@@ -70,8 +71,12 @@ def gap_text(target, ref, ref_name):
     return f"It is {quarters(abs(d))} {word} the {ref_name} {ref}"
 
 
-def build_facts(row, today):
-    """Return the facts for one spec as plain sentences, in reading order."""
+def build_facts(row, today, github=None):
+    """Return the facts for one spec as plain sentences, in reading order.
+
+    github is the spec's GitHub line from activity.json (spec-activity.py),
+    such as "9 commits, 10 PRs by 2 people in riscv/riscv-fast-interrupt".
+    """
     status = row["Status"]
     phase = phase_name(status)
     if status == "Cancelled":
@@ -125,8 +130,21 @@ def build_facts(row, today):
 
     last = dated(row.get("Last Contribution", ""), today)
     if last:
-        facts.append(f"The last repository activity was on {last}")
+        facts.append(f"The last GitHub contribution was on {last}")
+    facts.append(github_fact(github))
     return [f for f in facts if f]
+
+
+def github_fact(text):
+    """The latest GitHub contributions, as spec-activity.py counted them."""
+    text = (text or "").strip()
+    if not text:
+        return None
+    window = f"In the last {ACTIVITY_WINDOW_DAYS} days"
+    m = re.fullmatch(r"0 commits by 0 people in (.+)", text)
+    if m:
+        return f"{window}, {m.group(1)} had no commits or PRs from members"
+    return f"{window}, GitHub had {text}"
 
 
 # The three dates the Activity Level is computed from, as get-specs-data.py
@@ -195,6 +213,10 @@ def dated(value, today):
         return ""
 
 
+def github_text(entry):
+    return ((entry or {}).get("text") or {}).get("github", "") if isinstance(entry, dict) else ""
+
+
 def template(facts):
     return ". ".join(facts) + "."
 
@@ -255,6 +277,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("csv")
     ap.add_argument("--out", default="web-ui/public/summaries.json")
+    ap.add_argument("--activity", default="",
+                    help="spec-activity.py output (default: activity.json next to --out)")
     ap.add_argument("--only", default="", help="comma separated RVS keys")
     ap.add_argument("--no-model", action="store_true", help="templates only, no Bedrock calls")
     args = ap.parse_args()
@@ -265,6 +289,13 @@ def main():
         cache = json.load(open(args.out))
     except (OSError, ValueError):
         cache = {}
+
+    # Missing or unreadable: the summaries just leave the GitHub counts out.
+    activity_path = args.activity or os.path.join(os.path.dirname(args.out), "activity.json")
+    try:
+        activity = json.load(open(activity_path)).get("specs") or {}
+    except (OSError, ValueError, AttributeError):
+        activity = {}
 
     client = None
     if not args.no_model:
@@ -303,7 +334,8 @@ def main():
             continue
         old = cache.get(key) or {}
         spec_old = {k: v for k, v in old.items() if k != "group"}
-        entry = dict(summarize(key, build_facts(row, today), spec_old, row["Status"] != "Cancelled"))
+        facts = build_facts(row, today, github_text(activity.get(key)))
+        entry = dict(summarize(key, facts, spec_old, row["Status"] != "Cancelled"))
         group_facts = build_group_facts(row, today)
         if group_facts:
             # Without a level there is nothing to explain; the template says so.

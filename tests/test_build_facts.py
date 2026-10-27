@@ -28,7 +28,7 @@ def test_development_on_track(ais):
         "The projection has not changed in the last 90 days",
         "The next approval is Development complete, projected for 2026-12-25",
         "The projected dates were last set on 2026-03-09",
-        "The last repository activity was on 2026-10-16",
+        "The last GitHub contribution was on 2026-10-16",
     ]
 
 
@@ -122,10 +122,40 @@ def test_bad_dates_are_dropped_not_guessed(ais):
     facts = facts_for(ais, "development_on_track", **{
         "Phase Started": "soon", "Latest Replanning": "Not Set", "Last Contribution": "",
     })
-    assert not any(f.startswith(("This phase started", "The projected dates", "The last repository")) for f in facts)
+    assert not any(f.startswith(("This phase started", "The projected dates", "The last GitHub")) for f in facts)
 
 
 def test_unparsable_quarter_gap_is_dropped(ais):
     facts = facts_for(ais, "development_on_track", **{"Baseline Ratification Quarter": "2027"})
     assert not any("baseline" in f for f in facts)
     assert None not in facts
+
+
+def test_github_snapshot_follows_the_last_contribution(ais):
+    row = make_row(**ROWS["development_on_track"])
+    facts = ais.build_facts(row, TODAY, "9 commits, 10 PRs by 2 people in riscv/riscv-fast-interrupt")
+    assert facts[-2:] == [
+        "The last GitHub contribution was on 2026-10-16",
+        "In the last 90 days, GitHub had 9 commits, 10 PRs by 2 people in riscv/riscv-fast-interrupt",
+    ]
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("0 commits by 0 people in riscv/riscv-zilx", "In the last 90 days, riscv/riscv-zilx had no commits or PRs from members"),
+    ("", None),
+    (None, None),
+])
+def test_github_snapshot_edge_cases(ais, text, expected):
+    facts = ais.build_facts(make_row(**ROWS["development_on_track"]), TODAY, text)
+    assert facts[-1] == expected if expected else facts[-1].startswith("The last GitHub")
+
+
+def test_main_reads_activity_next_to_the_output(ais, rows, run_main):
+    run_main.out_path.parent.mkdir(parents=True, exist_ok=True)
+    (run_main.out_path.parent / "activity.json").write_text(
+        '{"specs": {"RVS-2": {"text": {"github": "1 commit by 1 person in riscv/x"}}}}')
+    out, _ = run_main([rows["development_on_track"]])
+    assert out["RVS-2"]["source"] == "ai"
+    facts = ais.build_facts(rows["development_on_track"], TODAY, "1 commit by 1 person in riscv/x")
+    assert out["RVS-2"]["hash"] == ais.hashlib.sha256(
+        ais.json.dumps([ais.MODEL_ID, ais.SYSTEM, facts]).encode()).hexdigest()[:16]
