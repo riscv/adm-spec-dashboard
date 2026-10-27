@@ -28,9 +28,9 @@
   "summary": "The specification is in Development. This phase started on 2026-03-09. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. On 2026-10-19 the projection moved later, from 27Q1 to 27Q2. The next approval is Development complete, projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last repository activity was on 2026-10-23."
  },
  "RVS-1145": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "group": {
-   "generated": "2026-10-26",
+   "generated": "2026-10-27",
    "hash": "aa490200e432fc78",
    "source": "template",
    "summary": "The specification is developed by the Unified Discovery. The group is Archived."
@@ -54,7 +54,7 @@
   "summary": "The specification is in Ratification-Ready. This phase started on 2026-10-14. Development started on 2024-08-28. The projected ratification quarter is 26Q4. It is 8 quarters behind the baseline 24Q4. The projection has not changed in the last 90 days. The next approval is TSC ratification, projected for 2026-12-19. The projected dates were last set on 2026-10-23. ARC review: Approved. Public review: Public Review In Progress. TSC approval: Not Started. The last repository activity was on 2026-10-23."
  },
  "RVS-1185": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -90,11 +90,11 @@
  "RVS-1790": {
   "generated": "2026-10-23",
   "group": {
-   "generated": "2026-10-26",
-   "hash": "d6b3e8af0edd39c8",
+   "generated": "2026-10-27",
+   "hash": "81cdf060e8560f10",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Attached Matrix Extension (AME) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-23. Its mailing list last had a message on 2026-10-26. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Attached Matrix Extension (AME) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-26. Its mailing list last had a message on 2026-10-26. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "1f3d68ff9a1240da",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -116,7 +116,7 @@
   "summary": "The specification is in Freeze. This phase started on 2025-06-06. Development started on 2024-06-12. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last repository activity was on 2026-10-22."
  },
  "RVS-1895": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -159,7 +159,7 @@
  "RVS-1942": {
   "generated": "2026-10-23",
   "group": {
-   "generated": "2026-10-26",
+   "generated": "2026-10-27",
    "hash": "175b4a9f381cbaac",
    "source": "template",
    "summary": "The specification is developed by the Performance Events TG. The group is Structuring and Chartering."
@@ -177,27 +177,27 @@
   "summary": "The specification is in Stabilization, following the fast-track process. This phase started on 2026-06-22. Development started on 2026-04-15. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. On 2026-10-19 the projection moved later, from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last repository activity was on 2026-10-25."
  },
  "RVS-2141": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "group": {
-   "generated": "2026-10-22",
-   "hash": "163eb0fcf8e61860",
+   "generated": "2026-10-27",
+   "hash": "6ecae70458aeb7fd",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-13. Its mailing list last had a message on 2026-10-12. Its repository was last updated on 2026-10-21. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-13. Its mailing list last had a message on 2026-10-26. Its repository was last updated on 2026-10-21. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "b388ef5443ff3297",
+  "hash": "529219ac98170c08",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last repository activity was on 2026-10-26."
+  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last repository activity was on 2026-10-27."
  },
  "RVS-2360": {
   "generated": "2026-10-23",
   "group": {
-   "generated": "2026-10-23",
-   "hash": "4a279e052b96c43d",
+   "generated": "2026-10-27",
+   "hash": "e5282fffaee6c370",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Post-Quantum Cryptography (PQC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-22. Its mailing list last had a message on 2026-10-22. Its repository was last updated on 2026-10-19. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the Post-Quantum Cryptography (PQC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-22. Its mailing list last had a message on 2026-10-26. Its repository was last updated on 2026-10-19. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "51de610be5f0afb3",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -205,18 +205,18 @@
   "summary": "The specification is in Stabilization. This phase started on 2026-07-22. Development started on 2026-03-05. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. On 2026-10-23 the projection moved later, from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last repository activity was on 2026-10-19."
  },
  "RVS-2362": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "group": {
-   "generated": "2026-10-26",
-   "hash": "b9b1ba8c67de66ad",
+   "generated": "2026-10-27",
+   "hash": "05a0a8ca68f70b83",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-10-19. Its repository was last updated on 2026-10-25. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-10-26. Its repository was last updated on 2026-10-26. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "1ba340f1b932319f",
+  "hash": "03f9ef5dc95d47d5",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Development. This phase started on 2026-03-04. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. On 2026-10-16 the projection moved later, from 27Q1 to 27Q2. The next approval is Development complete, projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last repository activity was on 2026-10-26."
+  "summary": "The specification is in Development. This phase started on 2026-03-04. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. On 2026-10-16, the projection moved from 27Q1 to 27Q2. The next approval is Development complete, projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last repository activity was on 2026-10-27."
  },
  "RVS-2611": {
   "generated": "2026-10-19",
@@ -235,11 +235,11 @@
  "RVS-2706": {
   "generated": "2026-10-26",
   "group": {
-   "generated": "2026-10-22",
-   "hash": "1c333c4c33d280cb",
+   "generated": "2026-10-27",
+   "hash": "ce4afca99f180df2",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Memory Tagging TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-09-28. Its repository was last updated on 2026-10-19. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Memory Tagging TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-10-26. Its repository was last updated on 2026-10-26. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "d3e25b1ad032bf22",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -249,11 +249,11 @@
  "RVS-2770": {
   "generated": "2026-10-26",
   "group": {
-   "generated": "2026-10-22",
-   "hash": "4cd39b4e3362ccd2",
+   "generated": "2026-10-27",
+   "hash": "d3bc8f5080c55a46",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Performance Event Sampling TG. Its activity level is Active. Its Confluence space was last updated on 2026-09-30. Its mailing list last had a message on 2026-10-14. Its repository was last updated on 2026-10-19. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Performance Event Sampling TG. Its activity level is Active. Its Confluence space was last updated on 2026-09-30. Its mailing list last had a message on 2026-10-14. Its repository was last updated on 2026-10-26. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "e84383f4b4b0dd73",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -331,13 +331,13 @@
   "summary": "The specification is in Development. This phase started on 2026-08-04. The projected ratification quarter is 27Q2. It matches the baseline 27Q2. The projection has not changed in the last 90 days. The next approval is Development complete, projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last repository activity was on 2026-03-07."
  },
  "RVS-3623": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
  },
  "RVS-3645": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -392,9 +392,9 @@
   "summary": "The specification is in Development, following the fast-track process. This phase started on 2025-07-08. The projected ratification quarter is 27Q2. It is 6 quarters behind the baseline 25Q4. On 2026-08-24 the projection moved later, from 27Q1 to 27Q2. The next approval is Development complete, projected for 2026-12-29. The projected dates were last set on 2026-10-23."
  },
  "RVS-4114": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "group": {
-   "generated": "2026-10-26",
+   "generated": "2026-10-27",
    "hash": "9db2fce77b8bb75e",
    "source": "template",
    "summary": "The specification is developed by the Speculation Barriers TG. The group is Archived."
@@ -460,7 +460,7 @@
   "summary": "The specification is in Inception, following the fast-track process. This phase started on 2026-01-30. No projected ratification quarter is set yet."
  },
  "RVS-4549": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -503,7 +503,7 @@
  "RVS-4762": {
   "generated": "2026-10-19",
   "group": {
-   "generated": "2026-10-26",
+   "generated": "2026-10-27",
    "hash": "f38d88a851e8e134",
    "source": "template",
    "summary": "The specification is developed by the Logic Analyzer Trace TG. The group is Structuring and Chartering."
@@ -521,14 +521,14 @@
   "summary": "The specification is in Development, following the fast-track process. This phase started on 2026-09-29. The projected ratification quarter is 27Q2. It matches the baseline 27Q2. The projection has not changed in the last 90 days. The next approval is Development complete, projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last repository activity was on 2026-10-15."
  },
  "RVS-4890": {
-  "generated": "2026-10-23",
-  "hash": "cfadcc3a1270a807",
+  "generated": "2026-10-27",
+  "hash": "ecacf3f1f79109e0",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Stabilization, following the fast-track process. This phase started on 2026-10-16. Development started on 2026-08-24. The projected ratification quarter is 27Q2, matching the baseline 27Q2. The projection has not changed in the last 90 days. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last repository activity was on 2026-10-20."
+  "summary": "The specification is in Stabilization following the fast-track process. This phase started on 2026-10-16. Development started on 2026-08-24. The projected ratification quarter is 27Q2, matching the baseline. The projection has not changed in the last 90 days. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last repository activity was on 2026-10-27."
  },
  "RVS-4913": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
@@ -576,7 +576,7 @@
   "summary": "The specification is in Planning, following the fast-track process. This phase started on 2026-10-23. No projected ratification quarter is set yet. The last repository activity was on 2026-10-01."
  },
  "RVS-5086": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "group": {
    "generated": "2026-10-25",
    "hash": "927d98c9583c0247",
@@ -584,10 +584,10 @@
    "source": "ai",
    "summary": "The specification is developed by the psABI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-13. Its mailing list last had a message on 2026-10-19. Its repository was last updated on 2026-10-24. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "0011c7a64e4e3931",
+  "hash": "71abc5b08410bc80",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2026-08-31. No projected ratification quarter is set yet. The last repository activity was on 2026-10-26."
+  "summary": "The specification is in Planning. This phase started on 2026-08-31. No projected ratification quarter is set yet. The last repository activity was on 2026-10-27."
  },
  "RVS-5117": {
   "generated": "2026-10-19",
@@ -597,20 +597,20 @@
   "summary": "The specification is in Inception, following the fast-track process. This phase started on 2026-09-25. No projected ratification quarter is set yet."
  },
  "RVS-5139": {
-  "generated": "2026-10-20",
+  "generated": "2026-10-27",
   "group": {
-   "generated": "2026-10-26",
+   "generated": "2026-10-27",
    "hash": "32a5c114e226fd47",
    "source": "template",
    "summary": "The specification is developed by the Long Instruction TG. The group is Structuring and Chartering."
   },
-  "hash": "c57e38f0cffdd912",
+  "hash": "63d8516f34330b40",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Inception. This phase started on 2026-09-29. No projected ratification quarter is set yet. The last repository activity was on 2026-10-20."
+  "summary": "The specification is in Inception. This phase started on 2026-09-29. No projected ratification quarter is set yet. The last repository activity was on 2026-10-27."
  },
  "RVS-793": {
-  "generated": "2026-10-23",
+  "generated": "2026-10-27",
   "group": {
    "generated": "2026-10-23",
    "hash": "e7de1560319300be",
@@ -618,13 +618,13 @@
    "source": "ai",
    "summary": "The specification is developed by the I/O Physical Memory Protection Unit (IOPMP) TG. Its activity level is Low. Its Confluence space was last updated on 2026-08-03. Its mailing list last had a message on 2026-10-22. No repository update is recorded. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
   },
-  "hash": "1597b312c5ce149c",
+  "hash": "15b4c265b80c12cc",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-07-16. Development started on 2023-06-21. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approved. The last repository activity was on 2026-10-23."
+  "summary": "The specification is in Freeze. This phase started on 2025-07-16. Development started on 2023-06-21. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approved. The last repository activity was on 2026-10-27."
  },
  "RVS-913": {
-  "generated": "2026-10-26",
+  "generated": "2026-10-27",
   "hash": "04b250407c07db0d",
   "source": "template",
   "summary": "The specification was cancelled."
