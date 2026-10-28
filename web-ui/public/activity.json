@@ -1140,7 +1140,7 @@
    "text": {
     "confluence": "Ratification Plan: 1 edit by 1 member; group space: 2 pages edited by members",
     "discussion": "2 messages from 1 person naming BRS, \"Boot & Runtime Services v1.1\" (tech-privileged 1, tech-unprivileged 1); the group's list had 1 message from 1 person",
-    "github": "9 commits, 5 PRs by 4 people in riscv-non-isa/riscv-brs",
+    "github": "9 commits, 7 PRs by 4 people in riscv-non-isa/riscv-brs",
     "jira": "2 approval steps closed (Develop Specification Plan; Notify TSC of Fast-Track Approval); phase changed 1 time; 1 comment from members"
    }
   },

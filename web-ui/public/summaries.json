@@ -205,7 +205,7 @@
   "summary": "The specification is in Stabilization. This phase started on 2026-07-22. Development started on 2026-03-05. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. On 2026-10-23 the projection moved later, from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-10-19. In the last 90 days, GitHub had 18 commits, 6 PRs by 3 people in riscv/riscv-pqc."
  },
  "RVS-2362": {
-  "generated": "2026-10-27",
+  "generated": "2026-10-28",
   "group": {
    "generated": "2026-10-28",
    "hash": "54f91bd836b77f9b",
@@ -213,10 +213,10 @@
    "source": "ai",
    "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-10-26. Its repository was last updated on 2026-10-27. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "c386f7d085c8d283",
+  "hash": "b4ea466f919fbceb",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Development, starting on 2026-03-04. The projected ratification quarter is 27Q2, which is 2 quarters behind the baseline 26Q4. On 2026-10-16, the projection moved from 27Q1 to 27Q2. The next approval, Development complete, is projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-10-27, with 992 commits and 40 PRs by 5 people in riscv/riscv-high-assurance-cryptography in the last 90 days."
+  "summary": "The specification is in Development, which started on 2026-03-04. The projected ratification quarter is 27Q2, 2 quarters behind the baseline 26Q4. On 2026-10-16, the projection moved from 27Q1 to 27Q2. The next approval, Development complete, is projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-10-28, with 992 commits and 40 PRs by 5 people in riscv/riscv-high-assurance-cryptography in the last 90 days."
  },
  "RVS-2611": {
   "generated": "2026-10-27",
@@ -548,7 +548,7 @@
   "summary": "The specification is in Inception, following the fast-track process. This phase started on 2026-08-26. No projected ratification quarter is set yet."
  },
  "RVS-5068": {
-  "generated": "2026-10-27",
+  "generated": "2026-10-28",
   "group": {
    "generated": "2026-10-22",
    "hash": "b3d71907fae4996b",
@@ -556,10 +556,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Boot and Runtime Services (BRS) TG. Its activity level is Active. Its Confluence space was last updated on 2026-09-24. Its mailing list last had a message on 2026-09-27. Its repository was last updated on 2026-10-13. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "bac0c8313bae0fc0",
+  "hash": "d7ab0f009acae3c9",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning, following the fast-track process. This phase started on 2026-08-26. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-10-13. In the last 90 days, GitHub had 9 commits and 5 PRs by 4 people in riscv-non-isa/riscv-brs."
+  "summary": "The specification is in Planning, following the fast-track process. This phase started on 2026-08-26. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-10-28. In the last 90 days, GitHub had 9 commits, 7 PRs by 4 people in riscv-non-isa/riscv-brs."
  },
  "RVS-5078": {
   "generated": "2026-10-19",
