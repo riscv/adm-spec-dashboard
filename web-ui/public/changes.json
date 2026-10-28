@@ -1,7 +1,7 @@
 {
-  "generated": "2026-10-27",
-  "from": "2026-10-20",
-  "to": "2026-10-27",
+  "generated": "2026-10-28",
+  "from": "2026-10-21",
+  "to": "2026-10-28",
   "changes": [
     {
       "spec": "RVS-793",
@@ -20,9 +20,23 @@
     {
       "spec": "RVS-1135",
       "summary": "Packed SIMD (P)",
+      "field": "status",
+      "from": "Specification Under Development",
+      "to": "Specification Under Stabilization"
+    },
+    {
+      "spec": "RVS-1135",
+      "summary": "Packed SIMD (P)",
+      "field": "progress",
+      "from": "Exposed",
+      "to": "On Track"
+    },
+    {
+      "spec": "RVS-1135",
+      "summary": "Packed SIMD (P)",
       "field": "next_approval_date",
       "from": "2026-12-25",
-      "to": "2026-12-29"
+      "to": "2026-12-12"
     },
     {
       "spec": "RVS-1153",
@@ -275,20 +289,6 @@
       "field": "presence",
       "from": "present",
       "to": "absent"
-    },
-    {
-      "spec": "RVS-4752",
-      "summary": "Instrumentation Trace",
-      "field": "projected_q",
-      "from": "27Q2",
-      "to": "Not Set Yet"
-    },
-    {
-      "spec": "RVS-4752",
-      "summary": "Instrumentation Trace",
-      "field": "progress",
-      "from": "On Track",
-      "to": "Not Set Yet"
     },
     {
       "spec": "RVS-4802",
