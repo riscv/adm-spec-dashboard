@@ -27,8 +27,8 @@
    ],
    "text": {
     "confluence": "group space: 8 pages edited by members",
-    "discussion": "0 messages from 0 people naming Smidctrl, Ssidctrl, Smeihv, Sseihv, Smnip, Ssnip, Smijt, Ssijt; the group's list had 10 messages from 2 people",
-    "github": "10 commits, 12 PRs by 2 people in riscv/riscv-fast-interrupt",
+    "discussion": "0 messages from 0 people naming Smidctrl, Ssidctrl, Smeihv, Sseihv, Smnip, Ssnip, Smijt, Ssijt; the group's list had 11 messages from 2 people",
+    "github": "11 commits, 14 PRs by 2 people in riscv/riscv-fast-interrupt",
     "jira": "4 comments from members",
     "tests": "2 PRs by 1 person (riscv-unified-db 2)"
    }
@@ -98,8 +98,8 @@
     "Smmtt"
    ],
    "text": {
-    "confluence": "group space: 6 pages edited by members",
-    "discussion": "1 message from 1 person naming Smmtt (tech-arch-review 1); the group's list had 32 messages from 5 people",
+    "confluence": "group space: 7 pages edited by members",
+    "discussion": "1 message from 1 person naming Smmtt (tech-arch-review 1); the group's list had 33 messages from 5 people",
     "github": "23 commits, 8 PRs by 6 people in riscv/riscv-smmtt",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
@@ -148,7 +148,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 13 pages edited by members",
-    "discussion": "0 messages from 0 people naming Ztt; the group's list had 146 messages from 24 people",
+    "discussion": "0 messages from 0 people naming Ztt; the group's list had 147 messages from 24 people",
     "github": "52 commits, 17 PRs by 7 people in riscv/riscv-attached-matrix-extension",
     "jira": "3 approval steps closed (Project Committee Approval (required); Develop Specification; Notify TSC and CSC); phase changed 1 time"
    }
@@ -595,7 +595,7 @@
     "\"RVM Profile\""
    ],
    "text": {
-    "confluence": "Ratification Plan: 3 edits by 1 member; group space: 16 pages edited by members",
+    "confluence": "Ratification Plan: 3 edits by 1 member; group space: 17 pages edited by members",
     "discussion": "2 messages from 1 person naming \"RVM Profile\" (tech-privileged 1, tech-unprivileged 1); the group's list had 8 messages from 3 people",
     "github": "0 commits, 1 PR by 1 person in riscv/riscv-rvm-profile",
     "jira": "2 approval steps closed (Governing Committee Plan Review (required); Develop Specification Plan)"
