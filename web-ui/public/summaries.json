@@ -185,10 +185,10 @@
    "source": "ai",
    "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-27. Its repository was last updated on 2026-10-21. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "a0c39375ad31d9b0",
+  "hash": "61c606c5ace4599b",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-10-29. In the last 90 days, GitHub had 85 commits, 104 PRs by 5 people in riscv/riscv-cheri."
+  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-10-29. In the last 90 days, GitHub had 85 commits, 105 PRs by 5 people in riscv/riscv-cheri."
  },
  "RVS-2360": {
   "generated": "2026-10-27",
