@@ -247,7 +247,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 10 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 73 messages from 13 people",
+    "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 74 messages from 13 people",
     "github": "1 commit, 10 PRs by 3 people in riscv/integrated-matrix-extension",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 13 messages from 4 people",
-    "github": "85 commits, 104 PRs by 5 people in riscv/riscv-cheri",
+    "github": "85 commits, 105 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -1255,7 +1255,7 @@
     "discussion": "0 messages from 0 people naming \"Long Instruction\"; the group's list had 6 messages from 3 people",
     "github": "11 commits by 1 person in riscv/riscv-long-instruction",
     "jira": "1 approval step closed (Initial Infrastructure Setup)",
-    "tests": "4 PRs by 2 people (riscv-unified-db 4)"
+    "tests": "3 PRs by 2 people (riscv-unified-db 3)"
    }
   },
   "RVS-793": {
