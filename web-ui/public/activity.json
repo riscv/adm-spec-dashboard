@@ -76,7 +76,7 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "4 messages from 2 people naming \"Security Model\" (tech-privileged 2, tech-unprivileged 2); the group's list had 5 messages from 3 people",
-    "github": "11 commits, 4 PRs by 2 people in riscv/riscv-security-model",
+    "github": "11 commits, 7 PRs by 2 people in riscv/riscv-security-model",
     "jira": "7 approval steps closed (Ensure Compliance with RISC-V Policies (required); ARC Review (required); List Code & Contributions; ...); 6 comments from members",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -100,7 +100,7 @@
    "text": {
     "confluence": "group space: 7 pages edited by members",
     "discussion": "1 message from 1 person naming Smmtt (tech-arch-review 1); the group's list had 33 messages from 5 people",
-    "github": "23 commits, 8 PRs by 6 people in riscv/riscv-smmtt",
+    "github": "23 commits, 9 PRs by 7 people in riscv/riscv-smmtt",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -149,7 +149,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 13 pages edited by members",
     "discussion": "0 messages from 0 people naming Ztt; the group's list had 138 messages from 23 people",
-    "github": "42 commits, 14 PRs by 6 people in riscv/riscv-attached-matrix-extension",
+    "github": "42 commits, 15 PRs by 6 people in riscv/riscv-attached-matrix-extension",
     "jira": "3 approval steps closed (Project Committee Approval (required); Develop Specification; Notify TSC and CSC); phase changed 1 time"
    }
   },
@@ -247,7 +247,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 10 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 72 messages from 13 people",
+    "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 73 messages from 13 people",
     "github": "1 commit, 10 PRs by 3 people in riscv/integrated-matrix-extension",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 13 messages from 4 people",
-    "github": "85 commits, 100 PRs by 5 people in riscv/riscv-cheri",
+    "github": "85 commits, 104 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -451,7 +451,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming Sspesa, Ssplcofi, Smpdis, Sspdis; the group's list had 8 messages from 2 people",
+    "discussion": "0 messages from 0 people naming Sspesa, Ssplcofi, Smpdis, Sspdis; the group's list had 10 messages from 3 people",
     "github": "27 commits, 12 PRs by 3 people in riscv/riscv-performance-event-sampling",
     "jira": "no approval step closed, no phase change, no member comment"
    }
