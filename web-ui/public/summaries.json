@@ -164,10 +164,10 @@
    "source": "template",
    "summary": "The specification is developed by the Performance Events TG. The group is Structuring and Chartering."
   },
-  "hash": "545e8f78c7c5a75c",
+  "hash": "913993764bbf205c",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2026-01-16. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-03-07. In the last 90 days, GitHub had 0 commits and 5 PRs by 2 people in riscv/riscv-performance-events."
+  "summary": "The specification is in Planning and started on 2026-01-16. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-10-30. In the last 90 days, GitHub had 2 commits and 5 PRs by 2 people in riscv/riscv-performance-events."
  },
  "RVS-1971": {
   "generated": "2026-10-27",
