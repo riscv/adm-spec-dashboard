@@ -148,7 +148,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 13 pages edited by members",
-    "discussion": "0 messages from 0 people naming Ztt; the group's list had 136 messages from 23 people",
+    "discussion": "0 messages from 0 people naming Ztt; the group's list had 137 messages from 24 people",
     "github": "37 commits, 13 PRs by 6 people in riscv/riscv-attached-matrix-extension",
     "jira": "3 approval steps closed (Project Committee Approval (required); Develop Specification; Notify TSC and CSC); phase changed 1 time"
    }
@@ -172,7 +172,7 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Sdsec; the group's list had 57 messages from 8 people",
-    "github": "24 commits, 5 PRs by 4 people in riscv-non-isa/riscv-external-debug-security",
+    "github": "24 commits, 6 PRs by 4 people in riscv-non-isa/riscv-external-debug-security",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 13 messages from 4 people",
-    "github": "85 commits, 100 PRs by 5 people in riscv/riscv-cheri",
+    "github": "87 commits, 102 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -376,7 +376,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 46 messages from 9 people",
-    "github": "992 commits, 40 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
+    "github": "991 commits, 40 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
     "jira": "1 approval step closed (Develop Specification)"
    }
   },
