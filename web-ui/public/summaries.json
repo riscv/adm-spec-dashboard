@@ -91,10 +91,10 @@
   "generated": "2026-10-30",
   "group": {
    "generated": "2026-10-31",
-   "hash": "90289c3adf4daca0",
+   "hash": "bb132c49ea85b356",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Attached Matrix Extension (AME) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-30. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Attached Matrix Extension (AME) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-31. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "b15eddb8d9b06920",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -205,7 +205,7 @@
   "summary": "The specification is in Stabilization. This phase started on 2026-07-22. Development started on 2026-03-05. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. On 2026-10-23 the projection moved later, from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-10-19. In the last 90 days, GitHub had 18 commits, 6 PRs by 3 people in riscv/riscv-pqc."
  },
  "RVS-2362": {
-  "generated": "2026-10-30",
+  "generated": "2026-10-31",
   "group": {
    "generated": "2026-10-30",
    "hash": "74863dc0e63acb05",
@@ -213,10 +213,10 @@
    "source": "ai",
    "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-26. Its repository was last updated on 2026-10-30. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "92a057eda4815e62",
+  "hash": "3a428de3a4c7fd1f",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Development, which started on 2026-03-04. The projected ratification quarter is 27Q2, 2 quarters behind the baseline 26Q4. On 2026-10-16, the projection moved from 27Q1 to 27Q2. The next approval, Development complete, is projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-10-30, with 991 commits and 40 PRs by 5 people in riscv/riscv-high-assurance-cryptography in the last 90 days."
+  "summary": "The specification is in Development, which started on 2026-03-04. The projected ratification quarter is 27Q2, which is 2 quarters behind the baseline 26Q4. On 2026-10-16, the projection moved from 27Q1 to 27Q2. The next approval, Development complete, is projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-10-31, with 991 commits and 40 PRs by 5 people in riscv/riscv-high-assurance-cryptography in the last 90 days."
  },
  "RVS-2611": {
   "generated": "2026-10-27",
@@ -578,11 +578,11 @@
  "RVS-5086": {
   "generated": "2026-10-27",
   "group": {
-   "generated": "2026-10-29",
-   "hash": "68e125f1bca5fea4",
+   "generated": "2026-10-31",
+   "hash": "19bbf547809fc99e",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the psABI TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-13. Its mailing list last had a message on 2026-10-19. Its repository was last updated on 2026-10-27. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the psABI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-31. Its mailing list last had a message on 2026-10-19. Its repository was last updated on 2026-10-27. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "f38c23ba850bb170",
   "model": "qwen.qwen3-next-80b-a3b",
