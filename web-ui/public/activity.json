@@ -1174,19 +1174,19 @@
    "points": {
     "confluence": 2,
     "discussion": 1,
-    "github": 0,
+    "github": 1,
     "jira": 2,
     "meetings": null,
     "tests": null
    },
-   "share": 50,
+   "share": 67,
    "terms": [
     "\"CBQRI Bandwidth Inactive Entry\""
    ],
    "text": {
     "confluence": "Ratification Plan: 12 edits by 1 member",
     "discussion": "7 messages from 2 people naming \"CBQRI Bandwidth Inactive Entry\" (soc-infra 4, tech-arch-review 1, tech-privileged 1, tech-unprivileged 1)",
-    "github": "0 commits by 0 people in riscv-non-isa/riscv-cbqri",
+    "github": "1 commit by 1 person in riscv-non-isa/riscv-cbqri",
     "jira": "4 approval steps closed (Ratification Plan Date Review Before Voting Begins; Develop Specification Plan; Notify TSC of Fast-Track Approval; ...); phase changed 1 time; 1 comment from members"
    }
   },

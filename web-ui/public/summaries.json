@@ -569,11 +569,11 @@
   "summary": "The specification is in Planning, following the fast-track process. This phase started on 2026-10-11. No projected ratification quarter is set yet."
  },
  "RVS-5082": {
-  "generated": "2026-10-31",
-  "hash": "a90f69ed4faad92f",
+  "generated": "2026-11-01",
+  "hash": "ae46cfd4e65919d6",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning, following the fast-track process. This phase started on 2026-10-23. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-10-01. In the last 90 days, riscv-non-isa/riscv-cbqri had no commits or PRs from members."
+  "summary": "The specification is in Planning, following the fast-track process. This phase started on 2026-10-23. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-01. In the last 90 days, GitHub had 1 commit by 1 person in riscv-non-isa/riscv-cbqri."
  },
  "RVS-5086": {
   "generated": "2026-10-27",
