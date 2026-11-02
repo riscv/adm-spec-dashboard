@@ -26,7 +26,7 @@
     "Ssijt"
    ],
    "text": {
-    "confluence": "group space: 8 pages edited by members",
+    "confluence": "group space: 9 pages edited by members",
     "discussion": "0 messages from 0 people naming Smidctrl, Ssidctrl, Smeihv, Sseihv, Smnip, Ssnip, Smijt, Ssijt; the group's list had 11 messages from 2 people",
     "github": "10 commits, 13 PRs by 3 people in riscv/riscv-fast-interrupt",
     "jira": "4 comments from members",
@@ -247,7 +247,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 11 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 77 messages from 15 people",
+    "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 78 messages from 15 people",
     "github": "1 commit, 10 PRs by 3 people in riscv/integrated-matrix-extension",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
@@ -255,24 +255,24 @@
   },
   "RVS-1942": {
    "governing": "",
-   "level": "Low",
+   "level": "Active",
    "measured": "2026-11-02",
    "points": {
     "confluence": 0,
     "discussion": 1,
-    "github": 1,
+    "github": 2,
     "jira": 0,
     "meetings": null,
     "tests": null
    },
-   "share": 33,
+   "share": 50,
    "terms": [
     "\"Performance Events Specification\""
    ],
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming \"Performance Events Specification\"; the group's list had 5 messages from 2 people",
-    "github": "2 commits, 5 PRs by 2 people in riscv/riscv-performance-events",
+    "github": "6 commits, 5 PRs by 3 people in riscv/riscv-performance-events",
     "jira": "no approval step closed, no phase change, no member comment"
    }
   },
@@ -376,7 +376,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 48 messages from 9 people",
-    "github": "991 commits, 39 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
+    "github": "990 commits, 40 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
     "jira": "1 approval step closed (Develop Specification)"
    }
   },
@@ -425,7 +425,7 @@
    "text": {
     "confluence": "Ratification Plan: 2 edits by 1 member; group space: 1 page edited by members",
     "discussion": "1 message from 1 person naming Zimt, Svatag, Smvatag (tech-privileged 1); the group's list had 8 messages from 2 people",
-    "github": "32 commits, 5 PRs by 3 people in riscv/riscv-memory-tagging",
+    "github": "33 commits, 5 PRs by 3 people in riscv/riscv-memory-tagging",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "1 PR by 1 person (sail-riscv 1)"
    }
@@ -452,7 +452,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Sspesa, Ssplcofi, Smpdis, Sspdis; the group's list had 9 messages from 3 people",
-    "github": "27 commits, 12 PRs by 3 people in riscv/riscv-performance-event-sampling",
+    "github": "28 commits, 12 PRs by 3 people in riscv/riscv-performance-event-sampling",
     "jira": "no approval step closed, no phase change, no member comment"
    }
   },
@@ -889,7 +889,7 @@
    "text": {
     "discussion": "0 messages from 0 people naming Ssvspmp, Ssvspmpen, Sshspmpdeleg, Sshspmpen",
     "github": "10 commits by 2 people in riscv/riscv-spmp main/spmp-for-hyp",
-    "jira": "1 approval step closed (Notify TSC and CSC); phase changed 1 time"
+    "jira": "2 approval steps closed (Develop Specification; Notify TSC and CSC); phase changed 1 time"
    }
   },
   "RVS-4463": {
@@ -1260,17 +1260,17 @@
   },
   "RVS-5524": {
    "governing": "",
-   "level": "Low",
+   "level": "Active",
    "measured": "2026-11-02",
    "points": {
     "confluence": 1,
     "discussion": 1,
-    "github": 0,
+    "github": 1,
     "jira": 2,
     "meetings": null,
     "tests": null
    },
-   "share": 42,
+   "share": 58,
    "terms": [
     "RSDP",
     "\"RISC-V Serial Debug Protocol\""
@@ -1278,7 +1278,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 1 page edited by members",
     "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 3 messages from 1 person",
-    "github": "0 commits by 0 people in riscv-non-isa/riscv-serial-debug-protocol",
+    "github": "1 commit by 1 person in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
   },
