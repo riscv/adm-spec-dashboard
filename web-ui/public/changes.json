@@ -23,6 +23,13 @@
       "field": "next_approval_date",
       "from": "2026-12-29",
       "to": "2026-12-12"
+    },
+    {
+      "spec": "RVS-5524",
+      "summary": "RISC-V Serial Debug Protocol (RSDP)",
+      "field": "presence",
+      "from": "absent",
+      "to": "present"
     }
   ]
 }
