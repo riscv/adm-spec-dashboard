@@ -335,11 +335,11 @@
     "confluence": 0,
     "discussion": 1,
     "github": 2,
-    "jira": 1,
+    "jira": 2,
     "meetings": null,
     "tests": null
    },
-   "share": 58,
+   "share": 67,
    "terms": [
     "Zvknhk"
    ],
@@ -347,7 +347,7 @@
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Zvknhk; the group's list had 24 messages from 4 people",
     "github": "18 commits, 6 PRs by 3 people in riscv/riscv-pqc",
-    "jira": "1 approval step closed (Internal Review (required))"
+    "jira": "2 approval steps closed (Technical Project Specification Stabilization Approval (requ; Internal Review (required))"
    }
   },
   "RVS-2362": {
@@ -1209,7 +1209,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 1 page edited by members",
     "discussion": "1 message from 1 person naming \"psABI\" (tech-privileged 1); the group's list had 8 messages from 3 people",
-    "github": "15 commits, 36 PRs by 17 people in riscv-non-isa/riscv-elf-psabi-doc",
+    "github": "15 commits, 41 PRs by 17 people in riscv-non-isa/riscv-elf-psabi-doc",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
   },
