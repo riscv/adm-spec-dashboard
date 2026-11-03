@@ -25,6 +25,34 @@
       "to": "2026-12-12"
     },
     {
+      "spec": "RVS-1345",
+      "summary": "Supervisor Domains Access Protection (Smmtt)",
+      "field": "next_approval_date",
+      "from": "2026-12-31",
+      "to": "2026-11-28"
+    },
+    {
+      "spec": "RVS-4890",
+      "summary": "RISC-V Indexed Integer Load (Zilx)",
+      "field": "status",
+      "from": "Specification Under Stabilization",
+      "to": "Specification in Freeze"
+    },
+    {
+      "spec": "RVS-4890",
+      "summary": "RISC-V Indexed Integer Load (Zilx)",
+      "field": "projected_q",
+      "from": "27Q2",
+      "to": "27Q1"
+    },
+    {
+      "spec": "RVS-4890",
+      "summary": "RISC-V Indexed Integer Load (Zilx)",
+      "field": "next_approval_date",
+      "from": "2026-12-08",
+      "to": "2027-01-11"
+    },
+    {
       "spec": "RVS-5524",
       "summary": "RISC-V Serial Debug Protocol (RSDP)",
       "field": "presence",
