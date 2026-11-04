@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 12 messages from 4 people",
-    "github": "89 commits, 104 PRs by 5 people in riscv/riscv-cheri",
+    "github": "89 commits, 106 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -595,7 +595,7 @@
     "\"RVM Profile\""
    ],
    "text": {
-    "confluence": "Ratification Plan: 3 edits by 1 member; group space: 17 pages edited by members",
+    "confluence": "Ratification Plan: 3 edits by 1 member; group space: 18 pages edited by members",
     "discussion": "2 messages from 1 person naming \"RVM Profile\" (tech-privileged 1, tech-unprivileged 1); the group's list had 8 messages from 3 people",
     "github": "0 commits, 1 PR by 1 person in riscv/riscv-rvm-profile",
     "jira": "2 approval steps closed (Governing Committee Plan Review (required); Develop Specification Plan)"
@@ -1278,8 +1278,8 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 2 pages edited by members",
-    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 3 messages from 1 person",
-    "github": "1 commit by 1 person in riscv-non-isa/riscv-serial-debug-protocol",
+    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 8 messages from 2 people",
+    "github": "4 commits, 2 PRs by 2 people in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
   },
