@@ -51,7 +51,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "8 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 2, tech-privileged 1, tech-unprivileged 5); the group's list had 40 messages from 12 people",
+    "discussion": "8 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 2, tech-privileged 1, tech-unprivileged 5); the group's list had 43 messages from 12 people",
     "github": "44 commits, 43 PRs by 5 people in riscv/riscv-p-spec",
     "jira": "2 approval steps closed (Governing Committee Chairs Confirmation (required); Develop Specification); phase changed 1 time; 3 comments from members",
     "tests": "1 PR by 1 person (sail-riscv 1)"
@@ -376,7 +376,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 48 messages from 9 people",
-    "github": "990 commits, 41 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
+    "github": "991 commits, 41 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
     "jira": "1 approval step closed (Develop Specification)"
    }
   },
@@ -1278,7 +1278,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 2 pages edited by members",
-    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 8 messages from 2 people",
+    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 9 messages from 2 people",
     "github": "4 commits, 2 PRs by 2 people in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
