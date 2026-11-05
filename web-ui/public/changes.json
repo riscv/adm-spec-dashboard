@@ -11,6 +11,13 @@
       "to": "2026-11-28"
     },
     {
+      "spec": "RVS-4344",
+      "summary": "SPMP for Hypervisor",
+      "field": "next_approval_date",
+      "from": "2026-12-29",
+      "to": "2026-11-25"
+    },
+    {
       "spec": "RVS-4890",
       "summary": "RISC-V Indexed Integer Load (Zilx)",
       "field": "status",
