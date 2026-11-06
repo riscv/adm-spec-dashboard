@@ -179,25 +179,25 @@
  "RVS-2141": {
   "generated": "2026-11-06",
   "group": {
-   "generated": "2026-11-05",
-   "hash": "11f91b93ca2589e1",
+   "generated": "2026-11-06",
+   "hash": "62bb183dc6b2a75e",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-27. Its repository was last updated on 2026-11-04. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-27. Its repository was last updated on 2026-11-05. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "a5a3e729e4fac8a7",
+  "hash": "76a0f9039736265e",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 96 commits, 105 PRs by 5 people in riscv/riscv-cheri."
+  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 96 commits, 109 PRs by 5 people in riscv/riscv-cheri."
  },
  "RVS-2360": {
   "generated": "2026-11-03",
   "group": {
-   "generated": "2026-11-04",
-   "hash": "7c675a54a48e717e",
+   "generated": "2026-11-06",
+   "hash": "439c663cb1eabb40",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Post-Quantum Cryptography (PQC) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-03. Its mailing list last had a message on 2026-11-03. Its repository was last updated on 2026-10-19. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Post-Quantum Cryptography (PQC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-03. Its mailing list last had a message on 2026-11-03. Its repository was last updated on 2026-11-05. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "a8c3a4632e7eaa54",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -584,10 +584,10 @@
    "source": "ai",
    "summary": "The specification is developed by the psABI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-31. Its mailing list last had a message on 2026-11-04. Its repository was last updated on 2026-11-04. Very Active means its Confluence space, mailing list, and repository were all updated within 15 days."
   },
-  "hash": "cdfe85a6937ec34c",
+  "hash": "095c39b7391d52ec",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2026-08-31. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 29 commits and 47 PRs by 17 people in riscv-non-isa/riscv-elf-psabi-doc."
+  "summary": "The specification is in Planning. This phase started on 2026-08-31. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 29 commits and 48 PRs by 18 people in riscv-non-isa/riscv-elf-psabi-doc."
  },
  "RVS-5117": {
   "generated": "2026-11-04",
