@@ -98,8 +98,8 @@
     "Smmtt"
    ],
    "text": {
-    "confluence": "group space: 7 pages edited by members",
-    "discussion": "1 message from 1 person naming Smmtt (tech-arch-review 1); the group's list had 33 messages from 5 people",
+    "confluence": "group space: 8 pages edited by members",
+    "discussion": "1 message from 1 person naming Smmtt (tech-arch-review 1); the group's list had 34 messages from 5 people",
     "github": "23 commits, 9 PRs by 7 people in riscv/riscv-smmtt",
     "jira": "1 approval step closed (ARC Review (required))",
     "tests": "1 PR by 1 person (riscv-unified-db 1)"
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 12 messages from 4 people",
-    "github": "96 commits, 105 PRs by 5 people in riscv/riscv-cheri",
+    "github": "96 commits, 109 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -693,7 +693,7 @@
     "confluence": "Ratification Plan: 0 edits by 0 members",
     "discussion": "8 messages from 4 people naming Zvabd (tech-arch-review 1, tech-privileged 3, tech-unprivileged 4)",
     "github": "0 commits, 1 PR by 1 person in riscv/integer-vector-absolute-difference",
-    "jira": "2 approval steps closed (ARC Review (required); Perform Input Testing); 4 comments from members",
+    "jira": "3 approval steps closed (ARC Review (required); Perform Input Testing; Develop Support for GCC); 4 comments from members",
     "tests": "5 PRs by 5 people (riscv-unified-db 2, sail-riscv 3)"
    }
   },
@@ -1209,7 +1209,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 1 page edited by members",
     "discussion": "1 message from 1 person naming \"psABI\" (tech-privileged 1); the group's list had 9 messages from 3 people",
-    "github": "29 commits, 47 PRs by 17 people in riscv-non-isa/riscv-elf-psabi-doc",
+    "github": "29 commits, 48 PRs by 18 people in riscv-non-isa/riscv-elf-psabi-doc",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
   },
