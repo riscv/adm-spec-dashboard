@@ -51,7 +51,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "6 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 4); the group's list had 44 messages from 12 people",
+    "discussion": "6 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 4); the group's list had 45 messages from 12 people",
     "github": "43 commits, 42 PRs by 4 people in riscv/riscv-p-spec",
     "jira": "2 approval steps closed (Governing Committee Chairs Confirmation (required); Develop Specification); phase changed 1 time; 3 comments from members",
     "tests": "1 PR by 1 person (sail-riscv 1)"
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 12 messages from 4 people",
-    "github": "96 commits, 109 PRs by 5 people in riscv/riscv-cheri",
+    "github": "97 commits, 109 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -693,7 +693,7 @@
     "confluence": "Ratification Plan: 0 edits by 0 members",
     "discussion": "8 messages from 4 people naming Zvabd (tech-arch-review 1, tech-privileged 3, tech-unprivileged 4)",
     "github": "0 commits, 1 PR by 1 person in riscv/integer-vector-absolute-difference",
-    "jira": "3 approval steps closed (ARC Review (required); Perform Input Testing; Develop Support for GCC); 4 comments from members",
+    "jira": "4 approval steps closed (ARC Review (required); Perform Input Testing; Develop Architectural Compatibility Tests; ...); 6 comments from members",
     "tests": "5 PRs by 5 people (riscv-unified-db 2, sail-riscv 3)"
    }
   },
