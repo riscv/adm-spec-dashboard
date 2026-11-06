@@ -185,10 +185,10 @@
    "source": "ai",
    "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-27. Its repository was last updated on 2026-11-05. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "76a0f9039736265e",
+  "hash": "8c997ed8aba02f16",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 96 commits, 109 PRs by 5 people in riscv/riscv-cheri."
+  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 97 commits, 109 PRs by 5 people in riscv/riscv-cheri."
  },
  "RVS-2360": {
   "generated": "2026-11-03",
@@ -261,11 +261,11 @@
   "summary": "The specification is in Stabilization. This phase started on 2026-06-23. Development started on 2024-09-11. The projected ratification quarter is 27Q2. It is 7 quarters behind the baseline 25Q3. On 2026-10-19 the projection moved later, from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-11-04. In the last 90 days, GitHub had 28 commits, 12 PRs by 3 people in riscv/riscv-performance-event-sampling."
  },
  "RVS-2940": {
-  "generated": "2026-11-03",
-  "hash": "c88bc42f514e7f5d",
+  "generated": "2026-11-06",
+  "hash": "6e3a21ae733465f6",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze, following the fast-track process. This phase started on 2026-02-18. Development started on 2025-04-23. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. On 2026-10-07 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approved. The last GitHub contribution was on 2026-10-09. In the last 90 days, GitHub had 1 commit, 3 PRs by 2 people in riscv/riscv-worlds."
+  "summary": "The specification is in Freeze, following the fast-track process. This phase started on 2026-02-18. Development started on 2025-04-23. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. On 2026-10-07 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approved. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 1 commit, 3 PRs by 2 people in riscv/riscv-worlds."
  },
  "RVS-2948": {
   "generated": "2026-10-27",
@@ -466,11 +466,11 @@
   "summary": "The specification was cancelled."
  },
  "RVS-4572": {
-  "generated": "2026-11-03",
-  "hash": "c043ed20ce96b89a",
+  "generated": "2026-11-06",
+  "hash": "8aa776e968240344",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze, following the fast-track process. This phase started on 2026-10-16. Development started on 2026-08-24. The projected ratification quarter is 27Q1, which is 1 quarter ahead of the baseline 27Q2. On 2026-09-16, the projection moved earlier from 27Q2 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Not Started. The last GitHub contribution was on 2026-10-09. In the last 90 days, GitHub had 1 commit and 3 PRs by 2 people in riscv/riscv-worlds."
+  "summary": "The specification is in Freeze, following the fast-track process. This phase started on 2026-10-16. Development started on 2026-08-24. The projected ratification quarter is 27Q1, which is 1 quarter ahead of the baseline 27Q2. On 2026-09-16, the projection moved earlier from 27Q2 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Not Started. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 1 commit and 3 PRs by 2 people in riscv/riscv-worlds."
  },
  "RVS-4646": {
   "generated": "2026-10-19",
@@ -590,11 +590,11 @@
   "summary": "The specification is in Planning. This phase started on 2026-08-31. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 29 commits and 48 PRs by 18 people in riscv-non-isa/riscv-elf-psabi-doc."
  },
  "RVS-5117": {
-  "generated": "2026-11-04",
-  "hash": "df1bcf61c040893b",
+  "generated": "2026-11-06",
+  "hash": "0485093375ffcf23",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Inception, following the fast-track process. This phase started on 2026-09-25. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-10-09. In the last 90 days, GitHub had 1 commit and 3 PRs by 2 people in riscv/riscv-worlds."
+  "summary": "The specification is in Inception, following the fast-track process. This phase started on 2026-09-25. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 1 commit and 3 PRs by 2 people in riscv/riscv-worlds."
  },
  "RVS-5139": {
   "generated": "2026-11-03",
