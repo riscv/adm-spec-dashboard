@@ -143,7 +143,7 @@
   "summary": "The specification is in Freeze, following the fast-track process. This phase started on 2025-10-15. Development started on 2023-12-20. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-10-23 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: AR Approved. The last GitHub contribution was on 2026-01-29. In the last 90 days, riscv/riscv-isa-manual PR #2369 had no commits or PRs from members."
  },
  "RVS-1930": {
-  "generated": "2026-11-03",
+  "generated": "2026-11-07",
   "group": {
    "generated": "2026-11-03",
    "hash": "bca805d02d5db882",
@@ -151,10 +151,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Integrated Matrix Extension (IME). Its activity level is Active. Its Confluence space was last updated on 2026-11-03. Its mailing list last had a message on 2026-11-02. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "c5ace9bd60836a33",
+  "hash": "2f4925a693f725ff",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2026-07-20. Development started on 2026-01-26. The projected ratification quarter is 27Q1. It is 2 quarters behind the baseline 26Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-03. In the last 90 days, GitHub had 0 commits, 9 PRs by 3 people in riscv/integrated-matrix-extension."
+  "summary": "The specification is in Freeze. This phase started on 2026-07-20. Development started on 2026-01-26. The projected ratification quarter is 27Q1. It is 2 quarters behind the baseline 26Q3. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-07. In the last 90 days, GitHub had 2 commits and 9 PRs by 3 people in riscv/integrated-matrix-extension."
  },
  "RVS-1942": {
   "generated": "2026-11-02",
@@ -207,11 +207,11 @@
  "RVS-2362": {
   "generated": "2026-11-07",
   "group": {
-   "generated": "2026-11-04",
-   "hash": "f113f7495340fc5c",
+   "generated": "2026-11-07",
+   "hash": "3ea4673da36fc0ca",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-02. Its repository was last updated on 2026-11-04. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-02. Its repository was last updated on 2026-11-07. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "123439a8a0841841",
   "model": "qwen.qwen3-next-80b-a3b",
