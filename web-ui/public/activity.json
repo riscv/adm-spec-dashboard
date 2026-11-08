@@ -184,12 +184,12 @@
    "points": {
     "confluence": 1,
     "discussion": 2,
-    "github": 1,
+    "github": 2,
     "jira": 0,
     "meetings": null,
     "tests": 0
    },
-   "share": 50,
+   "share": 64,
    "terms": [
     "CoVE",
     "\"Confidential VM Extension\""
@@ -197,7 +197,7 @@
    "text": {
     "confluence": "group space: 5 pages edited by members",
     "discussion": "1 message from 1 person naming CoVE, \"Confidential VM Extension\" (tech-arch-review 1); the group's list had 21 messages from 6 people",
-    "github": "0 commits, 2 PRs by 1 person in riscv-non-isa/riscv-ap-tee",
+    "github": "0 commits, 8 PRs by 3 people in riscv-non-isa/riscv-ap-tee",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -1256,7 +1256,7 @@
     "discussion": "0 messages from 0 people naming \"Long Instruction\"; the group's list had 10 messages from 4 people",
     "github": "12 commits by 1 person in riscv/riscv-long-instruction",
     "jira": "1 approval step closed (Initial Infrastructure Setup)",
-    "tests": "4 PRs by 2 people (riscv-unified-db 4)"
+    "tests": "5 PRs by 2 people (riscv-unified-db 5)"
    }
   },
   "RVS-5524": {

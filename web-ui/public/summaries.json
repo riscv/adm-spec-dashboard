@@ -122,7 +122,7 @@
   "summary": "The specification was cancelled."
  },
  "RVS-1906": {
-  "generated": "2026-10-27",
+  "generated": "2026-11-08",
   "group": {
    "generated": "2026-11-05",
    "hash": "bb74d99ad0d06975",
@@ -130,10 +130,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Application-Processor Trusted Execution Environment (CoVE) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-03. Its mailing list last had a message on 2026-11-03. Its repository was last updated on 2026-11-05. Very Active means its Confluence space, mailing list, and repository were all updated within 15 days."
   },
-  "hash": "ea9710ea3205883a",
+  "hash": "7fb75e6c37fc7368",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2024-07-12. Development started on 2024-01-02. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Not Started. The last GitHub contribution was on 2026-10-16. In the last 90 days, GitHub had 0 commits and 2 PRs by 1 person in riscv-non-isa/riscv-ap-tee."
+  "summary": "The specification is in Freeze. This phase started on 2024-07-12. Development started on 2024-01-02. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Not Started. The last GitHub contribution was on 2026-07-16. In the last 90 days, GitHub had 0 commits, 8 PRs by 3 people in riscv-non-isa/riscv-ap-tee."
  },
  "RVS-1915": {
   "generated": "2026-10-27",
