@@ -145,11 +145,11 @@
  "RVS-1930": {
   "generated": "2026-11-07",
   "group": {
-   "generated": "2026-11-03",
-   "hash": "bca805d02d5db882",
+   "generated": "2026-11-08",
+   "hash": "85c766a21ac65b98",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Integrated Matrix Extension (IME). Its activity level is Active. Its Confluence space was last updated on 2026-11-03. Its mailing list last had a message on 2026-11-02. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Integrated Matrix Extension (IME). Its activity level is Active. Its Confluence space was last updated on 2026-11-03. Its mailing list last had a message on 2026-11-07. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "2f4925a693f725ff",
   "model": "qwen.qwen3-next-80b-a3b",
