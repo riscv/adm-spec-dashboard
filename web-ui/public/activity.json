@@ -376,7 +376,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 46 messages from 9 people",
-    "github": "991 commits, 42 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
+    "github": "990 commits, 42 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
     "jira": "1 approval step closed (Develop Specification)"
    }
   },
@@ -425,7 +425,7 @@
    "text": {
     "confluence": "Ratification Plan: 1 edit by 1 member; group space: 1 page edited by members",
     "discussion": "1 message from 1 person naming Zimt, Svatag, Smvatag (tech-privileged 1); the group's list had 8 messages from 2 people",
-    "github": "30 commits, 3 PRs by 2 people in riscv/riscv-memory-tagging",
+    "github": "34 commits, 3 PRs by 2 people in riscv/riscv-memory-tagging",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "1 PR by 1 person (sail-riscv 1)"
    }
@@ -862,8 +862,8 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members",
     "discussion": "1 message from 1 person naming Smcfiss, Smucfiss, Sspmpss, Smpmpind (tech-privileged 1)",
-    "github": "1 commit by 1 person in ved-rivos/riscv-isa-manual smpmpss/src/smcfiss.adoc",
-    "jira": "2 approval steps closed (Technical Project Specification Stabilization Approval (requ; Internal Review (required)); phase changed 1 time",
+    "github": "2 commits by 2 people in riscv/riscv-isa-manual PR #3428",
+    "jira": "2 approval steps closed (Technical Project Specification Stabilization Approval (requ; Internal Review (required)); phase changed 1 time; 3 comments from members",
     "tests": "5 PRs by 1 person (riscv-unified-db 1, sail-riscv 4)"
    }
   },
