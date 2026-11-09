@@ -1,7 +1,7 @@
 {
-  "generated": "2026-11-08",
-  "from": "2026-11-01",
-  "to": "2026-11-08",
+  "generated": "2026-11-09",
+  "from": "2026-11-02",
+  "to": "2026-11-09",
   "changes": [
     {
       "spec": "RVS-1345",
@@ -37,13 +37,6 @@
       "field": "next_approval_date",
       "from": "2026-12-08",
       "to": "2027-01-11"
-    },
-    {
-      "spec": "RVS-5524",
-      "summary": "RISC-V Serial Debug Protocol (RSDP)",
-      "field": "presence",
-      "from": "absent",
-      "to": "present"
     }
   ]
 }
