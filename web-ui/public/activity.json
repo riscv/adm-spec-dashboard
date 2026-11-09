@@ -1,11 +1,11 @@
 {
- "generated": "2026-11-08",
- "since": "2026-08-10",
+ "generated": "2026-11-09",
+ "since": "2026-08-11",
  "specs": {
   "RVS-1017": {
    "governing": "Privileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 2,
     "discussion": 1,
@@ -27,16 +27,16 @@
    ],
    "text": {
     "confluence": "group space: 9 pages edited by members",
-    "discussion": "0 messages from 0 people naming Smidctrl, Ssidctrl, Smeihv, Sseihv, Smnip, Ssnip, Smijt, Ssijt; the group's list had 11 messages from 2 people",
-    "github": "10 commits, 13 PRs by 3 people in riscv/riscv-fast-interrupt",
-    "jira": "3 comments from members",
+    "discussion": "0 messages from 0 people naming Smidctrl, Ssidctrl, Smeihv, Sseihv, Smnip, Ssnip, Smijt, Ssijt; the group's list had 10 messages from 2 people",
+    "github": "9 commits, 12 PRs by 3 people in riscv/riscv-fast-interrupt",
+    "jira": "2 comments from members",
     "tests": "2 PRs by 1 person (riscv-unified-db 2)"
    }
   },
   "RVS-1135": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 2,
@@ -51,7 +51,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "6 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 4); the group's list had 45 messages from 12 people",
+    "discussion": "6 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 4); the group's list had 46 messages from 12 people",
     "github": "43 commits, 42 PRs by 4 people in riscv/riscv-p-spec",
     "jira": "2 approval steps closed (Governing Committee Chairs Confirmation (required); Develop Specification); phase changed 1 time; 3 comments from members",
     "tests": "1 PR by 1 person (sail-riscv 1)"
@@ -60,7 +60,7 @@
   "RVS-1153": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 1,
@@ -84,7 +84,7 @@
   "RVS-1345": {
    "governing": "",
    "level": "Very Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 2,
     "discussion": 2,
@@ -108,7 +108,7 @@
   "RVS-1618": {
    "governing": "",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 1,
@@ -125,7 +125,7 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "1 message from 1 person naming CoVE, \"Confidential VM Extension with I/O\" (tech-arch-review 1); the group's list had 2 messages from 2 people",
-    "github": "2 commits, 2 PRs by 1 person in riscv-non-isa/riscv-ap-tee-io",
+    "github": "1 commit, 1 PR by 1 person in riscv-non-isa/riscv-ap-tee-io",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -133,7 +133,7 @@
   "RVS-1790": {
    "governing": "",
    "level": "Very Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 2,
     "discussion": 2,
@@ -150,13 +150,13 @@
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 14 pages edited by members",
     "discussion": "0 messages from 0 people naming Ztt; the group's list had 122 messages from 25 people",
     "github": "16 commits, 9 PRs by 6 people in riscv/riscv-attached-matrix-extension",
-    "jira": "3 approval steps closed (Project Committee Approval (required); Develop Specification; Notify TSC and CSC); phase changed 1 time"
+    "jira": "2 approval steps closed (Project Committee Approval (required); Develop Specification)"
    }
   },
   "RVS-1792": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 2,
@@ -180,7 +180,7 @@
   "RVS-1906": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 2,
@@ -205,7 +205,7 @@
   "RVS-1915": {
    "governing": "Privileged ISA Committee (IC)",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": null,
     "discussion": 0,
@@ -229,7 +229,7 @@
   "RVS-1930": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 2,
     "discussion": 2,
@@ -246,8 +246,8 @@
     "Zvvmttls"
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 11 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 76 messages from 14 people",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 10 pages edited by members",
+    "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 77 messages from 14 people",
     "github": "2 commits, 9 PRs by 3 people in riscv/integrated-matrix-extension",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
@@ -256,7 +256,7 @@
   "RVS-1942": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 1,
@@ -279,16 +279,16 @@
   "RVS-1971": {
    "governing": "Unprivileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 1,
     "github": 2,
     "jira": 1,
     "meetings": null,
-    "tests": 2
+    "tests": 1
    },
-   "share": 64,
+   "share": 57,
    "terms": [
     "Zvdot4a8i"
    ],
@@ -297,13 +297,13 @@
     "discussion": "3 messages from 2 people naming Zvdot4a8i (tech-unprivileged 3)",
     "github": "5 commits by 3 people in riscv/riscv-isa-manual PR #2576",
     "jira": "3 comments from members",
-    "tests": "3 PRs by 3 people (riscv-unified-db 2, sail-riscv 1)"
+    "tests": "2 PRs by 2 people (riscv-unified-db 1, sail-riscv 1)"
    }
   },
   "RVS-2141": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 1,
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 12 messages from 4 people",
-    "github": "97 commits, 109 PRs by 5 people in riscv/riscv-cheri",
+    "github": "98 commits, 107 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -330,7 +330,7 @@
   "RVS-2360": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 1,
@@ -345,7 +345,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zvknhk; the group's list had 24 messages from 4 people",
+    "discussion": "0 messages from 0 people naming Zvknhk; the group's list had 23 messages from 4 people",
     "github": "18 commits, 6 PRs by 3 people in riscv/riscv-pqc",
     "jira": "2 approval steps closed (Technical Project Specification Stabilization Approval (requ; Internal Review (required))"
    }
@@ -353,7 +353,7 @@
   "RVS-2362": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 2,
@@ -375,7 +375,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 48 messages from 9 people",
+    "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 46 messages from 9 people",
     "github": "991 commits, 41 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
     "jira": "1 approval step closed (Develop Specification)"
    }
@@ -383,7 +383,7 @@
   "RVS-2611": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 2,
     "discussion": 2,
@@ -399,7 +399,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 1 edit by 1 member; group space: 9 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zcx, Zcxmulti; the group's list had 36 messages from 5 people",
+    "discussion": "0 messages from 0 people naming Zcx, Zcxmulti; the group's list had 35 messages from 5 people",
     "github": "1 commit by 1 person in riscv/composable-custom-extensions",
     "jira": "no approval step closed, no phase change, no member comment"
    }
@@ -407,7 +407,7 @@
   "RVS-2706": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 1,
@@ -433,7 +433,7 @@
   "RVS-2770": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 1,
@@ -459,7 +459,7 @@
   "RVS-2940": {
    "governing": "Security (HC)",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 1,
@@ -487,7 +487,7 @@
   "RVS-2948": {
    "governing": "Privileged ISA Committee (IC)",
    "level": "Stalled",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 0,
@@ -510,7 +510,7 @@
   "RVS-2977": {
    "governing": "Privileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": null,
     "discussion": 0,
@@ -533,7 +533,7 @@
   "RVS-3102": {
    "governing": "SOC Infrastructure (HC)",
    "level": "Stalled",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 0,
@@ -557,7 +557,7 @@
   "RVS-3131": {
    "governing": "",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 0,
@@ -581,7 +581,7 @@
   "RVS-3312": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 2,
     "discussion": 1,
@@ -604,7 +604,7 @@
   "RVS-3569": {
    "governing": "",
    "level": "Stalled",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 0,
@@ -627,7 +627,7 @@
   "RVS-3748": {
    "governing": "Unprivileged ISA Committee (IC)",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 0,
@@ -652,7 +652,7 @@
   "RVS-3828": {
    "governing": "Unprivileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 1,
@@ -676,7 +676,7 @@
   "RVS-3896": {
    "governing": "Unprivileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 2,
@@ -693,14 +693,14 @@
     "confluence": "Ratification Plan: 0 edits by 0 members",
     "discussion": "8 messages from 4 people naming Zvabd (tech-arch-review 1, tech-privileged 3, tech-unprivileged 4)",
     "github": "0 commits, 1 PR by 1 person in riscv/integer-vector-absolute-difference",
-    "jira": "4 approval steps closed (ARC Review (required); Perform Input Testing; Develop Architectural Compatibility Tests; ...); 6 comments from members",
+    "jira": "4 approval steps closed (ARC Review (required); Perform Input Testing; Develop Architectural Compatibility Tests; ...); 7 comments from members",
     "tests": "5 PRs by 5 people (riscv-unified-db 2, sail-riscv 3)"
    }
   },
   "RVS-3923": {
    "governing": "",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 2,
@@ -725,7 +725,7 @@
   "RVS-3925": {
    "governing": "Unprivileged ISA Committee (IC)",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 0,
@@ -750,7 +750,7 @@
   "RVS-3982": {
    "governing": "SOC Infrastructure (HC)",
    "level": "Stalled",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 0,
@@ -773,7 +773,7 @@
   "RVS-4146": {
    "governing": "",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 1,
@@ -796,7 +796,7 @@
   "RVS-4161": {
    "governing": "Unprivileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 2,
@@ -820,7 +820,7 @@
   "RVS-4281": {
    "governing": "SOC Infrastructure (HC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 2,
     "discussion": 1,
@@ -835,7 +835,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 6 edits by 1 member; group space: 2 pages edited by members",
-    "discussion": "0 messages from 0 people naming \"Event Trace\"; the group's list had 11 messages from 2 people",
+    "discussion": "0 messages from 0 people naming \"Event Trace\"; the group's list had 10 messages from 2 people",
     "github": "49 commits, 3 PRs by 2 people in riscv-non-isa/riscv-event-trace",
     "jira": "1 approval step closed (Develop Specification Plan); 1 comment from members"
    }
@@ -843,7 +843,7 @@
   "RVS-4335": {
    "governing": "Privileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 1,
@@ -864,13 +864,13 @@
     "discussion": "1 message from 1 person naming Smcfiss, Smucfiss, Sspmpss, Smpmpind (tech-privileged 1)",
     "github": "1 commit by 1 person in ved-rivos/riscv-isa-manual smpmpss/src/smcfiss.adoc",
     "jira": "2 approval steps closed (Technical Project Specification Stabilization Approval (requ; Internal Review (required)); phase changed 1 time",
-    "tests": "6 PRs by 1 person (riscv-unified-db 1, sail-riscv 5)"
+    "tests": "5 PRs by 1 person (riscv-unified-db 1, sail-riscv 4)"
    }
   },
   "RVS-4344": {
    "governing": "Privileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": null,
     "discussion": 0,
@@ -895,7 +895,7 @@
   "RVS-4463": {
    "governing": "",
    "level": "Stalled",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": null,
     "discussion": 0,
@@ -916,7 +916,7 @@
   "RVS-4572": {
    "governing": "",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 0,
@@ -940,7 +940,7 @@
   "RVS-4646": {
    "governing": "",
    "level": "Stalled",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": null,
     "discussion": 0,
@@ -961,7 +961,7 @@
   "RVS-4708": {
    "governing": "",
    "level": "Stalled",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": null,
     "discussion": 0,
@@ -983,7 +983,7 @@
   "RVS-4752": {
    "governing": "",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 1,
@@ -1006,7 +1006,7 @@
   "RVS-4762": {
    "governing": "",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 1,
@@ -1029,7 +1029,7 @@
   "RVS-4802": {
    "governing": "Privileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 2,
     "discussion": 1,
@@ -1053,7 +1053,7 @@
   "RVS-4890": {
    "governing": "Unprivileged ISA Committee (IC)",
    "level": "Very Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 2,
@@ -1069,7 +1069,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members",
     "discussion": "8 messages from 4 people naming Zilx (tech-arch-review 1, tech-privileged 1, tech-unprivileged 6)",
-    "github": "9 commits, 1 PR by 2 people in riscv/riscv-zilx",
+    "github": "10 commits, 1 PR by 2 people in riscv/riscv-zilx",
     "jira": "9 approval steps closed (Develop Proof of Concept; Add Support into the Sail Golden Model; Develop Support for LLVM; ...); phase changed 5 times; 9 comments from members",
     "tests": "3 PRs by 3 people (sail-riscv 3)"
    }
@@ -1077,7 +1077,7 @@
   "RVS-5054": {
    "governing": "Unprivileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 0,
@@ -1100,7 +1100,7 @@
   "RVS-5064": {
    "governing": "Privileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 1,
@@ -1123,7 +1123,7 @@
   "RVS-5068": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 1,
@@ -1147,7 +1147,7 @@
   "RVS-5078": {
    "governing": "Privileged ISA Committee (IC)",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 2,
     "discussion": 1,
@@ -1170,7 +1170,7 @@
   "RVS-5082": {
    "governing": "SOC Infrastructure (HC)",
    "level": "Very Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 2,
     "discussion": 2,
@@ -1193,7 +1193,7 @@
   "RVS-5086": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 1,
@@ -1216,7 +1216,7 @@
   "RVS-5117": {
    "governing": "",
    "level": "Low",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": null,
     "discussion": 1,
@@ -1238,7 +1238,7 @@
   "RVS-5139": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 1,
@@ -1253,7 +1253,7 @@
    ],
    "text": {
     "confluence": "group space: 5 pages edited by members",
-    "discussion": "0 messages from 0 people naming \"Long Instruction\"; the group's list had 10 messages from 4 people",
+    "discussion": "0 messages from 0 people naming \"Long Instruction\"; the group's list had 7 messages from 3 people",
     "github": "12 commits by 1 person in riscv/riscv-long-instruction",
     "jira": "1 approval step closed (Initial Infrastructure Setup)",
     "tests": "5 PRs by 2 people (riscv-unified-db 5)"
@@ -1262,7 +1262,7 @@
   "RVS-5524": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 1,
     "discussion": 1,
@@ -1279,14 +1279,14 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 3 pages edited by members",
     "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 9 messages from 2 people",
-    "github": "5 commits, 2 PRs by 2 people in riscv-non-isa/riscv-serial-debug-protocol",
+    "github": "10 commits, 2 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
   },
   "RVS-793": {
    "governing": "",
    "level": "Active",
-   "measured": "2026-11-08",
+   "measured": "2026-11-09",
    "points": {
     "confluence": 0,
     "discussion": 2,
