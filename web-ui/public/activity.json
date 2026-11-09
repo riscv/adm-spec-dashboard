@@ -100,7 +100,7 @@
    "text": {
     "confluence": "group space: 8 pages edited by members",
     "discussion": "1 message from 1 person naming Smmtt (tech-arch-review 1); the group's list had 34 messages from 5 people",
-    "github": "23 commits, 9 PRs by 7 people in riscv/riscv-smmtt",
+    "github": "32 commits, 9 PRs by 7 people in riscv/riscv-smmtt",
     "jira": "1 approval step closed (ARC Review (required))",
     "tests": "1 PR by 1 person (riscv-unified-db 1)"
    }
@@ -148,7 +148,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 14 pages edited by members",
-    "discussion": "0 messages from 0 people naming Ztt; the group's list had 122 messages from 25 people",
+    "discussion": "0 messages from 0 people naming Ztt; the group's list had 125 messages from 25 people",
     "github": "16 commits, 9 PRs by 6 people in riscv/riscv-attached-matrix-extension",
     "jira": "2 approval steps closed (Project Committee Approval (required); Develop Specification)"
    }
@@ -246,9 +246,9 @@
     "Zvvmttls"
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 10 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 77 messages from 14 people",
-    "github": "2 commits, 9 PRs by 3 people in riscv/integrated-matrix-extension",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 11 pages edited by members",
+    "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 78 messages from 14 people",
+    "github": "190 commits, 10 PRs by 4 people in riscv/integrated-matrix-extension",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -376,7 +376,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 46 messages from 9 people",
-    "github": "991 commits, 41 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
+    "github": "991 commits, 42 PRs by 5 people in riscv/riscv-high-assurance-cryptography",
     "jira": "1 approval step closed (Develop Specification)"
    }
   },
@@ -596,7 +596,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 3 edits by 1 member; group space: 18 pages edited by members",
-    "discussion": "2 messages from 1 person naming \"RVM Profile\" (tech-privileged 1, tech-unprivileged 1); the group's list had 9 messages from 4 people",
+    "discussion": "2 messages from 1 person naming \"RVM Profile\" (tech-privileged 1, tech-unprivileged 1); the group's list had 10 messages from 4 people",
     "github": "0 commits, 1 PR by 1 person in riscv/riscv-rvm-profile",
     "jira": "2 approval steps closed (Governing Committee Plan Review (required); Develop Specification Plan)"
    }
