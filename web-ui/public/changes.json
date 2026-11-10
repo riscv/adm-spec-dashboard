@@ -1,42 +1,14 @@
 {
-  "generated": "2026-11-09",
-  "from": "2026-11-02",
-  "to": "2026-11-09",
+  "generated": "2026-11-10",
+  "from": "2026-11-03",
+  "to": "2026-11-10",
   "changes": [
-    {
-      "spec": "RVS-1345",
-      "summary": "Supervisor Domains Access Protection (Smmtt)",
-      "field": "next_approval_date",
-      "from": "2026-12-31",
-      "to": "2026-11-28"
-    },
     {
       "spec": "RVS-4344",
       "summary": "SPMP for Hypervisor",
       "field": "next_approval_date",
       "from": "2026-12-29",
       "to": "2026-11-25"
-    },
-    {
-      "spec": "RVS-4890",
-      "summary": "RISC-V Indexed Integer Load (Zilx)",
-      "field": "status",
-      "from": "Specification Under Stabilization",
-      "to": "Specification in Freeze"
-    },
-    {
-      "spec": "RVS-4890",
-      "summary": "RISC-V Indexed Integer Load (Zilx)",
-      "field": "projected_q",
-      "from": "27Q2",
-      "to": "27Q1"
-    },
-    {
-      "spec": "RVS-4890",
-      "summary": "RISC-V Indexed Integer Load (Zilx)",
-      "field": "next_approval_date",
-      "from": "2026-12-08",
-      "to": "2027-01-11"
     }
   ]
 }
