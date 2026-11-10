@@ -27,7 +27,7 @@
    ],
    "text": {
     "confluence": "group space: 8 pages edited by members",
-    "discussion": "0 messages from 0 people naming Smidctrl, Ssidctrl, Smeihv, Sseihv, Smnip, Ssnip, Smijt, Ssijt; the group's list had 9 messages from 2 people",
+    "discussion": "0 messages from 0 people naming Smidctrl, Ssidctrl, Smeihv, Sseihv, Smnip, Ssnip, Smijt, Ssijt; the group's list had 10 messages from 2 people",
     "github": "9 commits, 12 PRs by 3 people in riscv/riscv-fast-interrupt",
     "jira": "2 comments from members",
     "tests": "2 PRs by 1 person (riscv-unified-db 2)"
@@ -425,7 +425,7 @@
    "text": {
     "confluence": "Ratification Plan: 1 edit by 1 member; group space: 1 page edited by members",
     "discussion": "0 messages from 0 people naming Zimt, Svatag, Smvatag; the group's list had 7 messages from 2 people",
-    "github": "34 commits, 3 PRs by 2 people in riscv/riscv-memory-tagging",
+    "github": "35 commits, 3 PRs by 2 people in riscv/riscv-memory-tagging",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "1 PR by 1 person (sail-riscv 1)"
    }
@@ -847,12 +847,12 @@
    "points": {
     "confluence": 0,
     "discussion": 1,
-    "github": 1,
+    "github": 2,
     "jira": 2,
     "meetings": null,
     "tests": 1
    },
-   "share": 50,
+   "share": 64,
    "terms": [
     "Smcfiss",
     "Smucfiss",
@@ -862,7 +862,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members",
     "discussion": "3 messages from 1 person naming Smcfiss, Smucfiss, Sspmpss, Smpmpind (tech-arch-review 1, tech-privileged 2)",
-    "github": "3 commits by 2 people in riscv/riscv-isa-manual PR #3428",
+    "github": "3 commits by 3 people in riscv/riscv-isa-manual PR #3428",
     "jira": "3 approval steps closed (Complete Documentation of New Instructions, State Changes, a; Technical Project Specification Stabilization Approval (requ; Internal Review (required)); phase changed 1 time; 5 comments from members",
     "tests": "2 PRs by 1 person (riscv-unified-db 1, sail-riscv 1)"
    }
