@@ -51,7 +51,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "6 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 4); the group's list had 47 messages from 12 people",
+    "discussion": "6 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 4); the group's list had 48 messages from 12 people",
     "github": "41 commits, 40 PRs by 3 people in riscv/riscv-p-spec",
     "jira": "2 approval steps closed (Governing Committee Chairs Confirmation (required); Develop Specification); phase changed 1 time; 3 comments from members",
     "tests": "1 PR by 1 person (sail-riscv 1)"
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 13 messages from 4 people",
-    "github": "99 commits, 108 PRs by 5 people in riscv/riscv-cheri",
+    "github": "100 commits, 108 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -716,7 +716,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "18 messages from 5 people naming VME, \"Vector Matrix Extension\" (tech-unprivileged 18); the group's list had 34 messages from 6 people",
+    "discussion": "18 messages from 5 people naming VME, \"Vector Matrix Extension\" (tech-unprivileged 18); the group's list had 35 messages from 6 people",
     "github": "0 commits by 0 people in riscv/riscv-vme",
     "jira": "3 approval steps closed (Internal Review (required); Project Committee Approval (required); Develop Specification); phase changed 2 times; 1 comment from members",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
