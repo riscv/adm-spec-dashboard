@@ -255,10 +255,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Performance Event Sampling TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-29. Its repository was last updated on 2026-11-08. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "3904f517dfca7c32",
+  "hash": "abd8438b83efdd05",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Stabilization. This phase started on 2026-06-23. Development started on 2024-09-11. The projected ratification quarter is 27Q2. It is 7 quarters behind the baseline 25Q3. On 2026-10-19 the projection moved later, from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-11-11. In the last 90 days, GitHub had 34 commits, 15 PRs by 3 people in riscv/riscv-performance-event-sampling."
+  "summary": "The specification is in Stabilization. This phase started on 2026-06-23. Development started on 2024-09-11. The projected ratification quarter is 27Q2. It is 7 quarters behind the baseline 25Q3. On 2026-10-19 the projection moved later, from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-11-11. In the last 90 days, GitHub had 35 commits, 15 PRs by 3 people in riscv/riscv-performance-event-sampling."
  },
  "RVS-2940": {
   "generated": "2026-11-11",
@@ -433,10 +433,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Event Trace TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-10-29. Its mailing list last had a message on 2026-11-02. Its repository was last updated on 2026-11-03. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "3d36a23c201bbe4d",
+  "hash": "5cf4106a4549869a",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning and started on 2025-09-25. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-03. In the last 90 days, GitHub had 46 commits. In the last 90 days, there were 2 PRs by 2 people in riscv-non-isa/riscv-event-trace."
+  "summary": "The specification is in Planning. This phase started on 2025-09-25. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-11. In the last 90 days, GitHub had 48 commits and 2 PRs by 2 people in riscv-non-isa/riscv-event-trace."
  },
  "RVS-4335": {
   "generated": "2026-11-10",

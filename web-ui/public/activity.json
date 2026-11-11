@@ -398,7 +398,7 @@
     "Zcxmulti"
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 4 pages edited by members",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 3 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcx, Zcxmulti; the group's list had 33 messages from 5 people",
     "github": "1 commit by 1 person in riscv/composable-custom-extensions",
     "jira": "no approval step closed, no phase change, no member comment"
@@ -435,14 +435,14 @@
    "level": "Active",
    "measured": "2026-11-11",
    "points": {
-    "confluence": 0,
+    "confluence": 1,
     "discussion": 1,
     "github": 2,
     "jira": 0,
     "meetings": null,
     "tests": null
    },
-   "share": 50,
+   "share": 58,
    "terms": [
     "Sspesa",
     "Ssplcofi",
@@ -450,9 +450,9 @@
     "Sspdis"
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming Sspesa, Ssplcofi, Smpdis, Sspdis; the group's list had 8 messages from 3 people",
-    "github": "34 commits, 15 PRs by 3 people in riscv/riscv-performance-event-sampling",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 1 page edited by members",
+    "discussion": "0 messages from 0 people naming Sspesa, Ssplcofi, Smpdis, Sspdis; the group's list had 9 messages from 3 people",
+    "github": "35 commits, 15 PRs by 3 people in riscv/riscv-performance-event-sampling",
     "jira": "no approval step closed, no phase change, no member comment"
    }
   },
@@ -836,7 +836,7 @@
    "text": {
     "confluence": "Ratification Plan: 6 edits by 1 member; group space: 1 page edited by members",
     "discussion": "0 messages from 0 people naming \"Event Trace\"; the group's list had 10 messages from 2 people",
-    "github": "46 commits, 2 PRs by 2 people in riscv-non-isa/riscv-event-trace",
+    "github": "48 commits, 2 PRs by 2 people in riscv-non-isa/riscv-event-trace",
     "jira": "1 approval step closed (Develop Specification Plan); 1 comment from members"
    }
   },
