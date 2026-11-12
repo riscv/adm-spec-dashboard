@@ -835,8 +835,8 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 6 edits by 1 member; group space: 1 page edited by members",
-    "discussion": "0 messages from 0 people naming \"Event Trace\"; the group's list had 10 messages from 2 people",
-    "github": "45 commits, 2 PRs by 2 people in riscv-non-isa/riscv-event-trace",
+    "discussion": "1 message from 1 person naming \"Event Trace\" (soc-infra 1); the group's list had 11 messages from 3 people",
+    "github": "47 commits, 2 PRs by 2 people in riscv-non-isa/riscv-event-trace",
     "jira": "1 approval step closed (Develop Specification Plan); 1 comment from members"
    }
   },
@@ -1255,7 +1255,7 @@
     "discussion": "0 messages from 0 people naming \"Long Instruction\"; the group's list had 7 messages from 3 people",
     "github": "12 commits by 1 person in riscv/riscv-long-instruction",
     "jira": "1 approval step closed (Initial Infrastructure Setup)",
-    "tests": "5 PRs by 2 people (riscv-unified-db 5)"
+    "tests": "6 PRs by 2 people (riscv-unified-db 6)"
    }
   },
   "RVS-5524": {
