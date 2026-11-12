@@ -51,7 +51,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "6 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 4); the group's list had 54 messages from 12 people",
+    "discussion": "6 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 4); the group's list had 55 messages from 12 people",
     "github": "41 commits, 40 PRs by 3 people in riscv/riscv-p-spec",
     "jira": "2 approval steps closed (Governing Committee Chairs Confirmation (required); Develop Specification); phase changed 1 time; 3 comments from members",
     "tests": "1 PR by 1 person (sail-riscv 1)"
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 13 messages from 4 people",
-    "github": "101 commits, 108 PRs by 5 people in riscv/riscv-cheri",
+    "github": "101 commits, 110 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -835,7 +835,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 6 edits by 1 member; group space: 1 page edited by members",
-    "discussion": "1 message from 1 person naming \"Event Trace\" (soc-infra 1); the group's list had 11 messages from 3 people",
+    "discussion": "1 message from 1 person naming \"Event Trace\" (soc-infra 1); the group's list had 12 messages from 3 people",
     "github": "47 commits, 2 PRs by 2 people in riscv-non-isa/riscv-event-trace",
     "jira": "1 approval step closed (Develop Specification Plan); 1 comment from members"
    }
