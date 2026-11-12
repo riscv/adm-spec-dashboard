@@ -1,14 +1,6 @@
 {
-  "generated": "2026-11-11",
-  "from": "2026-11-04",
-  "to": "2026-11-11",
-  "changes": [
-    {
-      "spec": "RVS-4344",
-      "summary": "SPMP for Hypervisor",
-      "field": "next_approval_date",
-      "from": "2026-12-29",
-      "to": "2026-11-25"
-    }
-  ]
+  "generated": "2026-11-12",
+  "from": "2026-11-05",
+  "to": "2026-11-12",
+  "changes": []
 }
