@@ -177,7 +177,7 @@
   "summary": "The specification is in Stabilization following the fast-track process. This phase started on 2026-06-22. Development started on 2026-04-15. The projected ratification quarter is 27Q2, which is 2 quarters behind the baseline 26Q4. On 2026-10-19, the projection moved from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-10-25. In the last 90 days, GitHub had 5 commits by 3 people in riscv/riscv-isa-manual PR #2576."
  },
  "RVS-2141": {
-  "generated": "2026-11-11",
+  "generated": "2026-11-12",
   "group": {
    "generated": "2026-11-12",
    "hash": "075c81d3f685048a",
@@ -185,10 +185,10 @@
    "source": "ai",
    "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-09. Its repository was last updated on 2026-11-11. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "552fd9509f87c893",
+  "hash": "33ea76795f9606b8",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-11. In the last 90 days, GitHub had 101 commits, 108 PRs by 5 people in riscv/riscv-cheri."
+  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-12. In the last 90 days, GitHub had 101 commits, 110 PRs by 5 people in riscv/riscv-cheri."
  },
  "RVS-2360": {
   "generated": "2026-11-10",
@@ -205,7 +205,7 @@
   "summary": "The specification is in Stabilization, which started on 2026-07-22. Development began on 2026-03-05. The projected ratification quarter is 27Q2, which is 2 quarters behind the baseline 26Q4. On 2026-10-23, the projection moved from 27Q1 to 27Q2. The next approval, Stabilization approval, is projected for 2026-12-08. The projected dates were last set on 2026-10-23, and the last GitHub contribution was on 2026-11-10. In the last 90 days, GitHub had 18 commits, 6 PRs by 3 people in riscv/riscv-pqc."
  },
  "RVS-2362": {
-  "generated": "2026-11-11",
+  "generated": "2026-11-12",
   "group": {
    "generated": "2026-11-12",
    "hash": "0b8772a80da6c98e",
@@ -213,10 +213,10 @@
    "source": "ai",
    "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-09. Its repository was last updated on 2026-11-11. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "f3e66eef168b47a7",
+  "hash": "7b32d9d826a6aef0",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Development, starting on 2026-03-04. The projected ratification quarter is 27Q2, which is 2 quarters behind the baseline 26Q4. On 2026-10-16, the projection moved from 27Q1 to 27Q2. The next approval, Development complete, is projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-11-11, with 986 commits and 42 PRs by 5 people in riscv/riscv-high-assurance-cryptography in the last 90 days."
+  "summary": "The specification is in Development, which started on 2026-03-04. The projected ratification quarter is 27Q2, 2 quarters behind the baseline 26Q4. On 2026-10-16, the projection moved from 27Q1 to 27Q2. The next approval, Development complete, is projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-11-12, with 986 commits and 42 PRs by 5 people in riscv/riscv-high-assurance-cryptography in the last 90 days."
  },
  "RVS-2611": {
   "generated": "2026-10-27",
