@@ -8,10 +8,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Fast Interrupts (CLIC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-10. Its repository was last updated on 2026-11-11. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "08d9b4d6341245b8",
+  "hash": "3a5a1a2fa20ff92d",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2026-07-08. Development started on 2024-03-08. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Not Started. The last GitHub contribution was on 2026-11-11. In the last 90 days, GitHub had 8 commits, 11 PRs by 3 people in riscv/riscv-fast-interrupt."
+  "summary": "The specification is in Freeze. This phase started on 2026-07-08. Development started on 2024-03-08. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Not Started. The last GitHub contribution was on 2026-11-13. In the last 90 days, GitHub had 11 commits, 11 PRs by 3 people in riscv/riscv-fast-interrupt."
  },
  "RVS-1135": {
   "generated": "2026-11-12",
@@ -143,7 +143,7 @@
   "summary": "The specification is in Freeze, following the fast-track process. This phase started on 2025-10-15. Development started on 2023-12-20. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-10-23 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: AR Approved. The last GitHub contribution was on 2026-01-29. In the last 90 days, riscv/riscv-isa-manual PR #2369 had no commits or PRs from members."
  },
  "RVS-1930": {
-  "generated": "2026-11-09",
+  "generated": "2026-11-13",
   "group": {
    "generated": "2026-11-12",
    "hash": "94077456d4e84133",
@@ -151,10 +151,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Integrated Matrix Extension (IME). Its activity level is Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-09. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "5f9e76ba5bdc30fa",
+  "hash": "2c9715d4c9d4c8a2",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2026-07-20. Development started on 2026-01-26. The projected ratification quarter is 27Q1. It is 2 quarters behind the baseline 26Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-09. In the last 90 days, GitHub had 190 commits, 10 PRs by 4 people in riscv/integrated-matrix-extension."
+  "summary": "The specification is in Freeze. This phase started on 2026-07-20. Development started on 2026-01-26. The projected ratification quarter is 27Q1. It is 2 quarters behind the baseline 26Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-13. In the last 90 days, GitHub had 192 commits, 10 PRs by 4 people in riscv/integrated-matrix-extension."
  },
  "RVS-1942": {
   "generated": "2026-11-02",
