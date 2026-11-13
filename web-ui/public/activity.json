@@ -51,7 +51,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "7 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 5); the group's list had 58 messages from 13 people",
+    "discussion": "7 messages from 4 people naming \"Packed SIMD\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 5); the group's list had 59 messages from 14 people",
     "github": "41 commits, 40 PRs by 3 people in riscv/riscv-p-spec",
     "jira": "2 approval steps closed (Governing Committee Chairs Confirmation (required); Develop Specification); phase changed 1 time; 3 comments from members",
     "tests": "1 PR by 1 person (sail-riscv 1)"
@@ -435,14 +435,14 @@
    "level": "Active",
    "measured": "2026-11-13",
    "points": {
-    "confluence": 1,
+    "confluence": 0,
     "discussion": 1,
     "github": 2,
     "jira": 0,
     "meetings": null,
     "tests": null
    },
-   "share": 58,
+   "share": 50,
    "terms": [
     "Sspesa",
     "Ssplcofi",
@@ -450,7 +450,7 @@
     "Sspdis"
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 1 page edited by members",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Sspesa, Ssplcofi, Smpdis, Sspdis; the group's list had 9 messages from 3 people",
     "github": "35 commits, 15 PRs by 3 people in riscv/riscv-performance-event-sampling",
     "jira": "no approval step closed, no phase change, no member comment"
@@ -1208,7 +1208,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "1 message from 1 person naming \"psABI\" (tech-privileged 1); the group's list had 6 messages from 2 people",
-    "github": "28 commits, 47 PRs by 17 people in riscv-non-isa/riscv-elf-psabi-doc",
+    "github": "28 commits, 49 PRs by 17 people in riscv-non-isa/riscv-elf-psabi-doc",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
   },
@@ -1277,7 +1277,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 3 pages edited by members",
-    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 12 messages from 3 people",
+    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 13 messages from 4 people",
     "github": "13 commits, 3 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
