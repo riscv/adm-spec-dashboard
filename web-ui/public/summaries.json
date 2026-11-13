@@ -584,10 +584,10 @@
    "source": "ai",
    "summary": "The specification is developed by the psABI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-04. Its repository was last updated on 2026-11-10. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "ea3f25cefa6f248b",
+  "hash": "09af6acc005ab1dc",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2026-08-31. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-06. In the last 90 days, GitHub had 28 commits, 47 PRs by 17 people in riscv-non-isa/riscv-elf-psabi-doc."
+  "summary": "The specification is in Planning. This phase started on 2026-08-31. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-13. In the last 90 days, GitHub had 28 commits and 49 PRs by 17 people in riscv-non-isa/riscv-elf-psabi-doc."
  },
  "RVS-5117": {
   "generated": "2026-11-12",
