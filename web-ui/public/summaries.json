@@ -2,11 +2,11 @@
  "RVS-1017": {
   "generated": "2026-11-13",
   "group": {
-   "generated": "2026-11-12",
-   "hash": "9de839ba7a7b206c",
+   "generated": "2026-11-15",
+   "hash": "a22ca385f6b7e9ef",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Fast Interrupts (CLIC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-10. Its repository was last updated on 2026-11-11. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the Fast Interrupts (CLIC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-10. Its repository was last updated on 2026-11-14. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "3a5a1a2fa20ff92d",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -16,11 +16,11 @@
  "RVS-1135": {
   "generated": "2026-11-14",
   "group": {
-   "generated": "2026-11-14",
-   "hash": "1b735f24de34a771",
+   "generated": "2026-11-15",
+   "hash": "4416cbd024b9d2ca",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Packed Single Instruction, Multiple Data (SIMD) - P TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-13. Its repository was last updated on 2026-11-12. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Packed Single Instruction, Multiple Data (SIMD) - P TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-13. Its repository was last updated on 2026-11-14. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "526df95fb8672441",
   "model": "qwen.qwen3-next-80b-a3b",
