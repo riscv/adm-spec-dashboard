@@ -100,7 +100,7 @@
    "text": {
     "confluence": "group space: 8 pages edited by members",
     "discussion": "1 message from 1 person naming Smmtt (tech-arch-review 1); the group's list had 34 messages from 5 people",
-    "github": "28 commits, 8 PRs by 7 people in riscv/riscv-smmtt",
+    "github": "40 commits, 10 PRs by 7 people in riscv/riscv-smmtt",
     "jira": "1 approval step closed (ARC Review (required))",
     "tests": "2 PRs by 1 person (riscv-unified-db 2)"
    }
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 11 messages from 4 people",
-    "github": "101 commits, 111 PRs by 5 people in riscv/riscv-cheri",
+    "github": "101 commits, 116 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -452,7 +452,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Sspesa, Ssplcofi, Smpdis, Sspdis; the group's list had 9 messages from 3 people",
-    "github": "35 commits, 15 PRs by 3 people in riscv/riscv-performance-event-sampling",
+    "github": "39 commits, 15 PRs by 3 people in riscv/riscv-performance-event-sampling",
     "jira": "no approval step closed, no phase change, no member comment"
    }
   },
@@ -466,9 +466,9 @@
     "github": 1,
     "jira": 1,
     "meetings": null,
-    "tests": 0
+    "tests": 1
    },
-   "share": 36,
+   "share": 43,
    "terms": [
     "Smwid",
     "Sswid",
@@ -481,7 +481,7 @@
     "discussion": "2 messages from 2 people naming Smwid, Sswid, Smlwid, Smlwidlist, Smwiddeleg (security 2)",
     "github": "0 commits, 1 PR by 1 person in riscv/riscv-worlds",
     "jira": "2 comments from members",
-    "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
+    "tests": "1 PR by 1 person (sail-riscv 1)"
    }
   },
   "RVS-2948": {
