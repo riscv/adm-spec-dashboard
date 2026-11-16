@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 11 messages from 4 people",
-    "github": "101 commits, 116 PRs by 5 people in riscv/riscv-cheri",
+    "github": "104 commits, 118 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -1255,7 +1255,7 @@
     "discussion": "0 messages from 0 people naming \"Long Instruction\"; the group's list had 7 messages from 3 people",
     "github": "12 commits by 1 person in riscv/riscv-long-instruction",
     "jira": "1 approval step closed (Initial Infrastructure Setup)",
-    "tests": "6 PRs by 2 people (riscv-unified-db 6)"
+    "tests": "7 PRs by 3 people (riscv-unified-db 6, sail-riscv 1)"
    }
   },
   "RVS-5524": {
@@ -1276,9 +1276,9 @@
     "\"RISC-V Serial Debug Protocol\""
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 3 pages edited by members",
-    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 13 messages from 4 people",
-    "github": "13 commits, 3 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 4 pages edited by members",
+    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 16 messages from 4 people",
+    "github": "14 commits, 4 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
   },
