@@ -185,10 +185,10 @@
    "source": "ai",
    "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-09. Its repository was last updated on 2026-11-11. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "4d6d9a3c8481f2b8",
+  "hash": "d32e5ab758cf85cb",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-16. In the last 90 days, GitHub had 101 commits, 116 PRs by 5 people in riscv/riscv-cheri."
+  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-16. In the last 90 days, GitHub had 104 commits, 118 PRs by 5 people in riscv/riscv-cheri."
  },
  "RVS-2360": {
   "generated": "2026-11-10",
@@ -617,10 +617,10 @@
    "source": "template",
    "summary": "The specification is developed by the Serial Debug Protocol (RSDP) TG. The group is Structuring and Chartering."
   },
-  "hash": "4f53532b791b0f92",
+  "hash": "e87306dcd2568e2d",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2026-11-02. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-16. In the last 90 days, GitHub had 13 commits, 3 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol."
+  "summary": "The specification is in Planning. This phase started on 2026-11-02. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-16. In the last 90 days, GitHub had 14 commits, 4 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol."
  },
  "RVS-793": {
   "generated": "2026-11-12",
