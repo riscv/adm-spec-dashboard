@@ -839,6 +839,7 @@ function summaryShareText(row, entry) {
   ].join("\n");
 }
 
+const TC_DASHBOARD_URL = "https://riscv.github.io/adm-tc-dashboard/";
 const EXPLORER_URL = "https://riscv.github.io/adm-riscv-sde/";
 
 // The spec's card in the Development Explorer: its phase and subtasks open.
@@ -881,6 +882,25 @@ function ExplorerHourglass({ specKey }) {
       </svg>
     </a>
   );
+}
+
+// Three people: the task group developing the spec.
+function GroupIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="#1f2328" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="icon-img">
+      <circle cx="12" cy="7.5" r="3" />
+      <path d="M6.5 19.5v-1a5.5 5.5 0 0 1 11 0v1" />
+      <circle cx="5" cy="9.5" r="2" />
+      <path d="M1.5 18.5v-.5a3.5 3.5 0 0 1 3.9-3.5" />
+      <circle cx="19" cy="9.5" r="2" />
+      <path d="M22.5 18.5v-.5a3.5 3.5 0 0 0-3.9-3.5" />
+    </svg>
+  );
+}
+
+// The group's row in the Technical Committee Dashboard.
+function tcDashboardUrl(groupKey) {
+  return `${TC_DASHBOARD_URL}?committees#${encodeURIComponent(groupKey)}`;
 }
 
 function RadarIcon() {
@@ -2558,6 +2578,22 @@ function App() {
                           <ExplorerIcon />
                         </a>
                       ) : null}
+                      {/^RVG-\d+$/.test(row.groupKey) ? (
+                        <a
+                          href={tcDashboardUrl(row.groupKey)}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="icon-link"
+                          title={`${row.group || row.groupKey} in the Technical Committee Dashboard`}
+                          aria-label={`${row.group || row.groupKey} in the Technical Committee Dashboard`}
+                        >
+                          <GroupIcon />
+                        </a>
+                      ) : (
+                        <span className="icon-disabled" title="No task group linked">
+                          <GroupIcon />
+                        </span>
+                      )}
                       {!bodOnly && (
                         <button
                           type="button"
