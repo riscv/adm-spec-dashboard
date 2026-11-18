@@ -2,5 +2,34 @@
   "generated": "2026-11-18",
   "from": "2026-11-11",
   "to": "2026-11-18",
-  "changes": []
+  "changes": [
+    {
+      "spec": "RVS-3312",
+      "summary": "RVM Profile",
+      "field": "status",
+      "from": "Specification in Planning",
+      "to": "Specification Under Development"
+    },
+    {
+      "spec": "RVS-3312",
+      "summary": "RVM Profile",
+      "field": "projected_q",
+      "from": "Not Set Yet",
+      "to": "27Q3"
+    },
+    {
+      "spec": "RVS-3312",
+      "summary": "RVM Profile",
+      "field": "next_approval_date",
+      "from": "",
+      "to": "2027-01-24"
+    },
+    {
+      "spec": "RVS-5139",
+      "summary": "Long Instruction",
+      "field": "status",
+      "from": "Specification Inception",
+      "to": "Specification in Planning"
+    }
+  ]
 }

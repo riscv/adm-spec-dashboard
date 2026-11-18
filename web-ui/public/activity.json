@@ -99,8 +99,8 @@
    ],
    "text": {
     "confluence": "group space: 8 pages edited by members",
-    "discussion": "0 messages from 0 people naming Smmtt; the group's list had 33 messages from 5 people",
-    "github": "34 commits, 16 PRs by 7 people in riscv/riscv-smmtt",
+    "discussion": "1 message from 1 person naming Smmtt (tech-arch-review 1); the group's list had 33 messages from 5 people",
+    "github": "53 commits, 17 PRs by 7 people in riscv/riscv-smmtt",
     "jira": "1 approval step closed (ARC Review (required))",
     "tests": "2 PRs by 1 person (riscv-unified-db 2)"
    }
@@ -111,20 +111,20 @@
    "measured": "2026-11-18",
    "points": {
     "confluence": 0,
-    "discussion": 0,
+    "discussion": 1,
     "github": 1,
     "jira": 0,
     "meetings": null,
     "tests": 0
    },
-   "share": 14,
+   "share": 29,
    "terms": [
     "CoVE",
     "\"Confidential VM Extension with I/O\""
    ],
    "text": {
     "confluence": "group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming CoVE, \"Confidential VM Extension with I/O\"; the group's list had 1 message from 1 person",
+    "discussion": "1 message from 1 person naming CoVE, \"Confidential VM Extension with I/O\" (tech-arch-review 1); the group's list had 1 message from 1 person",
     "github": "1 commit, 1 PR by 1 person in riscv-non-isa/riscv-ap-tee-io",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
@@ -148,7 +148,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 16 pages edited by members",
-    "discussion": "0 messages from 0 people naming Ztt; the group's list had 117 messages from 23 people",
+    "discussion": "0 messages from 0 people naming Ztt; the group's list had 118 messages from 24 people",
     "github": "0 commits, 7 PRs by 4 people in riscv/riscv-attached-matrix-extension",
     "jira": "1 approval step closed (Project Committee Approval (required))"
    }
@@ -196,7 +196,7 @@
    ],
    "text": {
     "confluence": "group space: 6 pages edited by members",
-    "discussion": "0 messages from 0 people naming CoVE, \"Confidential VM Extension\"; the group's list had 21 messages from 6 people",
+    "discussion": "1 message from 1 person naming CoVE, \"Confidential VM Extension\" (tech-arch-review 1); the group's list had 21 messages from 6 people",
     "github": "0 commits, 8 PRs by 3 people in riscv-non-isa/riscv-ap-tee",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 4 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 11 messages from 4 people",
-    "github": "104 commits, 121 PRs by 5 people in riscv/riscv-cheri",
+    "github": "105 commits, 121 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -595,10 +595,10 @@
     "\"RVM Profile\""
    ],
    "text": {
-    "confluence": "Ratification Plan: 3 edits by 1 member; group space: 18 pages edited by members",
+    "confluence": "Ratification Plan: 3 edits by 1 member; group space: 19 pages edited by members",
     "discussion": "3 messages from 2 people naming \"RVM Profile\" (tech-arch-review 1, tech-privileged 1, tech-unprivileged 1); the group's list had 16 messages from 5 people",
     "github": "0 commits, 1 PR by 1 person in riscv/riscv-rvm-profile",
-    "jira": "2 approval steps closed (Governing Committee Plan Review (required); Develop Specification Plan)"
+    "jira": "3 approval steps closed (Notify TSC and CSC; Governing Committee Plan Review (required); Develop Specification Plan); phase changed 1 time"
    }
   },
   "RVS-3569": {
@@ -836,7 +836,7 @@
    "text": {
     "confluence": "Ratification Plan: 6 edits by 1 member; group space: 1 page edited by members",
     "discussion": "1 message from 1 person naming \"Event Trace\" (soc-infra 1); the group's list had 13 messages from 3 people",
-    "github": "50 commits, 2 PRs by 2 people in riscv-non-isa/riscv-event-trace",
+    "github": "53 commits, 3 PRs by 2 people in riscv-non-isa/riscv-event-trace",
     "jira": "1 approval step closed (Develop Specification Plan); 1 comment from members"
    }
   },
@@ -998,7 +998,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 3 pages edited by members",
-    "discussion": "0 messages from 0 people naming \"Instrumentation Trace\"; the group's list had 8 messages from 2 people",
+    "discussion": "0 messages from 0 people naming \"Instrumentation Trace\"; the group's list had 9 messages from 2 people",
     "github": "0 commits by 0 people in riscv-non-isa/riscv-instrumentation-trace",
     "jira": "no approval step closed, no phase change, no member comment"
    }
@@ -1242,19 +1242,19 @@
     "confluence": 1,
     "discussion": 1,
     "github": 1,
-    "jira": 1,
+    "jira": 2,
     "meetings": null,
     "tests": 2
    },
-   "share": 57,
+   "share": 64,
    "terms": [
     "\"Long Instruction\""
    ],
    "text": {
-    "confluence": "group space: 5 pages edited by members",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming \"Long Instruction\"; the group's list had 7 messages from 3 people",
     "github": "12 commits by 1 person in riscv/riscv-long-instruction",
-    "jira": "1 approval step closed (Initial Infrastructure Setup)",
+    "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time",
     "tests": "9 PRs by 4 people (riscv-unified-db 7, sail-riscv 2)"
    }
   },
@@ -1276,7 +1276,7 @@
     "\"RISC-V Serial Debug Protocol\""
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 3 pages edited by members",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 17 messages from 4 people",
     "github": "14 commits, 4 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
@@ -1302,7 +1302,7 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "11 messages from 3 people naming IOPMP, \"Input/Output Physical Memory Protection\" (tech-arch-review 3, tech-privileged 4, tech-unprivileged 4); the group's list had 16 messages from 6 people",
-    "github": "88 commits, 57 PRs by 4 people in riscv-non-isa/riscv-iopmp",
+    "github": "91 commits, 57 PRs by 4 people in riscv-non-isa/riscv-iopmp",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
