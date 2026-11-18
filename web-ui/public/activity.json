@@ -1260,24 +1260,24 @@
   },
   "RVS-5524": {
    "governing": "",
-   "level": "Active",
+   "level": "Very Active",
    "measured": "2026-11-18",
    "points": {
-    "confluence": 1,
+    "confluence": 2,
     "discussion": 1,
     "github": 2,
     "jira": 2,
     "meetings": null,
     "tests": null
    },
-   "share": 75,
+   "share": 83,
    "terms": [
     "RSDP",
     "\"RISC-V Serial Debug Protocol\""
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
-    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 17 messages from 4 people",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 6 pages edited by members",
+    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 18 messages from 4 people",
     "github": "14 commits, 4 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
