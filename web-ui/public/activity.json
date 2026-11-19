@@ -99,7 +99,7 @@
    ],
    "text": {
     "confluence": "group space: 8 pages edited by members",
-    "discussion": "1 message from 1 person naming Smmtt (tech-arch-review 1); the group's list had 34 messages from 6 people",
+    "discussion": "1 message from 1 person naming Smmtt (tech-arch-review 1); the group's list had 35 messages from 6 people",
     "github": "53 commits, 17 PRs by 7 people in riscv/riscv-smmtt",
     "jira": "1 approval step closed (ARC Review (required))",
     "tests": "2 PRs by 1 person (riscv-unified-db 2)"
@@ -272,7 +272,7 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming \"Performance Events Specification\"; the group's list had 8 messages from 2 people",
-    "github": "6 commits, 5 PRs by 3 people in riscv/riscv-performance-events",
+    "github": "6 commits, 6 PRs by 3 people in riscv/riscv-performance-events",
     "jira": "no approval step closed, no phase change, no member comment"
    }
   },
@@ -997,7 +997,7 @@
     "\"Instrumentation Trace\""
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 2 pages edited by members",
+    "confluence": "Ratification Plan: 1 edit by 1 member; group space: 5 pages edited by members",
     "discussion": "0 messages from 0 people naming \"Instrumentation Trace\"; the group's list had 8 messages from 2 people",
     "github": "0 commits by 0 people in riscv-non-isa/riscv-instrumentation-trace",
     "jira": "no approval step closed, no phase change, no member comment"
@@ -1302,7 +1302,7 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "11 messages from 3 people naming IOPMP, \"Input/Output Physical Memory Protection\" (tech-arch-review 3, tech-privileged 4, tech-unprivileged 4); the group's list had 14 messages from 4 people",
-    "github": "132 commits, 40 PRs by 4 people in riscv-non-isa/riscv-iopmp",
+    "github": "139 commits, 43 PRs by 4 people in riscv-non-isa/riscv-iopmp",
     "jira": "1 comment from members",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
