@@ -611,17 +611,17 @@
   "summary": "The specification is in Planning. This phase started on 2026-11-18. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-17. In the last 90 days, GitHub had 12 commits by 1 person in riscv/riscv-long-instruction."
  },
  "RVS-5524": {
-  "generated": "2026-11-16",
+  "generated": "2026-11-19",
   "group": {
    "generated": "2026-11-19",
    "hash": "528f73048abb03bb",
    "source": "template",
    "summary": "The specification is developed by the Serial Debug Protocol (RSDP) TG. The group is Structuring and Chartering."
   },
-  "hash": "e87306dcd2568e2d",
+  "hash": "29f5b7a782859550",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2026-11-02. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-16. In the last 90 days, GitHub had 14 commits, 4 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol."
+  "summary": "The specification is in Planning. This phase started on 2026-11-02. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-19. In the last 90 days, GitHub had 15 commits, 4 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol."
  },
  "RVS-793": {
   "generated": "2026-11-19",
