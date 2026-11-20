@@ -25,6 +25,34 @@
       "to": "2027-01-24"
     },
     {
+      "spec": "RVS-4281",
+      "summary": "Event Trace",
+      "field": "status",
+      "from": "Specification in Planning",
+      "to": "Specification Under Development"
+    },
+    {
+      "spec": "RVS-4281",
+      "summary": "Event Trace",
+      "field": "projected_q",
+      "from": "Not Set Yet",
+      "to": "27Q3"
+    },
+    {
+      "spec": "RVS-4281",
+      "summary": "Event Trace",
+      "field": "progress",
+      "from": "Not Set Yet",
+      "to": "On Track"
+    },
+    {
+      "spec": "RVS-4281",
+      "summary": "Event Trace",
+      "field": "next_approval_date",
+      "from": "",
+      "to": "2027-01-26"
+    },
+    {
       "spec": "RVS-5139",
       "summary": "Long Instruction",
       "field": "status",
