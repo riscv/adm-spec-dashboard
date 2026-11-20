@@ -819,25 +819,25 @@
   },
   "RVS-4281": {
    "governing": "SOC Infrastructure (HC)",
-   "level": "Active",
+   "level": "Very Active",
    "measured": "2026-11-20",
    "points": {
     "confluence": 2,
     "discussion": 1,
     "github": 2,
-    "jira": 1,
+    "jira": 2,
     "meetings": null,
     "tests": null
    },
-   "share": 75,
+   "share": 83,
    "terms": [
     "\"Event Trace\""
    ],
    "text": {
     "confluence": "Ratification Plan: 6 edits by 1 member; group space: 4 pages edited by members",
     "discussion": "1 message from 1 person naming \"Event Trace\" (soc-infra 1); the group's list had 13 messages from 3 people",
-    "github": "46 commits, 3 PRs by 2 people in riscv-non-isa/riscv-event-trace",
-    "jira": "1 approval step closed (Develop Specification Plan); 1 comment from members"
+    "github": "50 commits, 3 PRs by 2 people in riscv-non-isa/riscv-event-trace",
+    "jira": "3 approval steps closed (Notify TSC and CSC; Governing Committee Approval (required); Develop Specification Plan); phase changed 1 time; 1 comment from members"
    }
   },
   "RVS-4335": {
@@ -1278,7 +1278,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 6 pages edited by members",
     "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 18 messages from 4 people",
-    "github": "18 commits, 4 PRs by 4 people in riscv-non-isa/riscv-serial-debug-protocol",
+    "github": "32 commits, 4 PRs by 4 people in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
   },
@@ -1301,9 +1301,9 @@
    ],
    "text": {
     "confluence": "group space: 0 pages edited by members",
-    "discussion": "11 messages from 3 people naming IOPMP, \"Input/Output Physical Memory Protection\" (tech-arch-review 3, tech-privileged 4, tech-unprivileged 4); the group's list had 14 messages from 4 people",
-    "github": "147 commits, 44 PRs by 5 people in riscv-non-isa/riscv-iopmp",
-    "jira": "1 comment from members",
+    "discussion": "11 messages from 3 people naming IOPMP, \"Input/Output Physical Memory Protection\" (tech-arch-review 3, tech-privileged 4, tech-unprivileged 4); the group's list had 15 messages from 4 people",
+    "github": "147 commits, 45 PRs by 5 people in riscv-non-isa/riscv-iopmp",
+    "jira": "2 comments from members",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
   }
