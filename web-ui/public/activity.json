@@ -320,8 +320,8 @@
     "Zabhlrsc"
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 4 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 11 messages from 4 people",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
+    "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 12 messages from 4 people",
     "github": "110 commits, 122 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
@@ -716,7 +716,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "18 messages from 5 people naming VME, \"Vector Matrix Extension\" (tech-unprivileged 18); the group's list had 38 messages from 8 people",
+    "discussion": "18 messages from 5 people naming VME, \"Vector Matrix Extension\" (tech-unprivileged 18); the group's list had 39 messages from 8 people",
     "github": "0 commits by 0 people in riscv/riscv-vme",
     "jira": "1 approval step closed (Internal Review (required)); phase changed 2 times; 1 comment from members",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
@@ -1020,8 +1020,8 @@
     "\"Logic Analyzer Trace\""
    ],
    "text": {
-    "confluence": "group space: 1 page edited by members",
-    "discussion": "0 messages from 0 people naming \"Logic Analyzer Trace\"; the group's list had 3 messages from 1 person",
+    "confluence": "group space: 2 pages edited by members",
+    "discussion": "0 messages from 0 people naming \"Logic Analyzer Trace\"; the group's list had 4 messages from 1 person",
     "github": "0 commits by 0 people in riscv-non-isa/riscv-logic-analyzer-trace",
     "jira": "no approval step closed, no phase change, no member comment"
    }
@@ -1277,7 +1277,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 6 pages edited by members",
-    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 21 messages from 4 people",
+    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 23 messages from 4 people",
     "github": "32 commits, 5 PRs by 4 people in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
    }
