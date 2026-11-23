@@ -246,7 +246,7 @@
     "Zvvmttls"
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 8 pages edited by members",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 10 pages edited by members",
     "discussion": "0 messages from 0 people naming Zvvmm, Zvvfmm, Zvvmtls, Zvvmttls; the group's list had 77 messages from 14 people",
     "github": "192 commits, 10 PRs by 4 people in riscv/integrated-matrix-extension",
     "jira": "no approval step closed, no phase change, no member comment",
@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 4 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 11 messages from 4 people",
-    "github": "109 commits, 122 PRs by 5 people in riscv/riscv-cheri",
+    "github": "110 commits, 122 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -345,7 +345,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zvknhk; the group's list had 21 messages from 3 people",
+    "discussion": "0 messages from 0 people naming Zvknhk; the group's list had 22 messages from 3 people",
     "github": "18 commits, 6 PRs by 3 people in riscv/riscv-pqc",
     "jira": "2 approval steps closed (Technical Project Specification Stabilization Approval (requ; Internal Review (required))"
    }
@@ -375,7 +375,7 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 39 messages from 9 people",
+    "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 40 messages from 9 people",
     "github": "870 commits, 39 PRs by 4 people in riscv/riscv-high-assurance-cryptography",
     "jira": "1 approval step closed (Develop Specification)"
    }
@@ -836,7 +836,7 @@
    "text": {
     "confluence": "Ratification Plan: 6 edits by 1 member; group space: 4 pages edited by members",
     "discussion": "1 message from 1 person naming \"Event Trace\" (soc-infra 1); the group's list had 12 messages from 3 people",
-    "github": "52 commits, 3 PRs by 2 people in riscv-non-isa/riscv-event-trace",
+    "github": "58 commits, 3 PRs by 2 people in riscv-non-isa/riscv-event-trace",
     "jira": "3 approval steps closed (Notify TSC and CSC; Governing Committee Approval (required); Develop Specification Plan); phase changed 1 time; 1 comment from members"
    }
   },
@@ -1277,9 +1277,32 @@
    ],
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 6 pages edited by members",
-    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 20 messages from 4 people",
+    "discussion": "0 messages from 0 people naming RSDP, \"RISC-V Serial Debug Protocol\"; the group's list had 21 messages from 4 people",
     "github": "32 commits, 5 PRs by 4 people in riscv-non-isa/riscv-serial-debug-protocol",
     "jira": "1 approval step closed (Initial Infrastructure Setup); phase changed 1 time"
+   }
+  },
+  "RVS-5564": {
+   "governing": "Unprivileged ISA Committee (IC)",
+   "level": "Low",
+   "measured": "2026-11-23",
+   "points": {
+    "confluence": 0,
+    "discussion": 1,
+    "github": 0,
+    "jira": 2,
+    "meetings": null,
+    "tests": null
+   },
+   "share": 33,
+   "terms": [
+    "Zvbec"
+   ],
+   "text": {
+    "confluence": "Ratification Plan: 0 edits by 0 members",
+    "discussion": "2 messages from 1 person naming Zvbec (tech-privileged 1, tech-unprivileged 1)",
+    "github": "0 commits by 0 people in riscv/riscv-zvbec",
+    "jira": "2 approval steps closed (Notify TSC of Fast-Track Approval; Initial Infrastructure Setup); phase changed 1 time"
    }
   },
   "RVS-793": {
@@ -1302,8 +1325,8 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "10 messages from 3 people naming IOPMP, \"Input/Output Physical Memory Protection\" (tech-arch-review 2, tech-privileged 4, tech-unprivileged 4); the group's list had 15 messages from 4 people",
-    "github": "168 commits, 49 PRs by 4 people in riscv-non-isa/riscv-iopmp",
-    "jira": "3 comments from members",
+    "github": "169 commits, 50 PRs by 4 people in riscv-non-isa/riscv-iopmp",
+    "jira": "4 comments from members",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
   }

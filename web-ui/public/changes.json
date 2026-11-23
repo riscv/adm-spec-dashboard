@@ -58,6 +58,13 @@
       "field": "status",
       "from": "Specification Inception",
       "to": "Specification in Planning"
+    },
+    {
+      "spec": "RVS-5564",
+      "summary": "Vector Bit Compress and Expand (Zvbec)",
+      "field": "presence",
+      "from": "absent",
+      "to": "present"
     }
   ]
 }
