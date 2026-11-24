@@ -1069,7 +1069,7 @@
     "confluence": "Ratification Plan: 0 edits by 0 members",
     "discussion": "8 messages from 4 people naming Zilx (tech-arch-review 1, tech-privileged 1, tech-unprivileged 6)",
     "github": "10 commits by 1 person in riscv/riscv-zilx",
-    "jira": "7 approval steps closed (Develop Proof of Concept; Add Support into the Sail Golden Model; Develop Support for LLVM; ...); phase changed 4 times; 9 comments from members",
+    "jira": "8 approval steps closed (ARC Review (required); Develop Proof of Concept; Add Support into the Sail Golden Model; ...); phase changed 4 times; 9 comments from members",
     "tests": "3 PRs by 3 people (sail-riscv 3)"
    }
   },
