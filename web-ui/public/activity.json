@@ -322,7 +322,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 6 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 12 messages from 4 people",
-    "github": "114 commits, 125 PRs by 5 people in riscv/riscv-cheri",
+    "github": "116 commits, 126 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -376,7 +376,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 38 messages from 9 people",
-    "github": "846 commits, 39 PRs by 4 people in riscv/riscv-high-assurance-cryptography",
+    "github": "847 commits, 39 PRs by 4 people in riscv/riscv-high-assurance-cryptography",
     "jira": "1 approval step closed (Develop Specification)"
    }
   },
@@ -837,7 +837,7 @@
     "confluence": "Ratification Plan: 6 edits by 1 member; group space: 4 pages edited by members",
     "discussion": "1 message from 1 person naming \"Event Trace\" (soc-infra 1); the group's list had 12 messages from 3 people",
     "github": "61 commits, 4 PRs by 2 people in riscv-non-isa/riscv-event-trace",
-    "jira": "3 approval steps closed (Notify TSC and CSC; Governing Committee Approval (required); Develop Specification Plan); phase changed 1 time; 1 comment from members"
+    "jira": "4 approval steps closed (Develop Specification; Notify TSC and CSC; Governing Committee Approval (required); ...); phase changed 1 time; 1 comment from members"
    }
   },
   "RVS-4335": {
