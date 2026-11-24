@@ -76,7 +76,7 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "2 messages from 1 person naming \"Security Model\" (tech-privileged 1, tech-unprivileged 1); the group's list had 5 messages from 3 people",
-    "github": "11 commits, 7 PRs by 2 people in riscv/riscv-security-model",
+    "github": "11 commits, 8 PRs by 2 people in riscv/riscv-security-model",
     "jira": "7 approval steps closed (Ensure Compliance with RISC-V Policies (required); ARC Review (required); List Code & Contributions; ...); 6 comments from members",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -99,7 +99,7 @@
    ],
    "text": {
     "confluence": "group space: 7 pages edited by members",
-    "discussion": "3 messages from 2 people naming Smmtt (tech-arch-review 1, tech-privileged 1, tech-unprivileged 1); the group's list had 31 messages from 6 people",
+    "discussion": "3 messages from 2 people naming Smmtt (tech-arch-review 1, tech-privileged 1, tech-unprivileged 1); the group's list had 32 messages from 6 people",
     "github": "52 commits, 17 PRs by 7 people in riscv/riscv-smmtt",
     "jira": "1 approval step closed (ARC Review (required))",
     "tests": "2 PRs by 1 person (riscv-unified-db 2)"
@@ -171,7 +171,7 @@
    ],
    "text": {
     "confluence": "group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming Sdsec; the group's list had 57 messages from 8 people",
+    "discussion": "0 messages from 0 people naming Sdsec; the group's list had 58 messages from 8 people",
     "github": "28 commits, 5 PRs by 3 people in riscv-non-isa/riscv-external-debug-security",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
@@ -305,14 +305,14 @@
    "level": "Active",
    "measured": "2026-11-24",
    "points": {
-    "confluence": 1,
+    "confluence": 2,
     "discussion": 1,
     "github": 2,
     "jira": 0,
     "meetings": null,
     "tests": 0
    },
-   "share": 50,
+   "share": 57,
    "terms": [
     "Zcheripurecap",
     "Zcherihybrid",
@@ -320,9 +320,9 @@
     "Zabhlrsc"
    ],
    "text": {
-    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 5 pages edited by members",
+    "confluence": "Ratification Plan: 0 edits by 0 members; group space: 6 pages edited by members",
     "discussion": "0 messages from 0 people naming Zcheripurecap, Zcherihybrid, Zish4add, Zabhlrsc; the group's list had 12 messages from 4 people",
-    "github": "111 commits, 124 PRs by 5 people in riscv/riscv-cheri",
+    "github": "114 commits, 125 PRs by 5 people in riscv/riscv-cheri",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
@@ -425,7 +425,7 @@
    "text": {
     "confluence": "Ratification Plan: 1 edit by 1 member; group space: 1 page edited by members",
     "discussion": "0 messages from 0 people naming Zimt, Svatag, Smvatag; the group's list had 3 messages from 2 people",
-    "github": "34 commits, 3 PRs by 1 person in riscv/riscv-memory-tagging",
+    "github": "35 commits, 3 PRs by 1 person in riscv/riscv-memory-tagging",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "1 PR by 1 person (sail-riscv 1)"
    }
@@ -452,7 +452,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Sspesa, Ssplcofi, Smpdis, Sspdis; the group's list had 9 messages from 3 people",
-    "github": "39 commits, 15 PRs by 3 people in riscv/riscv-performance-event-sampling",
+    "github": "44 commits, 16 PRs by 3 people in riscv/riscv-performance-event-sampling",
     "jira": "no approval step closed, no phase change, no member comment"
    }
   },
@@ -1325,8 +1325,8 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "10 messages from 3 people naming IOPMP, \"Input/Output Physical Memory Protection\" (tech-arch-review 2, tech-privileged 4, tech-unprivileged 4); the group's list had 15 messages from 4 people",
-    "github": "147 commits, 51 PRs by 4 people in riscv-non-isa/riscv-iopmp",
-    "jira": "4 comments from members",
+    "github": "152 commits, 52 PRs by 4 people in riscv-non-isa/riscv-iopmp",
+    "jira": "5 comments from members",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
   }
