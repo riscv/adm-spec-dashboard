@@ -1,7 +1,7 @@
 {
-  "generated": "2026-11-23",
-  "from": "2026-11-16",
-  "to": "2026-11-23",
+  "generated": "2026-11-24",
+  "from": "2026-11-17",
+  "to": "2026-11-24",
   "changes": [
     {
       "spec": "RVS-3312",
@@ -61,7 +61,7 @@
     },
     {
       "spec": "RVS-5564",
-      "summary": "Vector Bit Compress and Expand (Zvbec)",
+      "summary": "Vector Bit Expand and Compress (Zvbec)",
       "field": "presence",
       "from": "absent",
       "to": "present"
