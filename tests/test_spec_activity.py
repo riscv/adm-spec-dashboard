@@ -106,6 +106,20 @@ def test_plural():
     assert sa.plural(0, "commit") == "0 commits"
 
 
-def test_staff_file_loads():
-    staff = sa.load_staff(ROOT / "staff.json")
-    assert "jjscheel" in staff["github"] and "jeff scheel" in staff["names"]
+def test_staff_file_loads(monkeypatch):
+    monkeypatch.delenv("STAFF_JSON", raising=False)
+    staff = sa.load_staff(ROOT / "tests" / "fixtures" / "staff.example.json")
+    assert "example-staff" in staff["github"] and "example staff" in staff["names"]
+
+
+def test_staff_from_env(monkeypatch):
+    monkeypatch.setenv("STAFF_JSON", '{"names": ["Env Staff"], "github": ["env-staff"], "groupsio_user_ids": [1]}')
+    staff = sa.load_staff(None)
+    assert staff["names"] == {"env staff"} and staff["groupsio"] == {1}
+
+
+def test_staff_required(monkeypatch):
+    monkeypatch.delenv("STAFF_JSON", raising=False)
+    import pytest
+    with pytest.raises(SystemExit):
+        sa.load_staff(None)

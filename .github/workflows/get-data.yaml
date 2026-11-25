@@ -204,6 +204,7 @@ jobs:
           GHTOKEN: ${{ secrets.GHTOKEN }}
           GROUPSIO_USER: ${{ secrets.GROUPSIO_USER }}
           GROUPSIO_PASSWORD: ${{ secrets.GROUPSIO_PASSWORD }}
+          STAFF_JSON: ${{ secrets.STAFF_JSON }}  # staff list, kept out of this public repo
         run: |
           set -euo pipefail
           pip install --quiet requests==2.32.3

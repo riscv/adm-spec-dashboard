@@ -164,3 +164,5 @@ cython_debug/
 # Other
 *.csv
 !web-ui/public/latest.csv
+# staff list lives in the STAFF_JSON secret
+staff.json
