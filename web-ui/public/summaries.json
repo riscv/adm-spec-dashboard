@@ -2,11 +2,11 @@
  "RVS-1017": {
   "generated": "2026-11-25",
   "group": {
-   "generated": "2026-11-15",
-   "hash": "a22ca385f6b7e9ef",
+   "generated": "2026-11-25",
+   "hash": "bd51939f33194493",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Fast Interrupts (CLIC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-10. Its repository was last updated on 2026-11-14. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the Fast Interrupts (CLIC) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-02. Its mailing list last had a message on 2026-11-10. Its repository was last updated on 2026-11-16. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "c064f912e61a57f6",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -16,11 +16,11 @@
  "RVS-1135": {
   "generated": "2026-11-22",
   "group": {
-   "generated": "2026-11-16",
-   "hash": "255888436cfc7ff0",
+   "generated": "2026-11-25",
+   "hash": "f80429ce8df7666a",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Packed Single Instruction, Multiple Data (SIMD) - P TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-15. Its repository was last updated on 2026-11-14. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Packed Single Instruction, Multiple Data (SIMD) - P TG. Its activity level is Active. Its Confluence space was last updated on 2026-09-11. Its mailing list last had a message on 2026-11-15. Its repository was last updated on 2026-11-22. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "7a2edb9e78f9e740",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -42,11 +42,11 @@
  "RVS-1153": {
   "generated": "2026-11-25",
   "group": {
-   "generated": "2026-10-28",
-   "hash": "5e5698c2677e1d50",
+   "generated": "2026-11-25",
+   "hash": "7f0d3b11cfa936ae",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Security Model TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-23. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Security Model TG. Its activity level is Active. Its Confluence space was last updated on 2025-05-07. Its mailing list last had a message on 2026-10-14. Its repository was last updated on 2026-11-25. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "74698d891676cd94",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -63,10 +63,10 @@
   "generated": "2026-11-25",
   "group": {
    "generated": "2026-11-25",
-   "hash": "f149e8c286cc1c25",
+   "hash": "546c3f62840f2a5d",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the SmMTT (Supervisor Domain Isolation) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-24. Its repository was last updated on 2026-11-17. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the SmMTT (Supervisor Domain Isolation) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-06. Its mailing list last had a message on 2026-11-24. Its repository was last updated on 2026-11-17. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "6c078002ac28914a",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -76,11 +76,11 @@
  "RVS-1618": {
   "generated": "2026-11-24",
   "group": {
-   "generated": "2026-11-06",
-   "hash": "8621207e3211d870",
+   "generated": "2026-11-25",
+   "hash": "c0785c2b3a6da746",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Application-Processor Trusted Execution Environment I/O (CoVE-IO) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-21. Its repository was last updated on 2026-11-04. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Application-Processor Trusted Execution Environment I/O (CoVE-IO) TG. Its activity level is Stalled. Its Confluence space was last updated on 2025-02-11. Its mailing list last had a message on 2026-08-25. Its repository was last updated on 2026-08-25. Stalled means none of its Confluence space, mailing list and repository was updated within 60 days."
   },
   "hash": "23472cfdeafc97ff",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -90,11 +90,11 @@
  "RVS-1790": {
   "generated": "2026-11-15",
   "group": {
-   "generated": "2026-11-20",
-   "hash": "e11fbc0ae1e7e98f",
+   "generated": "2026-11-25",
+   "hash": "16d09c2ee940aefa",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Attached Matrix Extension (AME) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-20. Its mailing list last had a message on 2026-11-18. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Attached Matrix Extension (AME) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-20. Its mailing list last had a message on 2026-11-18. Its repository was last updated on 2026-08-16. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "13e0c5f38d74f3a5",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -105,10 +105,10 @@
   "generated": "2026-11-25",
   "group": {
    "generated": "2026-11-25",
-   "hash": "3029f11b43e98f3e",
+   "hash": "d7aed7b9ee84b105",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the External Debug Security TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-24. Its repository was last updated on 2026-11-03. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the External Debug Security TG. Its activity level is Active. Its Confluence space was last updated on 2026-08-25. Its mailing list last had a message on 2026-11-24. Its repository was last updated on 2026-11-23. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "8675752046a03614",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -125,10 +125,10 @@
   "generated": "2026-11-08",
   "group": {
    "generated": "2026-11-25",
-   "hash": "d82f5b279fc79c6c",
+   "hash": "9906c4a9a74bc392",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Application-Processor Trusted Execution Environment (CoVE) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-20. Its mailing list last had a message on 2026-11-17. Its repository was last updated on 2026-11-25. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the Application-Processor Trusted Execution Environment (CoVE) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-20. Its mailing list last had a message on 2026-11-17. Its repository was last updated on 2026-06-16. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "7fb75e6c37fc7368",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -145,11 +145,11 @@
  "RVS-1930": {
   "generated": "2026-11-23",
   "group": {
-   "generated": "2026-11-24",
-   "hash": "d78e75fba22e667d",
+   "generated": "2026-11-25",
+   "hash": "c8c8a2bb4df97c4a",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Integrated Matrix Extension (IME). Its activity level is Active. Its Confluence space was last updated on 2026-11-23. Its mailing list last had a message on 2026-11-21. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Integrated Matrix Extension (IME). Its activity level is Very Active. Its Confluence space was last updated on 2026-11-23. Its mailing list last had a message on 2026-11-21. Its repository was last updated on 2026-11-13. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "224e44097c16d778",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -180,24 +180,24 @@
   "generated": "2026-11-25",
   "group": {
    "generated": "2026-11-25",
-   "hash": "2d6cf9e1e2275854",
+   "hash": "c09226d52c950f8e",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-24. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-20. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-24. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-24. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "9eb9a9d0b541e370",
+  "hash": "5f349478de5e3da6",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-25. In the last 90 days, GitHub had 114 commits, 125 PRs by 4 people in riscv/riscv-cheri."
+  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-25. In the last 90 days, GitHub had 115 commits, 125 PRs by 4 people in riscv/riscv-cheri."
  },
  "RVS-2360": {
   "generated": "2026-11-25",
   "group": {
-   "generated": "2026-11-23",
-   "hash": "546d15f50cda67c0",
+   "generated": "2026-11-25",
+   "hash": "fe7a5c1cc17acb1d",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Post-Quantum Cryptography (PQC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-11. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the Post-Quantum Cryptography (PQC) TG. Its activity level is Active. Its Confluence space was last updated on 2026-07-02. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-10-13. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "3dc3d91ebed6a672",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -207,11 +207,11 @@
  "RVS-2362": {
   "generated": "2026-11-25",
   "group": {
-   "generated": "2026-11-23",
-   "hash": "ebc7d94823158d96",
+   "generated": "2026-11-25",
+   "hash": "2e45f87a471ac06c",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-11. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Active. Its Confluence space was last updated on 2026-09-08. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-16. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "0d2d25983cb5f9f1",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -221,11 +221,11 @@
  "RVS-2611": {
   "generated": "2026-11-18",
   "group": {
-   "generated": "2026-11-24",
-   "hash": "0f350ed92336b630",
+   "generated": "2026-11-25",
+   "hash": "c5ff543cd9896fc3",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Composable Custom Extensions TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-19. Its mailing list last had a message on 2026-11-19. Its repository was last updated on 2026-11-08. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Composable Custom Extensions TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-19. Its mailing list last had a message on 2026-11-19. Its repository was last updated on 2026-08-19. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "9e067c1f9fd66f6c",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -235,11 +235,11 @@
  "RVS-2706": {
   "generated": "2026-11-25",
   "group": {
-   "generated": "2026-11-12",
-   "hash": "5de63b870ff91269",
+   "generated": "2026-11-25",
+   "hash": "0e3ba6208e58ef52",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Memory Tagging TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-10-26. Its repository was last updated on 2026-11-11. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Memory Tagging TG. Its activity level is Low. Its Confluence space was last updated on 2026-09-15. Its mailing list last had a message on 2026-10-26. Its repository was last updated on 2026-08-20. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
   },
   "hash": "7dcbe690ce1a0ccd",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -249,11 +249,11 @@
  "RVS-2770": {
   "generated": "2026-11-25",
   "group": {
-   "generated": "2026-11-14",
-   "hash": "25db96e5a29434aa",
+   "generated": "2026-11-25",
+   "hash": "a5f08dff9cb89a18",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Performance Event Sampling TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-13. Its mailing list last had a message on 2026-11-13. Its repository was last updated on 2026-11-11. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the Performance Event Sampling TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-12. Its mailing list last had a message on 2026-11-11. Its repository was last updated on 2026-11-11. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "405b8267b2d15d11",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -291,11 +291,11 @@
  "RVS-3131": {
   "generated": "2026-10-27",
   "group": {
-   "generated": "2026-11-12",
-   "hash": "4b9ebab2bbd7805f",
+   "generated": "2026-11-25",
+   "hash": "240edbbc186a078b",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Self-hosted Trace TG. Its activity level is Low. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-08-04. No repository update is recorded. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
+   "summary": "The specification is developed by the Self-hosted Trace TG. Its activity level is Stalled. Its Confluence space was last updated on 2026-08-17. Its mailing list last had a message on 2026-08-04. Its repository was last updated on 2026-05-28. Stalled means none of its Confluence space, mailing list and repository was updated within 60 days."
   },
   "hash": "cb124cd8ce9e7f42",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -305,11 +305,11 @@
  "RVS-3312": {
   "generated": "2026-11-20",
   "group": {
-   "generated": "2026-11-21",
-   "hash": "4e97211ecbd9af37",
+   "generated": "2026-11-25",
+   "hash": "ac17d92529e410f9",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the RVM Profile TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-20. Its mailing list last had a message on 2026-11-18. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the RVM Profile TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-25. Its mailing list last had a message on 2026-11-18. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "82ce16de92470b72",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -319,11 +319,11 @@
  "RVS-3569": {
   "generated": "2026-10-27",
   "group": {
-   "generated": "2026-11-12",
-   "hash": "d6c2d202ddf93dee",
+   "generated": "2026-11-25",
+   "hash": "081c99569dfed34c",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Timing Fences TG. Its activity level is Low. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-04-01. No repository update is recorded. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
+   "summary": "The specification is developed by the Timing Fences TG. Its activity level is Stalled. Its Confluence space was last updated on 2026-07-17. Its mailing list last had a message on 2026-03-30. No repository update is recorded. Stalled means none of its Confluence space, mailing list and repository was updated within 60 days."
   },
   "hash": "3233e853d7ef29ed",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -366,11 +366,11 @@
  "RVS-3923": {
   "generated": "2026-10-27",
   "group": {
-   "generated": "2026-11-24",
-   "hash": "66ef4ebd2be23fe6",
+   "generated": "2026-11-25",
+   "hash": "c9cfad349646a6f3",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Vector Matrix Extension (VME) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-23. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Vector Matrix Extension (VME) TG. Its activity level is Low. Its Confluence space was last updated on 2026-07-01. Its mailing list last had a message on 2026-11-23. No repository update is recorded. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
   },
   "hash": "8ac1df63e2a7c642",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -406,11 +406,11 @@
  "RVS-4146": {
   "generated": "2026-10-23",
   "group": {
-   "generated": "2026-11-24",
-   "hash": "4da341c2bb098425",
+   "generated": "2026-11-25",
+   "hash": "e47d664d7fb2ef02",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Platform Management Interface (RPMI) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-23. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Platform Management Interface (RPMI) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-23. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "3a1ab75b71c1fac1",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -428,10 +428,10 @@
   "generated": "2026-11-24",
   "group": {
    "generated": "2026-11-25",
-   "hash": "4b6ca2085c6b7e13",
+   "hash": "10ca276b4414edf5",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Event Trace TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-24. Its mailing list last had a message on 2026-11-18. Its repository was last updated on 2026-11-15. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the Event Trace TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-19. Its mailing list last had a message on 2026-11-16. Its repository was last updated on 2026-11-24. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "ac8d68ea3c816806",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -489,11 +489,11 @@
  "RVS-4752": {
   "generated": "2026-10-27",
   "group": {
-   "generated": "2026-11-20",
-   "hash": "0e1844ade79276a1",
+   "generated": "2026-11-25",
+   "hash": "4f78b76211419819",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Instrumentation Trace TG. Its activity level is Active. No Confluence update is recorded. Its mailing list last had a message on 2026-11-19. Its repository was last updated on 2026-11-15. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Instrumentation Trace TG. Its activity level is Low. No Confluence update is recorded. Its mailing list last had a message on 2026-11-19. Its repository was last updated on 2026-06-04. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
   },
   "hash": "87eb090f1a5bcb68",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -550,11 +550,11 @@
  "RVS-5068": {
   "generated": "2026-11-20",
   "group": {
-   "generated": "2026-11-12",
-   "hash": "7bcddcb46bb1613e",
+   "generated": "2026-11-25",
+   "hash": "f80aa6c455b06d64",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Boot and Runtime Services (BRS) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-09-27. Its repository was last updated on 2026-11-11. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Boot and Runtime Services (BRS) TG. Its activity level is Active. Its Confluence space was last updated on 2026-09-24. Its mailing list last had a message on 2026-09-27. Its repository was last updated on 2026-11-04. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "e83e3db6f5571789",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -578,11 +578,11 @@
  "RVS-5086": {
   "generated": "2026-11-25",
   "group": {
-   "generated": "2026-11-24",
-   "hash": "1e19f96d95d0d039",
+   "generated": "2026-11-25",
+   "hash": "5dc969c9deb6af24",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the psABI TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-04. Its repository was last updated on 2026-11-24. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the psABI TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-31. Its mailing list last had a message on 2026-11-04. Its repository was last updated on 2026-11-16. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "7873f81bb5ce3ea0",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -599,11 +599,11 @@
  "RVS-5139": {
   "generated": "2026-11-24",
   "group": {
-   "generated": "2026-11-21",
-   "hash": "1e7a9da14948cc64",
+   "generated": "2026-11-25",
+   "hash": "7c024462cc1ee3a3",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Long Instruction TG. Its activity level is Low. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-11-03. No repository update is recorded. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
+   "summary": "The specification is developed by the Long Instruction TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-06. Its mailing list last had a message on 2026-11-03. Its repository was last updated on 2026-11-02. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "d7ffaec445076d8c",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -633,11 +633,11 @@
  "RVS-793": {
   "generated": "2026-11-25",
   "group": {
-   "generated": "2026-11-21",
-   "hash": "4af17169fac02921",
+   "generated": "2026-11-25",
+   "hash": "08ba4e89e25dada7",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the I/O Physical Memory Protection Unit (IOPMP) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-20. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the I/O Physical Memory Protection Unit (IOPMP) TG. Its activity level is Active. Its Confluence space was last updated on 2025-05-14. Its mailing list last had a message on 2026-11-20. Its repository was last updated on 2026-11-24. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "3ad4a3cf153d41c4",
   "model": "qwen.qwen3-next-80b-a3b",
