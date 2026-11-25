@@ -4,6 +4,27 @@
   "to": "2026-11-25",
   "changes": [
     {
+      "spec": "RVS-2770",
+      "summary": "Performance Event Sampling",
+      "field": "status",
+      "from": "Specification Under Stabilization",
+      "to": "Specification in Freeze"
+    },
+    {
+      "spec": "RVS-2770",
+      "summary": "Performance Event Sampling",
+      "field": "progress",
+      "from": "Exposed",
+      "to": "Late"
+    },
+    {
+      "spec": "RVS-2770",
+      "summary": "Performance Event Sampling",
+      "field": "next_approval_date",
+      "from": "2026-12-08",
+      "to": "2027-02-02"
+    },
+    {
       "spec": "RVS-4281",
       "summary": "Event Trace",
       "field": "status",
