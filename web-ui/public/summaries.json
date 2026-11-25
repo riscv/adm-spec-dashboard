@@ -8,10 +8,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Fast Interrupts (CLIC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-10. Its repository was last updated on 2026-11-14. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "5a755526664206c4",
+  "hash": "c064f912e61a57f6",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2026-07-08. Development started on 2024-03-08. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-16. In the last 90 days, GitHub had 12 commits, 12 PRs by 3 people in riscv/riscv-fast-interrupt."
+  "summary": "The specification is in Freeze. This phase started on 2026-07-08. Development started on 2024-03-08. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-16. In the last 90 days, GitHub had 10 commits and 10 PRs by 2 people in riscv/riscv-fast-interrupt."
  },
  "RVS-1135": {
   "generated": "2026-11-22",
@@ -40,7 +40,7 @@
   "summary": "The specification was cancelled."
  },
  "RVS-1153": {
-  "generated": "2026-11-24",
+  "generated": "2026-11-25",
   "group": {
    "generated": "2026-10-28",
    "hash": "5e5698c2677e1d50",
@@ -48,10 +48,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Security Model TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-10-23. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "a07ed03516c8e00a",
+  "hash": "74698d891676cd94",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Ratification-Ready. This phase started on 2026-10-14. Development started on 2024-08-28. The projected ratification quarter is 26Q4. It is 8 quarters behind the baseline 24Q4. The projection has not changed in the last 90 days. The next approval is TSC ratification, projected for 2026-12-19. The projected dates were last set on 2026-10-23. ARC review: Approved. Public review: Public Review In Progress. TSC approval: Not Started. The last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 11 commits, 8 PRs by 2 people in riscv/riscv-security-model."
+  "summary": "The specification is in Ratification-Ready. This phase started on 2026-10-14. Development started on 2024-08-28. The projected ratification quarter is 26Q4. It is 8 quarters behind the baseline 24Q4. The projection has not changed in the last 90 days. The next approval is TSC ratification, projected for 2026-12-19. The projected dates were last set on 2026-10-23. ARC review: Approved. Public review: Public Review In Progress. TSC approval: Not Started. The last GitHub contribution was on 2026-11-25. In the last 90 days, GitHub had 18 commits, 8 PRs by 2 people in riscv/riscv-security-model."
  },
  "RVS-1185": {
   "generated": "2026-11-25",
@@ -60,18 +60,18 @@
   "summary": "The specification was cancelled."
  },
  "RVS-1345": {
-  "generated": "2026-11-24",
+  "generated": "2026-11-25",
   "group": {
-   "generated": "2026-11-19",
-   "hash": "560848b88a5011d1",
+   "generated": "2026-11-25",
+   "hash": "f149e8c286cc1c25",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the SmMTT (Supervisor Domain Isolation) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-19. Its repository was last updated on 2026-11-17. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the SmMTT (Supervisor Domain Isolation) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-24. Its repository was last updated on 2026-11-17. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "d38ddb88cacaacc2",
+  "hash": "12e03413ba4ec75e",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-02-28. Development started on 2023-08-23. The projected ratification quarter is 27Q1. It is 7 quarters behind the baseline 25Q2. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-11-28. The projected dates were last set on 2026-11-03. ARC review: Approved. The last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 52 commits, 17 PRs by 7 people in riscv/riscv-smmtt."
+  "summary": "The specification is in Freeze. This phase started on 2025-02-28. Development started on 2023-08-23. The projected ratification quarter is 27Q1. It is 7 quarters behind the baseline 25Q2. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-11-28. The projected dates were last set on 2026-11-03. ARC review: Approved. The last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 52 commits, 18 PRs by 7 people in riscv/riscv-smmtt."
  },
  "RVS-1618": {
   "generated": "2026-11-24",
@@ -102,18 +102,18 @@
   "summary": "The specification is in Development, which started on 2026-08-10. The projected ratification quarter is 27Q2, matching the baseline. The projection has not changed in the last 90 days. The next approval, Development complete, is projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-10-29, with 0 commits and 7 PRs by 4 people in riscv/riscv-attached-matrix-extension in the last 90 days."
  },
  "RVS-1792": {
-  "generated": "2026-11-24",
+  "generated": "2026-11-25",
   "group": {
-   "generated": "2026-11-24",
-   "hash": "0699b6d7f81e7ebf",
+   "generated": "2026-11-25",
+   "hash": "3029f11b43e98f3e",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the External Debug Security TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-03. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the External Debug Security TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-24. Its repository was last updated on 2026-11-03. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "00fd56d7b36ffbe4",
+  "hash": "8675752046a03614",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-06-06. Development started on 2024-06-12. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-23. In the last 90 days, GitHub had 28 commits, 5 PRs by 3 people in riscv-non-isa/riscv-external-debug-security."
+  "summary": "The specification is in Freeze. This phase started on 2025-06-06. Development started on 2024-06-12. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-23. In the last 90 days, GitHub had 27 commits, 5 PRs by 3 people in riscv-non-isa/riscv-external-debug-security."
  },
  "RVS-1895": {
   "generated": "2026-11-25",
@@ -170,25 +170,25 @@
   "summary": "The specification is in Planning. This phase started on 2026-01-16. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-02. In the last 90 days, GitHub had 6 commits and 6 PRs by 3 people in riscv/riscv-performance-events."
  },
  "RVS-1971": {
-  "generated": "2026-10-27",
-  "hash": "27b030f4561eec8c",
+  "generated": "2026-11-25",
+  "hash": "4671ea22602d026a",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Stabilization following the fast-track process. This phase started on 2026-06-22. Development started on 2026-04-15. The projected ratification quarter is 27Q2, which is 2 quarters behind the baseline 26Q4. On 2026-10-19, the projection moved from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-10-25. In the last 90 days, GitHub had 5 commits by 3 people in riscv/riscv-isa-manual PR #2576."
+  "summary": "The specification is in Stabilization, following the fast-track process. This phase started on 2026-06-22. Development started on 2026-04-15. The projected ratification quarter is 27Q2, which is 2 quarters behind the baseline 26Q4. On 2026-10-19, the projection moved from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-10-25. In the last 90 days, GitHub had 5 commits by 2 people in riscv/riscv-isa-manual PR #2576."
  },
  "RVS-2141": {
-  "generated": "2026-11-24",
+  "generated": "2026-11-25",
   "group": {
-   "generated": "2026-11-24",
-   "hash": "6b9cd84271c2025c",
+   "generated": "2026-11-25",
+   "hash": "2d6cf9e1e2275854",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-23. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-20. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-24. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-20. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "3e5b32158ccfa863",
+  "hash": "4a56ae8f6e6b4bec",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 116 commits, 126 PRs by 5 people in riscv/riscv-cheri."
+  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-25. In the last 90 days, GitHub had 116 commits, 127 PRs by 5 people in riscv/riscv-cheri."
  },
  "RVS-2360": {
   "generated": "2026-11-24",
@@ -205,7 +205,7 @@
   "summary": "The specification is in Stabilization, which started on 2026-07-22. Development began on 2026-03-05. The projected ratification quarter is 27Q2, which is 2 quarters behind the baseline 26Q4. On 2026-10-23, the projection moved from 27Q1 to 27Q2. The next approval, Stabilization approval, is projected for 2026-12-08. The projected dates were last set on 2026-10-23, and the last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 18 commits, 6 PRs by 3 people in riscv/riscv-pqc."
  },
  "RVS-2362": {
-  "generated": "2026-11-24",
+  "generated": "2026-11-25",
   "group": {
    "generated": "2026-11-23",
    "hash": "ebc7d94823158d96",
@@ -213,10 +213,10 @@
    "source": "ai",
    "summary": "The specification is developed by the High Assurance Cryptography (HAC) TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-11. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-11. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "8789987c2bdc57cd",
+  "hash": "0986fae595bb79af",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Development, which started on 2026-03-04. The projected ratification quarter is 27Q2, 2 quarters behind the baseline 26Q4. On 2026-10-16, the projection moved from 27Q1 to 27Q2. The next approval, Development complete, is projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-11-24, with 847 commits and 39 PRs by 4 people in riscv/riscv-high-assurance-cryptography in the last 90 days."
+  "summary": "The specification is in Development. This phase started on 2026-03-04. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. On 2026-10-16 the projection moved later, from 27Q1 to 27Q2. The next approval is Development complete, projected for 2026-12-29. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 810 commits, 39 PRs by 4 people in riscv/riscv-high-assurance-cryptography."
  },
  "RVS-2611": {
   "generated": "2026-11-18",
@@ -427,11 +427,11 @@
  "RVS-4281": {
   "generated": "2026-11-24",
   "group": {
-   "generated": "2026-11-20",
-   "hash": "830c8018500c1505",
+   "generated": "2026-11-25",
+   "hash": "4b6ca2085c6b7e13",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Event Trace TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-19. Its mailing list last had a message on 2026-11-18. Its repository was last updated on 2026-11-15. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the Event Trace TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-24. Its mailing list last had a message on 2026-11-18. Its repository was last updated on 2026-11-15. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
   "hash": "ac8d68ea3c816806",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -439,11 +439,11 @@
   "summary": "The specification is in Development, which started on 2026-11-20. The projected ratification quarter is 27Q3, matching the baseline. The projection has not changed in the last 90 days. The next approval, Development complete, is projected for 2027-01-26. The projected dates were last set on 2026-11-20. The last GitHub contribution was on 2026-11-24, with 61 commits and 4 PRs by 2 people in riscv-non-isa/riscv-event-trace in the last 90 days."
  },
  "RVS-4335": {
-  "generated": "2026-11-24",
-  "hash": "72a56e3504ae7a41",
+  "generated": "2026-11-25",
+  "hash": "6e06b73e45bf34fa",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze, following the fast-track process. This phase started on 2026-10-16. Development started on 2026-01-19. The projected ratification quarter is 27Q1. It is 2 quarters behind the baseline 26Q3. The projection has not changed in the last 90 days. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-10. In the last 90 days, GitHub had 3 commits by 3 people in riscv/riscv-isa-manual PR #3428."
+  "summary": "The specification is in Freeze, following the fast-track process. This phase started on 2026-10-16. Development started on 2026-01-19. The projected ratification quarter is 27Q1, which is 2 quarters behind the baseline 26Q3. The projection has not changed in the last 90 days. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-25. In the last 90 days, GitHub had 4 commits by 3 people in riscv/riscv-isa-manual PR #3428."
  },
  "RVS-4344": {
   "generated": "2026-11-05",
@@ -611,27 +611,27 @@
   "summary": "The specification is in Planning. This phase started on 2026-11-18. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 12 commits by 1 person in riscv/riscv-long-instruction."
  },
  "RVS-5524": {
-  "generated": "2026-11-23",
+  "generated": "2026-11-25",
   "group": {
    "generated": "2026-11-25",
    "hash": "528f73048abb03bb",
    "source": "template",
    "summary": "The specification is developed by the Serial Debug Protocol (RSDP) TG. The group is Structuring and Chartering."
   },
-  "hash": "f4a99b90d889c690",
+  "hash": "c09b7628770f8c31",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2026-11-02. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-23. In the last 90 days, GitHub had 32 commits, 5 PRs by 4 people in riscv-non-isa/riscv-serial-debug-protocol."
+  "summary": "The specification is in Planning. This phase started on 2026-11-02. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-25. In the last 90 days, GitHub had 32 commits, 6 PRs by 4 people in riscv-non-isa/riscv-serial-debug-protocol."
  },
  "RVS-5564": {
-  "generated": "2026-11-23",
-  "hash": "30ae8f82229f6687",
+  "generated": "2026-11-25",
+  "hash": "260b183c9b8c8ee3",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning under the fast-track process. This phase started on 2026-11-23. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-21. In the last 90 days, riscv/riscv-zvbec had no commits or PRs from members."
+  "summary": "The specification is in Planning under the fast-track process. This phase started on 2026-11-23. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-25. In the last 90 days, GitHub had 1 commit by 1 person in riscv/riscv-zvbec."
  },
  "RVS-793": {
-  "generated": "2026-11-24",
+  "generated": "2026-11-25",
   "group": {
    "generated": "2026-11-21",
    "hash": "4af17169fac02921",
@@ -639,10 +639,10 @@
    "source": "ai",
    "summary": "The specification is developed by the I/O Physical Memory Protection Unit (IOPMP) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-20. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "48be64dfce513599",
+  "hash": "d2f308ecbcd96d16",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-07-16. Development started on 2023-06-21. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approved. The last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 152 commits, 52 PRs by 4 people in riscv-non-isa/riscv-iopmp."
+  "summary": "The specification is in Freeze. This phase started on 2025-07-16. Development started on 2023-06-21. The projected ratification quarter is 27Q1. It is 5 quarters behind the baseline 25Q4. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approved. The last GitHub contribution was on 2026-11-25. In the last 90 days, GitHub had 153 commits, 52 PRs by 4 people in riscv-non-isa/riscv-iopmp."
  },
  "RVS-913": {
   "generated": "2026-11-25",
