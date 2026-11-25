@@ -77,7 +77,7 @@
     "confluence": "group space: 0 pages edited by members",
     "discussion": "2 messages from 1 person naming \"Security Model\" (tech-privileged 1, tech-unprivileged 1); the group's list had 5 messages from 3 people",
     "github": "18 commits, 8 PRs by 2 people in riscv/riscv-security-model",
-    "jira": "7 approval steps closed (Ensure Compliance with RISC-V Policies (required); ARC Review (required); List Code & Contributions; ...); 6 comments from members",
+    "jira": "7 approval steps closed (Ensure Compliance with RISC-V Policies (required); ARC Review (required); List Code & Contributions; ...); 7 comments from members",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
   },
@@ -376,7 +376,7 @@
    "text": {
     "confluence": "Ratification Plan: 0 edits by 0 members; group space: 0 pages edited by members",
     "discussion": "0 messages from 0 people naming Zlv, Zlio, Zlaes128p, Zlaes192p, Zlaes256p, Zlsm4p, Zlctrm, Zlxctrm; the group's list had 38 messages from 9 people",
-    "github": "762 commits, 15 PRs by 3 people in riscv/riscv-high-assurance-cryptography",
+    "github": "762 commits, 17 PRs by 3 people in riscv/riscv-high-assurance-cryptography",
     "jira": "1 approval step closed (Develop Specification)"
    }
   },
