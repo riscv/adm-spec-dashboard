@@ -1,0 +1,12 @@
+{
+ "_comment": "Fake entries for tests. The real staff list is the STAFF_JSON repository secret.",
+ "names": [
+  "Example Staff"
+ ],
+ "github": [
+  "example-staff"
+ ],
+ "groupsio_user_ids": [
+  1
+ ]
+}

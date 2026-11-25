@@ -159,9 +159,22 @@ def plural(n, word):
 
 # ----- staff -----
 
-def load_staff(path):
-    with open(path, encoding="utf-8") as f:
-        data = json.load(f)
+def load_staff(path=None):
+    """Staff list from the STAFF_JSON secret, or from a local file.
+
+    The list identifies people, so it is never committed to this public
+    repository: CI passes it in the STAFF_JSON secret, and a local run can
+    point --staff at a private copy.
+    """
+    raw = os.environ.get("STAFF_JSON", "").strip()
+    if raw:
+        data = json.loads(raw)
+    elif path and os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        sys.exit("No staff list: set STAFF_JSON or pass --staff <private file>. "
+                 "Without it, staff activity would be counted as member activity.")
     return {
         "names": {n.lower() for n in data["names"]},
         "github": {n.lower() for n in data["github"]},
@@ -551,7 +564,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("csv")
     ap.add_argument("--out", default="web-ui/public/activity.json")
-    ap.add_argument("--staff", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "staff.json"))
+    ap.add_argument("--staff", default=None,
+                    help="private staff list (JSON); CI uses the STAFF_JSON secret instead")
     ap.add_argument("--only", default="")
     ap.add_argument("--workers", type=int, default=6,
                     help="specs measured at once; Groups.io takes seconds per call, so this is most of the speed")
