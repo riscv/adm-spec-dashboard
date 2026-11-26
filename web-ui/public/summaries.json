@@ -1,6 +1,6 @@
 {
  "RVS-1017": {
-  "generated": "2026-11-25",
+  "generated": "2026-11-26",
   "group": {
    "generated": "2026-11-25",
    "hash": "bd51939f33194493",
@@ -8,10 +8,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Fast Interrupts (CLIC) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-02. Its mailing list last had a message on 2026-11-10. Its repository was last updated on 2026-11-16. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "c064f912e61a57f6",
+  "hash": "1bf802a0cb88b2d3",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2026-07-08. Development started on 2024-03-08. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-16. In the last 90 days, GitHub had 10 commits and 10 PRs by 2 people in riscv/riscv-fast-interrupt."
+  "summary": "The specification is in Freeze. This phase started on 2026-07-08. Development started on 2024-03-08. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-26. In the last 90 days, GitHub had 12 commits and 12 PRs by 2 people in riscv/riscv-fast-interrupt."
  },
  "RVS-1135": {
   "generated": "2026-11-26",
@@ -40,7 +40,7 @@
   "summary": "The specification was cancelled."
  },
  "RVS-1153": {
-  "generated": "2026-11-25",
+  "generated": "2026-11-26",
   "group": {
    "generated": "2026-11-25",
    "hash": "7f0d3b11cfa936ae",
@@ -48,10 +48,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Security Model TG. Its activity level is Active. Its Confluence space was last updated on 2025-05-07. Its mailing list last had a message on 2026-10-14. Its repository was last updated on 2026-11-25. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "74698d891676cd94",
+  "hash": "6359b72d09aa09a9",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Ratification-Ready. This phase started on 2026-10-14. Development started on 2024-08-28. The projected ratification quarter is 26Q4. It is 8 quarters behind the baseline 24Q4. The projection has not changed in the last 90 days. The next approval is TSC ratification, projected for 2026-12-19. The projected dates were last set on 2026-10-23. ARC review: Approved. Public review: Public Review In Progress. TSC approval: Not Started. The last GitHub contribution was on 2026-11-25. In the last 90 days, GitHub had 18 commits, 8 PRs by 2 people in riscv/riscv-security-model."
+  "summary": "The specification is in Ratification-Ready. This phase started on 2026-10-14. Development started on 2024-08-28. The projected ratification quarter is 27Q1. It is 9 quarters behind the baseline 24Q4. On 2026-11-26, the projection moved from 26Q4 to 27Q1. The next approval is TSC ratification, projected for 2026-12-17. The projected dates were last set on 2026-11-26. ARC review: Approved. Public review: Public Review Done. TSC approval: Not Started. The last GitHub contribution was on 2026-11-26. In the last 90 days, GitHub had 19 commits and 8 PRs by 2 people in riscv/riscv-security-model."
  },
  "RVS-1185": {
   "generated": "2026-11-26",
@@ -104,11 +104,11 @@
  "RVS-1792": {
   "generated": "2026-11-26",
   "group": {
-   "generated": "2026-11-25",
-   "hash": "d7aed7b9ee84b105",
+   "generated": "2026-11-26",
+   "hash": "d40f34e4f05223df",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the External Debug Security TG. Its activity level is Active. Its Confluence space was last updated on 2026-08-25. Its mailing list last had a message on 2026-11-24. Its repository was last updated on 2026-11-23. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the External Debug Security TG. Its activity level is Active. Its Confluence space was last updated on 2026-08-25. Its mailing list last had a message on 2026-11-25. Its repository was last updated on 2026-11-23. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "cb4e288d633ed5ca",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -221,11 +221,11 @@
  "RVS-2611": {
   "generated": "2026-11-18",
   "group": {
-   "generated": "2026-11-25",
-   "hash": "c5ff543cd9896fc3",
+   "generated": "2026-11-26",
+   "hash": "5d15e9429ab8a8a1",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Composable Custom Extensions TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-19. Its mailing list last had a message on 2026-11-19. Its repository was last updated on 2026-08-19. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Composable Custom Extensions TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-19. Its mailing list last had a message on 2026-11-25. Its repository was last updated on 2026-08-19. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "9e067c1f9fd66f6c",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -406,11 +406,11 @@
  "RVS-4146": {
   "generated": "2026-10-23",
   "group": {
-   "generated": "2026-11-25",
-   "hash": "e47d664d7fb2ef02",
+   "generated": "2026-11-26",
+   "hash": "6b568aa344312853",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the Platform Management Interface (RPMI) TG. Its activity level is Active. Its Confluence space was last updated on 2026-10-28. Its mailing list last had a message on 2026-11-23. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the Platform Management Interface (RPMI) TG. Its activity level is Active. Its Confluence space was last updated on 2026-11-26. Its mailing list last had a message on 2026-11-23. No repository update is recorded. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "3a1ab75b71c1fac1",
   "model": "qwen.qwen3-next-80b-a3b",
@@ -611,17 +611,17 @@
   "summary": "The specification is in Planning. This phase started on 2026-11-18. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 12 commits by 1 person in riscv/riscv-long-instruction."
  },
  "RVS-5524": {
-  "generated": "2026-11-25",
+  "generated": "2026-11-26",
   "group": {
    "generated": "2026-11-26",
    "hash": "528f73048abb03bb",
    "source": "template",
    "summary": "The specification is developed by the Serial Debug Protocol (RSDP) TG. The group is Structuring and Chartering."
   },
-  "hash": "46e3d61af7acc896",
+  "hash": "55ffbe2d276860a2",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2026-11-02. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-25. In the last 90 days, GitHub had 30 commits, 5 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol."
+  "summary": "The specification is in Planning. This phase started on 2026-11-02. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-26. In the last 90 days, GitHub had 30 commits, 5 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol."
  },
  "RVS-5564": {
   "generated": "2026-11-25",
@@ -633,11 +633,11 @@
  "RVS-793": {
   "generated": "2026-11-26",
   "group": {
-   "generated": "2026-11-25",
-   "hash": "08ba4e89e25dada7",
+   "generated": "2026-11-26",
+   "hash": "56003bf3b6a5ba1b",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the I/O Physical Memory Protection Unit (IOPMP) TG. Its activity level is Active. Its Confluence space was last updated on 2025-05-14. Its mailing list last had a message on 2026-11-20. Its repository was last updated on 2026-11-24. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the I/O Physical Memory Protection Unit (IOPMP) TG. Its activity level is Active. Its Confluence space was last updated on 2025-05-14. Its mailing list last had a message on 2026-11-20. Its repository was last updated on 2026-11-26. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "913335b4613dacdc",
   "model": "qwen.qwen3-next-80b-a3b",

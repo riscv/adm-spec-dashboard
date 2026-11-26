@@ -27,8 +27,8 @@
    ],
    "text": {
     "confluence": "group space: 7 pages edited by members",
-    "discussion": "0 messages from 0 people naming Smidctrl, Ssidctrl, Smeihv, Sseihv, Smnip, Ssnip, Smijt, Ssijt; the group's list had 8 messages from 1 person",
-    "github": "10 commits, 10 PRs by 2 people in riscv/riscv-fast-interrupt",
+    "discussion": "0 messages from 0 people naming Smidctrl, Ssidctrl, Smeihv, Sseihv, Smnip, Ssnip, Smijt, Ssijt; the group's list had 9 messages from 1 person",
+    "github": "12 commits, 12 PRs by 2 people in riscv/riscv-fast-interrupt",
     "jira": "1 comment from members",
     "tests": "2 PRs by 1 person (riscv-unified-db 2)"
    }
@@ -76,8 +76,8 @@
    "text": {
     "confluence": "group space: 0 pages edited by members",
     "discussion": "2 messages from 1 person naming \"Security Model\" (tech-privileged 1, tech-unprivileged 1); the group's list had 5 messages from 3 people",
-    "github": "18 commits, 8 PRs by 2 people in riscv/riscv-security-model",
-    "jira": "7 approval steps closed (Ensure Compliance with RISC-V Policies (required); ARC Review (required); List Code & Contributions; ...); 7 comments from members",
+    "github": "19 commits, 8 PRs by 2 people in riscv/riscv-security-model",
+    "jira": "7 approval steps closed (Ensure Compliance with RISC-V Policies (required); ARC Review (required); List Code & Contributions; ...); 10 comments from members",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
    }
   },
@@ -171,7 +171,7 @@
    ],
    "text": {
     "confluence": "group space: 0 pages edited by members",
-    "discussion": "0 messages from 0 people naming Sdsec; the group's list had 61 messages from 8 people",
+    "discussion": "0 messages from 0 people naming Sdsec; the group's list had 62 messages from 8 people",
     "github": "27 commits, 6 PRs by 3 people in riscv-non-isa/riscv-external-debug-security",
     "jira": "no approval step closed, no phase change, no member comment",
     "tests": "no PRs in riscv-arch-test, sail-riscv or riscv-unified-db"
