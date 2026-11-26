@@ -4,6 +4,27 @@
   "to": "2026-11-26",
   "changes": [
     {
+      "spec": "RVS-1153",
+      "summary": "Security Model",
+      "field": "projected_q",
+      "from": "26Q4",
+      "to": "27Q1"
+    },
+    {
+      "spec": "RVS-1153",
+      "summary": "Security Model",
+      "field": "progress",
+      "from": "On Track",
+      "to": "Exposed"
+    },
+    {
+      "spec": "RVS-1153",
+      "summary": "Security Model",
+      "field": "next_approval_date",
+      "from": "2026-12-19",
+      "to": "2026-12-17"
+    },
+    {
       "spec": "RVS-2770",
       "summary": "Performance Event Sampling",
       "field": "status",
