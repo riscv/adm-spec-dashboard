@@ -1,7 +1,7 @@
 {
-  "generated": "2026-11-25",
-  "from": "2026-11-18",
-  "to": "2026-11-25",
+  "generated": "2026-11-26",
+  "from": "2026-11-19",
+  "to": "2026-11-26",
   "changes": [
     {
       "spec": "RVS-2770",
@@ -15,13 +15,34 @@
       "summary": "Performance Event Sampling",
       "field": "progress",
       "from": "Exposed",
-      "to": "Late"
+      "to": "On Track"
     },
     {
       "spec": "RVS-2770",
       "summary": "Performance Event Sampling",
       "field": "next_approval_date",
       "from": "2026-12-08",
+      "to": "2027-02-02"
+    },
+    {
+      "spec": "RVS-3923",
+      "summary": "Vector Matrix Extension (VME)",
+      "field": "projected_q",
+      "from": "27Q1",
+      "to": "27Q2"
+    },
+    {
+      "spec": "RVS-3923",
+      "summary": "Vector Matrix Extension (VME)",
+      "field": "progress",
+      "from": "On Track",
+      "to": "Exposed"
+    },
+    {
+      "spec": "RVS-3923",
+      "summary": "Vector Matrix Extension (VME)",
+      "field": "next_approval_date",
+      "from": "2026-12-31",
       "to": "2027-02-02"
     },
     {
@@ -51,6 +72,20 @@
       "field": "next_approval_date",
       "from": "",
       "to": "2027-01-26"
+    },
+    {
+      "spec": "RVS-4802",
+      "summary": "CPU Utilization Counter Extension (Sscpuutil)",
+      "field": "status",
+      "from": "Specification Under Development",
+      "to": "Specification Under Stabilization"
+    },
+    {
+      "spec": "RVS-4802",
+      "summary": "CPU Utilization Counter Extension (Sscpuutil)",
+      "field": "next_approval_date",
+      "from": "2026-12-29",
+      "to": "2026-12-28"
     },
     {
       "spec": "RVS-5564",
