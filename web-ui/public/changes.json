@@ -1,7 +1,7 @@
 {
-  "generated": "2026-11-26",
-  "from": "2026-11-19",
-  "to": "2026-11-26",
+  "generated": "2026-11-27",
+  "from": "2026-11-20",
+  "to": "2026-11-27",
   "changes": [
     {
       "spec": "RVS-1153",
@@ -65,34 +65,6 @@
       "field": "next_approval_date",
       "from": "2026-12-31",
       "to": "2027-02-02"
-    },
-    {
-      "spec": "RVS-4281",
-      "summary": "Event Trace",
-      "field": "status",
-      "from": "Specification in Planning",
-      "to": "Specification Under Development"
-    },
-    {
-      "spec": "RVS-4281",
-      "summary": "Event Trace",
-      "field": "projected_q",
-      "from": "Not Set Yet",
-      "to": "27Q3"
-    },
-    {
-      "spec": "RVS-4281",
-      "summary": "Event Trace",
-      "field": "progress",
-      "from": "Not Set Yet",
-      "to": "On Track"
-    },
-    {
-      "spec": "RVS-4281",
-      "summary": "Event Trace",
-      "field": "next_approval_date",
-      "from": "",
-      "to": "2027-01-26"
     },
     {
       "spec": "RVS-4802",
