@@ -179,19 +179,19 @@
  "RVS-2141": {
   "generated": "2026-11-27",
   "group": {
-   "generated": "2026-11-26",
-   "hash": "f0fe4b25ca38e60f",
+   "generated": "2026-11-27",
+   "hash": "be3e3cd7965b5e9a",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-24. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-25. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
+   "summary": "The specification is developed by the CHERI TG. Its activity level is Very Active. Its Confluence space was last updated on 2026-11-24. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-11-27. Very Active means its Confluence space, mailing list and repository were all updated within 15 days."
   },
-  "hash": "3e1cdd5224c17317",
+  "hash": "2a022ac3a5533b97",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16 the projection moved later, from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-27. In the last 90 days, GitHub had 115 commits, 126 PRs by 5 people in riscv/riscv-cheri."
+  "summary": "The specification is in Freeze. This phase started on 2025-03-04. Development started on 2024-12-11. The projected ratification quarter is 27Q1. It is 6 quarters behind the baseline 25Q3. On 2026-09-16, the projection moved from 26Q4 to 27Q1. The next approval is Freeze approval, projected for 2026-12-31. The projected dates were last set on 2026-10-23. ARC review: Approval In Progress. The last GitHub contribution was on 2026-11-27. In the last 90 days, GitHub had 116 commits, 127 PRs by 5 people in riscv/riscv-cheri."
  },
  "RVS-2360": {
-  "generated": "2026-11-25",
+  "generated": "2026-11-27",
   "group": {
    "generated": "2026-11-25",
    "hash": "fe7a5c1cc17acb1d",
@@ -199,10 +199,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Post-Quantum Cryptography (PQC) TG. Its activity level is Active. Its Confluence space was last updated on 2026-07-02. Its mailing list last had a message on 2026-11-23. Its repository was last updated on 2026-10-13. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
-  "hash": "3dc3d91ebed6a672",
+  "hash": "6fde74838fe41251",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Stabilization. This phase started on 2026-07-22. Development started on 2026-03-05. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. On 2026-10-23 the projection moved later, from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 16 commits, 6 PRs by 2 people in riscv/riscv-pqc."
+  "summary": "The specification is in Stabilization. This phase started on 2026-07-22. Development started on 2026-03-05. The projected ratification quarter is 27Q2. It is 2 quarters behind the baseline 26Q4. On 2026-10-23 the projection moved later, from 27Q1 to 27Q2. The next approval is Stabilization approval, projected for 2026-12-08. The projected dates were last set on 2026-10-23. The last GitHub contribution was on 2026-11-27. In the last 90 days, GitHub had 16 commits, 6 PRs by 2 people in riscv/riscv-pqc."
  },
  "RVS-2362": {
   "generated": "2026-11-27",
@@ -233,7 +233,7 @@
   "summary": "The specification is in Planning. This phase started on 2025-06-17. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-08-19. In the last 90 days, riscv/composable-custom-extensions had no commits or PRs from members."
  },
  "RVS-2706": {
-  "generated": "2026-11-25",
+  "generated": "2026-11-27",
   "group": {
    "generated": "2026-11-25",
    "hash": "0e3ba6208e58ef52",
@@ -241,10 +241,10 @@
    "source": "ai",
    "summary": "The specification is developed by the Memory Tagging TG. Its activity level is Low. Its Confluence space was last updated on 2026-09-15. Its mailing list last had a message on 2026-10-26. Its repository was last updated on 2026-08-20. Low means at least 1 of its Confluence space, mailing list and repository was updated within 60 days."
   },
-  "hash": "7dcbe690ce1a0ccd",
+  "hash": "21937501daaf0ede",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2025-06-17. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-24. In the last 90 days, riscv/riscv-memory-tagging had no commits or PRs from members."
+  "summary": "The specification is in Planning. This phase started on 2025-06-17. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-27. In the last 90 days, riscv/riscv-memory-tagging had no commits or PRs from members."
  },
  "RVS-2770": {
   "generated": "2026-11-25",
@@ -611,17 +611,17 @@
   "summary": "The specification is in Planning. This phase started on 2026-11-18. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-24. In the last 90 days, GitHub had 12 commits by 1 person in riscv/riscv-long-instruction."
  },
  "RVS-5524": {
-  "generated": "2026-11-26",
+  "generated": "2026-11-27",
   "group": {
    "generated": "2026-11-27",
    "hash": "528f73048abb03bb",
    "source": "template",
    "summary": "The specification is developed by the Serial Debug Protocol (RSDP) TG. The group is Structuring and Chartering."
   },
-  "hash": "55ffbe2d276860a2",
+  "hash": "47bb40fdf9e9f605",
   "model": "qwen.qwen3-next-80b-a3b",
   "source": "ai",
-  "summary": "The specification is in Planning. This phase started on 2026-11-02. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-26. In the last 90 days, GitHub had 30 commits, 5 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol."
+  "summary": "The specification is in Planning. This phase started on 2026-11-02. No projected ratification quarter is set yet. The last GitHub contribution was on 2026-11-27. In the last 90 days, GitHub had 30 commits, 5 PRs by 3 people in riscv-non-isa/riscv-serial-debug-protocol."
  },
  "RVS-5564": {
   "generated": "2026-11-25",
@@ -633,11 +633,11 @@
  "RVS-793": {
   "generated": "2026-11-27",
   "group": {
-   "generated": "2026-11-26",
-   "hash": "56003bf3b6a5ba1b",
+   "generated": "2026-11-27",
+   "hash": "b7ea33daf23cd254",
    "model": "qwen.qwen3-next-80b-a3b",
    "source": "ai",
-   "summary": "The specification is developed by the I/O Physical Memory Protection Unit (IOPMP) TG. Its activity level is Active. Its Confluence space was last updated on 2025-05-14. Its mailing list last had a message on 2026-11-20. Its repository was last updated on 2026-11-26. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
+   "summary": "The specification is developed by the I/O Physical Memory Protection Unit (IOPMP) TG. Its activity level is Active. Its Confluence space was last updated on 2025-05-14. Its mailing list last had a message on 2026-11-20. Its repository was last updated on 2026-11-27. Active means at least 2 of its Confluence space, mailing list and repository were updated within 45 days, or the repository, the main signal for this type of group, was."
   },
   "hash": "adfc9862a2d70a28",
   "model": "qwen.qwen3-next-80b-a3b",
